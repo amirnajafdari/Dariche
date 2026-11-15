@@ -1,0 +1,105 @@
+---
+import type { Lang } from '@/i18n';
+import Headline from './Headline.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+
+/**
+ * Inner-page hero. Variants keep pages from feeling identical:
+ *  - type   oversized type, lead pushed to the far column
+ *  - split  headline and lead separated by a vertical rule
+ *  - frame  headline beside a framed visual (pass it in the "visual" slot)
+ * Default slot = actions under the lead.
+ */
+interface Props {
+  lang: Lang;
+  title: string[];
+  lead?: string;
+  eyebrow?: string;
+  variant?: 'type' | 'split' | 'frame';
+  breadcrumbs?: { name: string; path: string }[];
+}
+const { lang, title, lead, eyebrow, variant = 'type', breadcrumbs } = Astro.props;
+const hasVisual = Astro.slots.has('visual');
+---
+<section class:list={['phero', `phero--${variant}`, { 'phero--has-visual': hasVisual }]}>
+  <div class="container">
+    {breadcrumbs && <Breadcrumbs lang={lang} items={breadcrumbs} />}
+    <div class="phero__grid">
+      <div class="phero__main">
+        {eyebrow && <p class="eyebrow phero__eyebrow" data-reveal="fade">{eyebrow}</p>}
+        <Headline lines={title} as="h1" size="display" />
+      </div>
+      {(lead || Astro.slots.has('default')) && (
+        <div class="phero__side" data-reveal style="--delay:.2s">
+          {lead && <p class="lead">{lead}</p>}
+          {Astro.slots.has('default') && <div class="btn-row phero__actions"><slot /></div>}
+        </div>
+      )}
+      {hasVisual && (
+        <div class="phero__visual">
+          <slot name="visual" />
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .phero {
+    padding-block: clamp(2rem, 1rem + 3vw, 4rem) var(--section-sm);
+  }
+  .phero__grid {
+    display: grid;
+    gap: var(--stack-lg);
+    margin-top: clamp(3rem, 1.5rem + 6vw, 8rem);
+  }
+  .phero__main {
+    display: grid;
+    gap: var(--stack-md);
+  }
+  .phero__side {
+    display: grid;
+    gap: 2rem;
+    align-content: start;
+  }
+  .phero__actions {
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .phero__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    /* type: huge headline across, lead tucked into the far columns below */
+    .phero--type .phero__main {
+      grid-column: 1 / span 11;
+    }
+    .phero--type .phero__side {
+      grid-column: 7 / -1;
+    }
+    /* split: rule between headline and lead */
+    .phero--split .phero__main {
+      grid-column: 1 / span 7;
+    }
+    .phero--split .phero__side {
+      grid-column: 9 / -1;
+      align-self: end;
+      padding-inline-start: var(--col-gap);
+      border-inline-start: 1px solid var(--line);
+    }
+    /* frame: headline + lead stacked beside a visual */
+    .phero--frame .phero__main {
+      grid-column: 1 / span 6;
+      align-self: end;
+    }
+    .phero--frame .phero__side {
+      grid-column: 1 / span 5;
+      grid-row: 2;
+    }
+    .phero--frame .phero__visual {
+      grid-column: 8 / -1;
+      grid-row: 1 / span 2;
+    }
+  }
+</style>

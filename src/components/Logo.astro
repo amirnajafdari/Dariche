@@ -1,0 +1,54 @@
+---
+import { href, type Lang } from '@/i18n';
+import { site } from '@/data/site';
+
+interface Props {
+  lang: Lang;
+  size?: 'md' | 'lg';
+  link?: boolean;
+}
+const { lang, size = 'md', link = true } = Astro.props;
+const Tag = link ? 'a' : 'span';
+const linkProps = link ? { href: href(lang), 'aria-label': site.name[lang] } : {};
+---
+<Tag class:list={['logo', `logo--${size}`]} {...linkProps}>
+  <svg class="logo__mark" viewBox="0 0 22 30" aria-hidden="true">
+    <!-- a tall, slightly pointed window; the lower pane is open -->
+    <path d="M1 29V11.5C1 5.6 5.4 1.6 11 1c5.6.6 10 4.6 10 10.5V29Z" fill="none" stroke="currentColor" stroke-width="1.4"></path>
+    <rect x="4.5" y="17" width="13" height="9" fill="#226F54"></rect>
+  </svg>
+  <span class="logo__word">{site.name[lang]}</span>
+</Tag>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .logo__mark {
+    width: 1.05rem;
+    height: auto;
+    flex: none;
+    transition: transform 0.6s var(--ease);
+  }
+  .logo__word {
+    font-size: 1.45rem;
+    font-weight: 700;
+  }
+  :global(:root[lang='en-GB']) .logo__word {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+  .logo--lg .logo__mark {
+    width: 1.6rem;
+  }
+  .logo--lg .logo__word {
+    font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  }
+  a.logo:hover .logo__mark {
+    transform: translateY(-2px);
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import type { Lang } from '@/i18n';
+import { home } from '@/data/pages';
+import { testimonials } from '@/data/testimonials';
+import { visible } from '@/data/site';
+import SectionHeading from '../SectionHeading.astro';
+import Testimonial from '../Testimonial.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+// Never more than three at once.
+const items = visible(testimonials).slice(0, 3);
+---
+{items.length > 0 && (
+  <section class="testimonials section" aria-labelledby="testimonials-title">
+    <div class="container">
+      <SectionHeading eyebrow={home.testimonials.eyebrow[lang]} title={home.testimonials.title[lang]} id="testimonials-title" />
+      <div class:list={['testimonials__grid', `testimonials__grid--${items.length}`]}>
+        {items.map((item) => <Testimonial item={item} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .testimonials__grid {
+    display: grid;
+    gap: var(--stack-xl) var(--col-gap);
+  }
+  @media (min-width: 900px) {
+    .testimonials__grid--2 {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .testimonials__grid--2 > :global(:first-child) {
+      grid-column: 1 / span 5;
+    }
+    .testimonials__grid--2 > :global(:last-child) {
+      grid-column: 7 / span 5;
+      margin-top: var(--stack-xl);
+    }
+    .testimonials__grid--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

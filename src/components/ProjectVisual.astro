@@ -1,0 +1,39 @@
+---
+import type { Lang } from '@/i18n';
+import type { CaseStudy, ImageAsset } from '@/data/caseStudies';
+import ScreenMock from './ScreenMock.astro';
+
+interface Props {
+  cs: CaseStudy;
+  lang: Lang;
+  device?: 'desktop' | 'mobile';
+  /** Specific screenshot; defaults to the cover */
+  image?: ImageAsset;
+  eager?: boolean;
+  sizes?: string;
+}
+const { cs, lang, device = 'desktop', image = device === 'mobile' ? cs.mobile : cs.cover, eager = false, sizes = '(min-width: 900px) 60vw, 100vw' } = Astro.props;
+---
+{image ? (
+  <img
+    src={image.src}
+    alt={image.alt[lang]}
+    width={image.width}
+    height={image.height}
+    sizes={sizes}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding="async"
+    class="project-visual"
+  />
+) : (
+  <ScreenMock kind={cs.mock.kind} bg={cs.mock.bg} accent={cs.mock.accent} title={cs.client[lang]} device={device} />
+)}
+
+<style>
+  .project-visual {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

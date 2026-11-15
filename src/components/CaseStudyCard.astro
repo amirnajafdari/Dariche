@@ -1,0 +1,150 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import type { CaseStudy } from '@/data/caseStudies';
+import { getService } from '@/data/services';
+import ProjectVisual from './ProjectVisual.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  cs: CaseStudy;
+  lang: Lang;
+  /** Shape of the image window */
+  shape?: 'wide' | 'tall' | 'square';
+  headingLevel?: 'h2' | 'h3';
+  class?: string;
+  style?: string;
+}
+const { cs, lang, shape = 'wide', headingLevel: H = 'h3', class: className, style } = Astro.props;
+const t = useTranslations(lang);
+const url = href(lang, `work/${cs.slug}`);
+const services = cs.services.map((s) => getService(s)?.name[lang]).filter(Boolean).join(' / ');
+---
+<article class:list={['case-card', `case-card--${shape}`, className]} style={style}>
+  <div class="window case-card__window">
+    <div class="window__pane case-card__pane" data-reveal="mask">
+      <ProjectVisual cs={cs} lang={lang} sizes={shape === 'wide' ? '(min-width: 900px) 65vw, 100vw' : '(min-width: 900px) 40vw, 100vw'} />
+    </div>
+  </div>
+  <div class="case-card__meta" data-reveal>
+    <p class="case-card__info">
+      <span>{cs.industry[lang]}</span>
+      <span aria-hidden="true">·</span>
+      <span>{cs.location[lang]}</span>
+      {cs.sample && <span class="sample-tag" title={t.sampleNote}>{t.sample}</span>}
+    </p>
+    <H class="case-card__title">
+      <a href={url} class="case-card__link">{cs.client[lang]}</a>
+    </H>
+    <p class="case-card__summary">{cs.summary[lang]}</p>
+    {cs.result && <p class="case-card__result">{cs.result[lang]}</p>}
+    <p class="case-card__foot">
+      <span class="case-card__services">{services}</span>
+      <span class="case-card__go" aria-hidden="true"><Icon name="arrow" /></span>
+    </p>
+  </div>
+</article>
+
+<style>
+  .case-card {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    align-content: start;
+  }
+  .case-card__pane {
+    aspect-ratio: 16 / 10;
+  }
+  .case-card--tall .case-card__pane {
+    aspect-ratio: 4 / 5;
+  }
+  .case-card--square .case-card__pane {
+    aspect-ratio: 1 / 1;
+  }
+  @media (max-width: 699px) {
+    .case-card__pane,
+    .case-card--tall .case-card__pane,
+    .case-card--square .case-card__pane {
+      aspect-ratio: 4 / 3.4;
+    }
+  }
+  .case-card__meta {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 34rem;
+  }
+  .case-card__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .case-card__info .sample-tag {
+    margin-inline-start: 0.5rem;
+  }
+  .case-card__title {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  /* stretched link: the whole card is clickable, the accessible name stays short */
+  .case-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .case-card__link:focus-visible {
+    outline: none;
+  }
+  .case-card:has(.case-card__link:focus-visible) .case-card__window {
+    outline: 2px solid var(--green);
+    outline-offset: 6px;
+  }
+  .case-card__summary {
+    color: var(--ink-2);
+  }
+  .case-card__result {
+    color: var(--green);
+    font-weight: 500;
+  }
+  .case-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.9rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .case-card__go {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink);
+    transition: background-color 0.35s, color 0.35s, border-color 0.35s, transform 0.5s var(--ease);
+  }
+  .case-card:hover .case-card__go {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .case-card:hover .case-card__title a {
+    color: var(--green);
+  }
+  .case-card:hover .window::before {
+    --wx: 22px;
+    --wy: 22px;
+    border-color: var(--green);
+  }
+  .case-card:hover .window__pane > :global(*) {
+    scale: 1.025;
+  }
+</style>

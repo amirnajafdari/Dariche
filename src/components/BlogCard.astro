@@ -1,0 +1,131 @@
+---
+import { formatDate, href, num } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { categoryName, type Post } from '@/data/blog';
+
+interface Props {
+  post: Post;
+  featured?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { post, featured = false, headingLevel: H = 'h3' } = Astro.props;
+const lang = post.lang;
+const t = useTranslations(lang);
+const url = href(lang, `blog/${post.slug}`);
+const cat = categoryName(post.category, lang);
+---
+<article class:list={['post-card', { 'post-card--featured': featured }]} data-category={post.category} data-reveal>
+  {featured && (
+    <div class="post-card__cover window" aria-hidden="true">
+      <div class="window__pane">
+        {post.cover ? (
+          <img src={post.cover.src} alt="" width={post.cover.width} height={post.cover.height} loading="lazy" decoding="async" />
+        ) : (
+          <span class="post-card__word">{cat}</span>
+        )}
+      </div>
+    </div>
+  )}
+  <div class="post-card__body">
+    <p class="post-card__meta">
+      <span class="post-card__cat">{cat}</span>
+      <span aria-hidden="true">·</span>
+      <time datetime={post.date}>{formatDate(lang, post.date)}</time>
+    </p>
+    <H class="post-card__title"><a href={url} class="post-card__link">{post.title}</a></H>
+    <p class="post-card__excerpt">{post.excerpt}</p>
+    <p class="post-card__foot">
+      <span>{t.readingTime(num(lang, post.readingMinutes))}</span>
+      {post.sample && <span class="sample-tag" title={t.sampleNote}>{t.sample}</span>}
+    </p>
+  </div>
+</article>
+
+<style>
+  .post-card {
+    position: relative;
+    display: grid;
+    gap: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+    align-content: start;
+  }
+  .post-card--featured {
+    border-top: 0;
+    padding-top: 0;
+  }
+  @media (min-width: 900px) {
+    .post-card--featured {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--col-gap);
+      align-items: end;
+    }
+  }
+  .post-card__cover .window__pane {
+    aspect-ratio: 16 / 10;
+    display: grid;
+    place-items: center;
+  }
+  .post-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .post-card__word {
+    font-size: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    font-weight: 200;
+    color: var(--green);
+    letter-spacing: -0.02em;
+  }
+  .post-card__body {
+    display: grid;
+    gap: 0.85rem;
+  }
+  .post-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .post-card__cat {
+    color: var(--red);
+  }
+  .post-card__title {
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);
+    font-weight: 400;
+    line-height: 1.45;
+    transition: color 0.25s;
+  }
+  .post-card--featured .post-card__title {
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+    font-weight: 300;
+    line-height: 1.35;
+  }
+  .post-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .post-card:hover .post-card__title {
+    color: var(--green);
+  }
+  .post-card:has(.post-card__link:focus-visible) {
+    outline: 2px solid var(--green);
+    outline-offset: 6px;
+  }
+  .post-card__link:focus-visible {
+    outline: none;
+  }
+  .post-card__excerpt {
+    color: var(--ink-2);
+    max-width: 34rem;
+  }
+  .post-card__foot {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+</style>

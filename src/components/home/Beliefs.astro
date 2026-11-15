@@ -1,0 +1,71 @@
+---
+import { num, type Lang } from '@/i18n';
+import { home } from '@/data/pages';
+import Headline from '../Headline.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+<section class="beliefs section" aria-labelledby="beliefs-title">
+  <div class="container">
+    <Headline lines={home.beliefs.title[lang]} id="beliefs-title" size="display" class="beliefs__title" />
+    <ol class="beliefs__list" role="list">
+      {home.beliefs.items[lang].map((text, i) => (
+        <li class:list={['belief', `belief--${i % 2 ? 'b' : 'a'}`]} data-reveal>
+          <span class="belief__n">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+          <p class="belief__text">{text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .beliefs__title {
+    font-size: clamp(2.3rem, 1.3rem + 4.4vw, 5.6rem);
+    max-width: 16ch;
+  }
+  .beliefs__list {
+    display: grid;
+    gap: clamp(3.5rem, 2rem + 6vw, 8rem);
+    margin-top: var(--section-sm);
+  }
+  .belief {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .belief__n {
+    font-size: var(--fs-small);
+    color: var(--red);
+    font-weight: 500;
+  }
+  .belief__text {
+    font-size: clamp(1.6rem, 1.1rem + 2.2vw, 3rem);
+    font-weight: 300;
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  :global(:root[lang='fa']) .belief__text {
+    line-height: 1.45;
+  }
+  @media (min-width: 900px) {
+    .beliefs__list {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .belief {
+      grid-template-columns: 4rem 1fr;
+      align-items: baseline;
+    }
+    .belief--a {
+      grid-column: 1 / span 8;
+    }
+    .belief--b {
+      grid-column: 5 / span 8;
+    }
+  }
+</style>

@@ -1,0 +1,571 @@
+/* ==========================================================================
+   Daricheh — design system
+   White first. Green to act. Red, rarely.
+   ========================================================================== */
+
+:root {
+  /* Colour */
+  --green: #226f54;
+  --green-deep: #19533f;
+  --green-tint: #eef4f1;
+  --red: #6e0509;
+  --ink: #1d1f22;
+  --ink-2: #464a50;
+  --ink-3: #6a6f75;
+  --line: #e6e6e2;
+  --line-strong: #cdcdc7;
+  --paper: #ffffff;
+  --paper-2: #f7f7f4;
+
+  /* Type */
+  --font-fa: 'Dana', 'Vazirmatn Variable', Tahoma, sans-serif;
+  --font-en: 'Outfit Variable', 'Dana', system-ui, sans-serif;
+  --font: var(--font-fa);
+
+  --fs-display: clamp(2.6rem, 1.4rem + 5.6vw, 6.6rem);
+  --fs-h2: clamp(2rem, 1.3rem + 3vw, 4.1rem);
+  --fs-h3: clamp(1.35rem, 1.1rem + 0.9vw, 1.9rem);
+  --fs-lead: clamp(1.15rem, 1.05rem + 0.45vw, 1.45rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9rem;
+  --fs-micro: 0.8rem;
+
+  --lh-body: 1.95;
+  --lh-tight: 1.3;
+  --lh-display: 1.22;
+  --tracking-display: 0;
+
+  /* Space */
+  --gutter: clamp(1.25rem, 0.6rem + 4.2vw, 5.5rem);
+  --max: 88rem;
+  --max-text: 36rem;
+  --section: clamp(6rem, 3rem + 11vw, 14rem);
+  --section-sm: clamp(4rem, 2.5rem + 6vw, 8rem);
+  --stack-xl: clamp(3.5rem, 2rem + 5vw, 7rem);
+  --stack-lg: clamp(2.5rem, 1.6rem + 3vw, 4.5rem);
+  --stack-md: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  --col-gap: clamp(1rem, 0.5rem + 2vw, 2.75rem);
+
+  /* Shape & motion */
+  --radius: 4px;
+  --header-h: 5.5rem;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --dur: 0.9s;
+
+  color-scheme: light;
+}
+
+:root[lang='en-GB'] {
+  --font: var(--font-en);
+  --lh-body: 1.65;
+  --lh-display: 1.04;
+  --lh-tight: 1.2;
+  --tracking-display: -0.032em;
+}
+
+/* --------------------------------------------------------------------------
+   Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+body {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: var(--lh-tight);
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+strong,
+b {
+  font-weight: 700;
+}
+::selection {
+  background: var(--green);
+  color: #fff;
+}
+
+/* Latin runs inside Persian text (brand names, "Google Maps") */
+[lang='fa'] :is(bdi, .ltr) {
+  font-family: var(--font-fa);
+}
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--ink);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--narrow {
+  max-width: 62rem;
+}
+.section {
+  padding-block: var(--section);
+}
+.section--sm {
+  padding-block: var(--section-sm);
+}
+.section + .section--tight-top {
+  padding-top: 0;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+}
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* --------------------------------------------------------------------------
+   Type
+   -------------------------------------------------------------------------- */
+.display,
+.h2 {
+  font-weight: 300;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-display);
+  color: var(--ink);
+}
+.display {
+  font-size: var(--fs-display);
+}
+.h2 {
+  font-size: var(--fs-h2);
+}
+:is(.display, .h2) strong {
+  font-weight: 700;
+}
+:is(.display, .h2) .line {
+  display: block;
+}
+.h3 {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: calc(var(--tracking-display) / 2);
+}
+.lead {
+  font-size: var(--fs-lead);
+  line-height: calc(var(--lh-body) - 0.15);
+  color: var(--ink-2);
+  font-weight: 300;
+  max-width: var(--max-text);
+}
+.body {
+  color: var(--ink-2);
+  max-width: var(--max-text);
+}
+.small {
+  font-size: var(--fs-small);
+}
+.muted {
+  color: var(--ink-3);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.eyebrow::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+:root[lang='en-GB'] .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--fs-micro);
+}
+.index {
+  font-weight: 200;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Links & buttons
+   -------------------------------------------------------------------------- */
+.link {
+  color: var(--green);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35em;
+  text-decoration-color: color-mix(in srgb, var(--green) 35%, transparent);
+  transition: text-decoration-color 0.25s, color 0.25s;
+}
+.link:hover {
+  text-decoration-color: var(--red);
+}
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  color: var(--green);
+  font-weight: 500;
+  padding-block: 0.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--green) 30%, transparent);
+  transition: border-color 0.3s, gap 0.3s var(--ease);
+}
+.link-arrow:hover {
+  border-color: var(--red);
+  gap: 0.9em;
+}
+.arrow {
+  width: 1em;
+  height: 1em;
+  flex: none;
+}
+[dir='rtl'] .arrow {
+  transform: scaleX(-1);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65em;
+  min-height: 3.35rem;
+  padding: 0 1.6rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+.btn .arrow {
+  transition: translate 0.35s var(--ease);
+}
+.btn:hover .arrow {
+  translate: 0.25em 0;
+}
+[dir='rtl'] .btn:hover .arrow {
+  translate: -0.25em 0;
+}
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+/* A thin deep-red line slides in on hover — the only red on the button */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: var(--from, left);
+  transition: transform 0.45s var(--ease);
+}
+[dir='rtl'] .btn-primary::after {
+  --from: right;
+}
+.btn-primary:hover {
+  background: var(--green-deep);
+}
+.btn-primary:hover::after {
+  transform: scaleX(1);
+}
+.btn-secondary {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+}
+.btn-secondary:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.btn-ghost {
+  padding-inline: 0.25rem;
+  color: var(--ink-2);
+  min-height: 2.75rem;
+}
+.btn-ghost:hover {
+  color: var(--green);
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.25rem;
+}
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
+
+/* Small text label for sample/placeholder content */
+.sample-tag {
+  display: inline-block;
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  line-height: 1;
+  padding: 0.35rem 0.5rem;
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-3);
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+/* --------------------------------------------------------------------------
+   Window language — frames, openings, reveals. Use sparingly.
+   -------------------------------------------------------------------------- */
+.window {
+  position: relative;
+  isolation: isolate;
+}
+/* the offset second frame — like a casement standing slightly open */
+.window::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line-strong);
+  translate: var(--wx, 14px) var(--wy, 14px);
+  z-index: -1;
+  pointer-events: none;
+  transition: translate 0.7s var(--ease), border-color 0.4s;
+}
+[dir='rtl'] .window::before {
+  translate: calc(var(--wx, 14px) * -1) var(--wy, 14px);
+}
+.window__pane {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+.window__pane > * {
+  transition: scale 1.1s var(--ease);
+}
+a:hover .window::before,
+.window:hover::before {
+  --wx: 22px;
+  --wy: 22px;
+  border-color: var(--green);
+}
+a:hover .window__pane > * {
+  scale: 1.025;
+}
+
+/* --------------------------------------------------------------------------
+   Motion — only enabled when JS has run (html.js) and the user allows motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    translate: 0 1.75rem;
+    transition: opacity var(--dur) var(--ease), translate var(--dur) var(--ease);
+    transition-delay: var(--delay, 0s);
+  }
+  .js [data-reveal='mask'] {
+    opacity: 1;
+    translate: none;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.25s var(--ease);
+    transition-delay: var(--delay, 0s);
+  }
+  .js [data-reveal='fade'] {
+    translate: none;
+  }
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    translate: 0 0;
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* headline lines rise out of their own frame */
+  .js .reveal-lines .line {
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .js .reveal-lines .line > span {
+    display: block;
+    translate: 0 105%;
+    transition: translate 1.1s var(--ease);
+  }
+  .js .reveal-lines .line:nth-child(2) > span {
+    transition-delay: 0.1s;
+  }
+  .js .reveal-lines .line:nth-child(3) > span {
+    transition-delay: 0.2s;
+  }
+  .js .reveal-lines.is-visible .line > span {
+    translate: 0 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+.field {
+  display: grid;
+  gap: 0.5rem;
+}
+.field label,
+.field legend {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink);
+}
+.field .opt {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.input {
+  width: 100%;
+  min-height: 3.35rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--paper);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+textarea.input {
+  min-height: 9rem;
+  resize: vertical;
+  line-height: 1.8;
+}
+.input:hover {
+  border-color: var(--ink-3);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 18%, transparent);
+}
+.input[aria-invalid='true'] {
+  border-color: var(--red);
+}
+.field-error {
+  font-size: var(--fs-small);
+  color: var(--red);
+}
+.input::placeholder {
+  color: var(--ink-3);
+  opacity: 0.8;
+}
+input[type='tel'],
+input[type='email'],
+input[type='url'] {
+  direction: ltr;
+}
+[dir='rtl'] input[type='tel'],
+[dir='rtl'] input[type='email'],
+[dir='rtl'] input[type='url'] {
+  text-align: right;
+}

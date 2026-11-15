@@ -1,0 +1,133 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { getService } from '@/data/services';
+import { serviceMenu } from '@/data/navigation';
+import { num } from '@/i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  id: string;
+}
+const { lang, id } = Astro.props;
+const t = useTranslations(lang);
+const items = serviceMenu.map((slug) => getService(slug)!);
+const primary = items.filter((s) => s.tier === 'primary');
+const supporting = items.filter((s) => s.tier === 'supporting');
+const current = Astro.url.pathname;
+---
+<div class="mega" id={id} data-mega hidden>
+  <div class="container mega__inner">
+    <ul class="mega__primary" role="list">
+      {primary.map((s, i) => (
+        <li>
+          <a href={href(lang, s.slug)} class="mega__big" aria-current={current === href(lang, s.slug) ? 'page' : undefined}>
+            <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+            <span class="mega__name">{s.name[lang]}</span>
+            <span class="mega__blurb">{s.menuBlurb[lang]}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <ul class="mega__supporting" role="list">
+      {supporting.map((s) => (
+        <li>
+          <a href={href(lang, s.slug)} class="mega__small" aria-current={current === href(lang, s.slug) ? 'page' : undefined}>
+            <span class="mega__name-sm">{s.name[lang]}</span>
+            <span class="mega__blurb">{s.menuBlurb[lang]}</span>
+          </a>
+        </li>
+      ))}
+      <li class="mega__all">
+        <a href={href(lang, 'services')} class="link-arrow">
+          {t.allServices}
+          <Icon name="arrow" />
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .mega {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    animation: mega-in 0.45s var(--ease);
+  }
+  @keyframes mega-in {
+    from {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mega {
+      animation: none;
+    }
+  }
+  .mega__inner {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--col-gap);
+    padding-block: 3rem 3.5rem;
+  }
+  .mega__primary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--col-gap);
+  }
+  .mega__big {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    transition: border-color 0.3s;
+  }
+  .mega__big:hover,
+  .mega__big[aria-current] {
+    border-color: var(--green);
+  }
+  .mega__name {
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.3;
+    transition: color 0.25s;
+  }
+  .mega__big:hover .mega__name {
+    color: var(--green);
+  }
+  .mega__blurb {
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+    line-height: 1.7;
+  }
+  .mega__supporting {
+    display: grid;
+    gap: 1.1rem;
+    padding-inline-start: var(--col-gap);
+    border-inline-start: 1px solid var(--line);
+  }
+  .mega__small {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .mega__name-sm {
+    font-weight: 500;
+    transition: color 0.25s;
+  }
+  .mega__small:hover .mega__name-sm {
+    color: var(--green);
+  }
+  .mega__all {
+    padding-top: 0.5rem;
+  }
+</style>

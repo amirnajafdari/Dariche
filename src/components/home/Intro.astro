@@ -1,0 +1,38 @@
+---
+import type { Lang } from '@/i18n';
+import { home } from '@/data/pages';
+import Headline from '../Headline.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+<section class="intro section" aria-labelledby="intro-title">
+  <div class="container intro__grid">
+    <Headline lines={home.intro.title[lang]} id="intro-title" class="intro__title" />
+    <p class="intro__text lead" data-reveal style="--delay:.15s">{home.intro.text[lang]}</p>
+  </div>
+</section>
+
+<style>
+  .intro {
+    padding-top: 0;
+  }
+  .intro__grid {
+    display: grid;
+    gap: var(--stack-lg);
+  }
+  @media (min-width: 960px) {
+    .intro__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .intro__title {
+      grid-column: 2 / span 9;
+    }
+    .intro__text {
+      grid-column: 6 / span 6;
+    }
+  }
+</style>

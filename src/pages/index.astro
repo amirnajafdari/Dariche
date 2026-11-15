@@ -1,0 +1,24 @@
+---
+// Root: Persian is the primary language. Vercel also redirects / → /fa/ at the edge (vercel.json);
+// this page is the fallback for other hosts.
+import { site } from '@/data/site';
+---
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.name.fa} · {site.name.en}</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`${site.url}/fa/`} />
+    <link rel="alternate" hreflang="fa" href={`${site.url}/fa/`} />
+    <link rel="alternate" hreflang="en-GB" href={`${site.url}/en/`} />
+    <link rel="alternate" hreflang="x-default" href={`${site.url}/${site.xDefaultLang}/`} />
+    <meta http-equiv="refresh" content="0; url=/fa/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body style="font-family: system-ui, sans-serif; padding: 3rem; background:#fff; color:#1d1f22">
+    <p><a href="/fa/">دریچه — فارسی</a></p>
+    <p><a href="/en/" lang="en-GB" dir="ltr">Daricheh — English</a></p>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+---
+import { href, num, type Lang } from '@/i18n';
+import type { Service } from '@/data/services';
+import Icon from './Icon.astro';
+
+/** One dominant service row in the homepage's editorial services list. */
+interface Props {
+  service: Service;
+  index: number;
+  lang: Lang;
+}
+const { service, index, lang } = Astro.props;
+---
+<article class="svc" data-reveal style={`--delay:${index * 0.08}s`}>
+  <span class="svc__index index">{num(lang, String(index + 1).padStart(2, '0'))}</span>
+  <h3 class="svc__name">
+    <a href={href(lang, service.slug)} class="svc__link">{service.name[lang]}</a>
+  </h3>
+  <p class="svc__blurb">{service.homeBlurb[lang]}</p>
+  <span class="svc__go" aria-hidden="true"><Icon name="arrow" /></span>
+</article>
+
+<style>
+  .svc {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 0.75rem 1rem;
+    padding-block: clamp(2rem, 1.4rem + 2vw, 3.25rem);
+    border-top: 1px solid var(--line);
+    transition: border-color 0.4s;
+  }
+  .svc:last-of-type {
+    border-bottom: 1px solid var(--line);
+  }
+  .svc__index {
+    font-size: 1.1rem;
+    padding-top: 0.5rem;
+  }
+  .svc__name {
+    font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.9rem);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: var(--tracking-display);
+    transition: color 0.35s, translate 0.6s var(--ease);
+  }
+  .svc__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .svc__blurb {
+    grid-column: 2;
+    color: var(--ink-2);
+    max-width: 30rem;
+  }
+  .svc__go {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .svc {
+      grid-template-columns: 5rem minmax(0, 1.2fr) minmax(0, 1fr) 3rem;
+      align-items: center;
+      column-gap: var(--col-gap);
+    }
+    .svc__blurb {
+      grid-column: 3;
+    }
+    .svc__go {
+      display: grid;
+      place-items: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      transition: background-color 0.35s, border-color 0.35s, color 0.35s;
+    }
+  }
+  .svc:hover .svc__name {
+    color: var(--green);
+    translate: calc(var(--shift, 0.5rem)) 0;
+  }
+  :global([dir='rtl']) .svc:hover .svc__name {
+    --shift: -0.5rem;
+  }
+  .svc:hover {
+    border-top-color: var(--green);
+  }
+  .svc:hover .svc__go {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .svc:has(.svc__link:focus-visible) {
+    outline: 2px solid var(--green);
+    outline-offset: 4px;
+  }
+  .svc__link:focus-visible {
+    outline: none;
+  }
+</style>

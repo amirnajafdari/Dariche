@@ -1,0 +1,20 @@
+---
+import { rich } from '@/lib/text';
+
+// Renders headline lines with *bold* emphasis. `reveal` makes lines rise in on scroll.
+interface Props {
+  lines: string[] | string;
+  as?: 'h1' | 'h2' | 'h3' | 'p';
+  size?: 'display' | 'h2';
+  reveal?: boolean;
+  class?: string;
+  id?: string;
+}
+const { lines, as: Tag = 'h2', size = 'h2', reveal = true, class: className, id } = Astro.props;
+const list = Array.isArray(lines) ? lines : [lines];
+---
+<Tag id={id} class:list={[size, { 'reveal-lines': reveal }, className]} data-reveal-lines={reveal ? '' : undefined}>
+  {list.map((line) => (
+    <span class="line"><span set:html={rich(line)} /></span>
+  ))}
+</Tag>

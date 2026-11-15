@@ -1,0 +1,358 @@
+---
+import { href, languages, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { caseStudies, type CaseStudy } from '@/data/caseStudies';
+import { getService } from '@/data/services';
+import { getTestimonial } from '@/data/testimonials';
+import { site, visible } from '@/data/site';
+import { workPage } from '@/data/pages';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ProjectVisual from '@/components/ProjectVisual.astro';
+import Testimonial from '@/components/Testimonial.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+import Icon from '@/components/Icon.astro';
+
+export function getStaticPaths() {
+  const list = visible(caseStudies);
+  return languages.flatMap((lang) =>
+    list.map((cs, i) => ({ params: { lang, slug: cs.slug }, props: { cs, next: list[(i + 1) % list.length] } })),
+  );
+}
+
+const lang = Astro.params.lang as Lang;
+const { cs, next } = Astro.props as { cs: CaseStudy; next: CaseStudy };
+const t = useTranslations(lang);
+const L = workPage.labels;
+const testimonial = getTestimonial(cs.testimonialId);
+const showTestimonial = testimonial && (site.showSampleContent || !testimonial.sample);
+const results = cs.results[lang];
+const crumbs = [
+  { name: lang === 'fa' ? 'نمونه‌کارها' : 'Work', path: href(lang, 'work') },
+  { name: cs.client[lang], path: href(lang, `work/${cs.slug}`) },
+];
+const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`;
+---
+<BaseLayout
+  lang={lang}
+  path={`work/${cs.slug}`}
+  title={title}
+  description={cs.summary[lang]}
+  breadcrumbs={crumbs}
+  image={cs.cover?.src}
+  noindex={cs.sample}
+>
+  <article>
+    <header class="cs-hero">
+      <div class="container">
+        <Breadcrumbs lang={lang} items={crumbs} />
+        <div class="cs-hero__grid">
+          <div class="cs-hero__main">
+            <p class="eyebrow" data-reveal="fade">
+              {cs.industry[lang]} · {cs.location[lang]}
+              {cs.sample && <span class="sample-tag" title={t.sampleNote}>{t.sample}</span>}
+            </p>
+            <h1 class="display" data-reveal>{cs.client[lang]}</h1>
+            <p class="lead" data-reveal>{cs.summary[lang]}</p>
+          </div>
+          <dl class="cs-meta" data-reveal>
+            <div><dt>{t.client}</dt><dd>{cs.client[lang]}</dd></div>
+            <div><dt>{t.industry}</dt><dd>{cs.industry[lang]}</dd></div>
+            <div><dt>{t.location}</dt><dd>{cs.location[lang]}</dd></div>
+            <div>
+              <dt>{t.servicesUsed}</dt>
+              <dd>
+                {cs.services.map((s, i) => (
+                  <>{i > 0 && ' / '}<a href={href(lang, s)} class="link">{getService(s)?.name[lang]}</a></>
+                ))}
+              </dd>
+            </div>
+            {cs.url && (
+              <div><dt>{t.visitSite}</dt><dd><a href={cs.url} class="link" target="_blank" rel="noopener"><span class="ltr">{new URL(cs.url).hostname}</span></a></dd></div>
+            )}
+          </dl>
+        </div>
+      </div>
+      <div class="container cs-cover">
+        <div class="window">
+          <div class="window__pane cs-cover__pane" data-reveal="mask">
+            <ProjectVisual cs={cs} lang={lang} eager sizes="100vw" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section cs-block" aria-labelledby="cs-challenge">
+      <div class="container cs-block__grid">
+        <h2 class="eyebrow" id="cs-challenge">{L.challenge[lang]}</h2>
+        <p class="cs-block__big" data-reveal>{cs.challenge[lang]}</p>
+      </div>
+    </section>
+
+    <section class="section--sm cs-block" aria-labelledby="cs-approach">
+      <div class="container cs-block__grid">
+        <h2 class="eyebrow" id="cs-approach">{L.approach[lang]}</h2>
+        <ul class="cs-list" role="list">
+          {cs.approach[lang].map((a) => <li data-reveal>{a}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- design: desktop + mobile, side by side -->
+    <section class="section cs-shots" aria-labelledby="cs-design">
+      <div class="container">
+        <h2 class="eyebrow" id="cs-design">{L.design[lang]}</h2>
+        <div class="cs-shots__grid">
+          <div class="cs-shots__desktop window">
+            <div class="window__pane" data-reveal="mask"><ProjectVisual cs={cs} lang={lang} image={cs.gallery?.[0] ?? cs.cover} /></div>
+          </div>
+          <div class="cs-shots__phone" data-reveal>
+            <div class="cs-phone"><ProjectVisual cs={cs} lang={lang} device="mobile" /></div>
+          </div>
+        </div>
+        {cs.gallery && cs.gallery.length > 1 && (
+          <div class="cs-gallery">
+            {cs.gallery.slice(1).map((img) => (
+              <div class="window__pane" data-reveal="mask"><ProjectVisual cs={cs} lang={lang} image={img} /></div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+
+    {cs.seoWork && (
+      <section class="section--sm cs-block" aria-labelledby="cs-seo">
+        <div class="container cs-block__grid">
+          <h2 class="eyebrow" id="cs-seo">{L.seo[lang]}</h2>
+          <ul class="cs-list" role="list">
+            {cs.seoWork[lang].map((a) => <li data-reveal>{a}</li>)}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {(results.length > 0 || cs.sample) && (
+      <section class="section cs-block" aria-labelledby="cs-results">
+        <div class="container cs-block__grid">
+          <h2 class="eyebrow" id="cs-results">{L.results[lang]}</h2>
+          {results.length > 0 ? (
+            <dl class="cs-results">
+              {results.map((r) => (
+                <div data-reveal><dt>{r.label}</dt><dd>{r.value}</dd></div>
+              ))}
+            </dl>
+          ) : (
+            <p class="cs-pending" data-reveal>{L.resultsPending[lang]}</p>
+          )}
+        </div>
+      </section>
+    )}
+
+    {showTestimonial && testimonial && (
+      <section class="section cs-quote">
+        <div class="container cs-block__grid">
+          <span></span>
+          <Testimonial item={testimonial} lang={lang} size="lg" />
+        </div>
+      </section>
+    )}
+  </article>
+
+  {next && next.slug !== cs.slug && (
+    <nav class="cs-next" aria-label={t.nextProject}>
+      <div class="container">
+        <a href={href(lang, `work/${next.slug}`)} class="cs-next__link">
+          <span class="eyebrow">{t.nextProject}</span>
+          <span class="cs-next__name">{next.client[lang]}</span>
+          <Icon name="arrow" class="cs-next__arrow" />
+        </a>
+      </div>
+    </nav>
+  )}
+
+  <FinalCTA lang={lang} />
+</BaseLayout>
+
+<style>
+  .cs-hero {
+    padding-top: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .cs-hero__grid {
+    display: grid;
+    gap: var(--stack-lg);
+    margin-top: clamp(3rem, 1.5rem + 5vw, 7rem);
+  }
+  .cs-hero__main {
+    display: grid;
+    gap: var(--stack-md);
+  }
+  .cs-hero__main .sample-tag {
+    margin-inline-start: 0.75rem;
+  }
+  .cs-meta {
+    display: grid;
+    align-content: end;
+  }
+  .cs-meta div {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 1rem;
+    padding-block: 0.85rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-small);
+  }
+  .cs-meta dt {
+    color: var(--ink-3);
+  }
+  @media (min-width: 960px) {
+    .cs-hero__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .cs-hero__main {
+      grid-column: 1 / span 7;
+    }
+    .cs-meta {
+      grid-column: 9 / -1;
+    }
+  }
+  .cs-cover {
+    margin-top: var(--section-sm);
+  }
+  .cs-cover__pane {
+    aspect-ratio: 16 / 9;
+  }
+  @media (max-width: 699px) {
+    .cs-cover__pane {
+      aspect-ratio: 4 / 3.4;
+    }
+  }
+
+  .cs-block__grid {
+    display: grid;
+    gap: var(--stack-md);
+  }
+  @media (min-width: 960px) {
+    .cs-block__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .cs-block__grid > :first-child {
+      grid-column: 1 / span 3;
+      padding-top: 0.6rem;
+    }
+    .cs-block__grid > :last-child {
+      grid-column: 5 / span 7;
+    }
+  }
+  .cs-block__big {
+    font-size: clamp(1.4rem, 1.1rem + 1.3vw, 2.2rem);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  :global(:root[lang='en-GB']) .cs-block__big {
+    line-height: 1.35;
+  }
+  .cs-list {
+    display: grid;
+  }
+  .cs-list li {
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--line);
+    font-size: 1.1rem;
+  }
+  .cs-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--col-gap);
+  }
+  .cs-results dd {
+    font-size: clamp(2.4rem, 2rem + 2vw, 4rem);
+    font-weight: 200;
+    color: var(--green);
+    order: -1;
+  }
+  .cs-results div {
+    display: flex;
+    flex-direction: column;
+  }
+  .cs-pending {
+    padding: 2rem;
+    border: 1px dashed var(--line-strong);
+    color: var(--ink-3);
+  }
+
+  .cs-shots__grid {
+    display: grid;
+    gap: var(--stack-lg);
+    margin-top: var(--stack-lg);
+    align-items: end;
+  }
+  .cs-shots__desktop .window__pane {
+    aspect-ratio: 16 / 10;
+  }
+  .cs-shots__phone {
+    display: flex;
+    justify-content: center;
+  }
+  .cs-phone {
+    width: min(18rem, 70vw);
+    aspect-ratio: 9 / 18.5;
+    border: 1px solid var(--ink);
+    border-radius: 2rem;
+    padding: 0.6rem;
+    background: var(--paper);
+  }
+  .cs-phone > :global(*) {
+    border-radius: 1.5rem;
+  }
+  @media (min-width: 960px) {
+    .cs-shots__grid {
+      grid-template-columns: 2fr 1fr;
+      column-gap: var(--col-gap);
+    }
+    .cs-shots__phone {
+      margin-bottom: -4rem;
+    }
+  }
+  .cs-gallery {
+    display: grid;
+    gap: var(--col-gap);
+    margin-top: var(--stack-xl);
+  }
+  @media (min-width: 800px) {
+    .cs-gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .cs-next {
+    border-top: 1px solid var(--line);
+  }
+  .cs-next__link {
+    display: grid;
+    gap: 1rem;
+    padding-block: var(--section-sm);
+  }
+  .cs-next__name {
+    font-size: var(--fs-display);
+    font-weight: 300;
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    transition: color 0.3s;
+  }
+  .cs-next__link:hover .cs-next__name {
+    color: var(--green);
+  }
+  .cs-next__arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    transition: translate 0.5s var(--ease);
+  }
+  .cs-next__link:hover .cs-next__arrow {
+    translate: 0.5rem 0;
+  }
+  :global([dir='rtl']) .cs-next__link:hover .cs-next__arrow {
+    translate: -0.5rem 0;
+  }
+</style>

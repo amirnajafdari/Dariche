@@ -1,0 +1,43 @@
+---
+import Headline from './Headline.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string[] | string;
+  lead?: string;
+  id?: string;
+  size?: 'display' | 'h2';
+  layout?: 'stack' | 'split';
+  class?: string;
+}
+const { eyebrow, title, lead, id, size = 'h2', layout = 'stack', class: className } = Astro.props;
+---
+<header class:list={['section-heading', `section-heading--${layout}`, className]}>
+  {eyebrow && <p class="eyebrow" data-reveal="fade">{eyebrow}</p>}
+  <Headline lines={title} size={size} id={id} />
+  {lead && <p class="lead" data-reveal style="--delay:.15s">{lead}</p>}
+  <slot />
+</header>
+
+<style>
+  .section-heading {
+    display: grid;
+    gap: var(--stack-md);
+    margin-bottom: var(--stack-xl);
+  }
+  @media (min-width: 960px) {
+    .section-heading--split {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: end;
+    }
+    .section-heading--split > :global(.eyebrow),
+    .section-heading--split > :global(h2) {
+      grid-column: 1 / span 7;
+    }
+    .section-heading--split > :global(.lead) {
+      grid-column: 9 / -1;
+      grid-row: 2;
+    }
+  }
+</style>

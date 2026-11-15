@@ -1,0 +1,295 @@
+---
+import type { Lang } from '@/i18n';
+import { form } from '@/data/pages';
+import { site } from '@/data/site';
+import Icon from './Icon.astro';
+
+/**
+ * Callback / contact form.
+ * - With site.formEndpoint set: POSTs JSON there.
+ * - Without it: opens the visitor's email app with everything pre-filled.
+ * Without JavaScript the form still submits to the endpoint (or mailto) natively.
+ */
+interface Props {
+  lang: Lang;
+  /** Pre-select a service option (by index in form.helpOptions) */
+  preselect?: number;
+}
+const { lang, preselect } = Astro.props;
+const action = site.formEndpoint || `mailto:${site.contact.email}`;
+const method = site.formEndpoint ? 'post' : 'get';
+---
+<form
+  class="cform"
+  style="position: relative"
+  action={action}
+  method={method}
+  novalidate
+  data-contact-form
+  data-endpoint={site.formEndpoint}
+  data-email={site.contact.email}
+  data-msg-required={form.required[lang]}
+  data-msg-email={form.invalidEmail[lang]}
+  data-msg-sending={form.sending[lang]}
+  data-lang={lang}
+>
+  <div class="cform__grid">
+    <div class="field">
+      <label for="cf-name">{form.name[lang]}</label>
+      <input class="input" id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-err" />
+      <p class="field-error" id="cf-name-err" hidden></p>
+    </div>
+    <div class="field">
+      <label for="cf-business">{form.business[lang]}</label>
+      <input class="input" id="cf-business" name="business" type="text" autocomplete="organization" required aria-describedby="cf-business-err" />
+      <p class="field-error" id="cf-business-err" hidden></p>
+    </div>
+    <div class="field">
+      <label for="cf-phone">{form.phone[lang]}</label>
+      <input class="input" id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="cf-phone-err" />
+      <p class="field-error" id="cf-phone-err" hidden></p>
+    </div>
+    <div class="field">
+      <label for="cf-email">{form.email[lang]}</label>
+      <input class="input" id="cf-email" name="email" type="email" autocomplete="email" required aria-describedby="cf-email-err" />
+      <p class="field-error" id="cf-email-err" hidden></p>
+    </div>
+    <div class="field field--full">
+      <label for="cf-website">{form.website[lang]} <span class="opt">({form.optional[lang]})</span></label>
+      <input class="input" id="cf-website" name="website" type="url" inputmode="url" autocomplete="url" placeholder="https://" />
+    </div>
+
+    <fieldset class="field field--full cform__help">
+      <legend>{form.help[lang]}</legend>
+      <div class="chips">
+        {form.helpOptions[lang].map((opt, i) => (
+          <label class="chip">
+            <input type="checkbox" name="help" value={opt} checked={preselect === i} />
+            <span>{opt}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <div class="field field--full">
+      <label for="cf-message">{form.message[lang]}</label>
+      <textarea class="input" id="cf-message" name="message" rows="5" placeholder={form.messagePlaceholder[lang]}></textarea>
+    </div>
+
+    {/* honeypot — hidden from people, tempting to bots */}
+    <div class="cform__hp" aria-hidden="true">
+      <label>Leave empty <input type="text" name="company_url" tabindex="-1" autocomplete="off" /></label>
+    </div>
+  </div>
+
+  <div class="cform__foot">
+    <button type="submit" class="btn btn-primary" data-submit>
+      <span data-submit-label>{form.submit[lang]}</span>
+      <Icon name="arrow" />
+    </button>
+    <p class="small muted">{form.privacy[lang]}</p>
+  </div>
+
+  <div class="cform__status" role="status" aria-live="polite" tabindex="-1" data-status>
+    <p class="cform__success" hidden data-success>{form.success[lang]}</p>
+    <p class="cform__error" hidden data-error>{form.error[lang]}</p>
+  </div>
+</form>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-contact-form]');
+
+  forms.forEach((formEl) => {
+    const d = formEl.dataset;
+    const status = formEl.querySelector<HTMLElement>('[data-status]')!;
+    const success = formEl.querySelector<HTMLElement>('[data-success]')!;
+    const errorMsg = formEl.querySelector<HTMLElement>('[data-error]')!;
+    const submitLabel = formEl.querySelector<HTMLElement>('[data-submit-label]')!;
+    const submitBtn = formEl.querySelector<HTMLButtonElement>('[data-submit]')!;
+
+    // Pre-select a package mention from ?package=… (links from pricing cards)
+    const pkg = new URLSearchParams(location.search).get('package');
+    const message = formEl.querySelector<HTMLTextAreaElement>('#cf-message');
+    if (pkg && message && !message.value) message.dataset.package = pkg;
+
+    const setError = (input: HTMLInputElement, msg: string | null) => {
+      const err = formEl.querySelector<HTMLElement>(`#${input.id}-err`);
+      input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      if (err) {
+        err.textContent = msg ?? '';
+        err.hidden = !msg;
+      }
+    };
+
+    const validate = () => {
+      let firstInvalid: HTMLInputElement | null = null;
+      formEl.querySelectorAll<HTMLInputElement>('input[required]').forEach((input) => {
+        let msg: string | null = null;
+        if (!input.value.trim()) msg = d.msgRequired!;
+        else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) msg = d.msgEmail!;
+        setError(input, msg);
+        if (msg && !firstInvalid) firstInvalid = input;
+      });
+      (firstInvalid as HTMLInputElement | null)?.focus();
+      return !firstInvalid;
+    };
+
+    formEl.querySelectorAll<HTMLInputElement>('input[required]').forEach((input) =>
+      input.addEventListener('blur', () => {
+        if (input.getAttribute('aria-invalid') === 'true') validate();
+      }),
+    );
+
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      success.hidden = true;
+      errorMsg.hidden = true;
+      if (!validate()) return;
+
+      const data = new FormData(formEl);
+      if (data.get('company_url')) return; // bot
+      const payload = {
+        name: String(data.get('name') ?? ''),
+        business: String(data.get('business') ?? ''),
+        phone: String(data.get('phone') ?? ''),
+        email: String(data.get('email') ?? ''),
+        website: String(data.get('website') ?? ''),
+        help: data.getAll('help').map(String),
+        message: String(data.get('message') ?? ''),
+        package: message?.dataset.package ?? '',
+        language: d.lang,
+        page: location.pathname,
+      };
+
+      const done = () => {
+        formEl.querySelector('.cform__grid')?.setAttribute('hidden', '');
+        formEl.querySelector('.cform__foot')?.setAttribute('hidden', '');
+        success.hidden = false;
+        status.focus();
+      };
+
+      if (!d.endpoint) {
+        // No endpoint configured yet: hand over to the visitor's email app.
+        const body = Object.entries(payload)
+          .filter(([, v]) => (Array.isArray(v) ? v.length : v))
+          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`)
+          .join('\n');
+        location.href = `mailto:${d.email}?subject=${encodeURIComponent(`Daricheh — ${payload.business || payload.name}`)}&body=${encodeURIComponent(body)}`;
+        done();
+        return;
+      }
+
+      const original = submitLabel.textContent;
+      submitBtn.disabled = true;
+      submitLabel.textContent = d.msgSending!;
+      try {
+        const res = await fetch(d.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        done();
+      } catch {
+        errorMsg.hidden = false;
+        status.focus();
+      } finally {
+        submitBtn.disabled = false;
+        submitLabel.textContent = original;
+      }
+    });
+  });
+</script>
+
+<style>
+  .cform {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .cform__grid {
+    display: grid;
+    gap: 1.75rem var(--col-gap);
+  }
+  @media (min-width: 700px) {
+    .cform__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .field--full {
+      grid-column: 1 / -1;
+    }
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .cform__help legend {
+    margin-bottom: 0.9rem;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .chip {
+    position: relative;
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    font-size: var(--fs-small);
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+  }
+  .chip:hover span {
+    border-color: var(--ink-3);
+  }
+  .chip input:checked + span {
+    background: var(--green-tint);
+    border-color: var(--green);
+    color: var(--green-deep);
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+  /* no offsets: a negative left would create huge scroll overflow on RTL pages */
+  .cform__hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .cform__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .cform__status:focus {
+    outline: none;
+  }
+  .cform__success {
+    font-size: var(--fs-lead);
+    font-weight: 300;
+    padding: 2rem 0;
+    border-top: 2px solid var(--green);
+  }
+  .cform__error {
+    color: var(--red);
+  }
+  [hidden] {
+    display: none !important;
+  }
+</style>

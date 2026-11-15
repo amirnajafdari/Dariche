@@ -1,0 +1,13 @@
+---
+import { languages, type Lang } from '@/i18n';
+import { services, type Service } from '@/data/services';
+import ServicePage from '@/components/service/ServicePage.astro';
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) => services.map((service) => ({ params: { lang, service: service.slug }, props: { service } })));
+}
+
+const lang = Astro.params.lang as Lang;
+const { service } = Astro.props as { service: Service };
+---
+<ServicePage lang={lang} service={service} />

@@ -1,0 +1,55 @@
+---
+import { formatDate, href, languages, type Lang } from '@/i18n';
+import { legal } from '@/data/pages';
+import { site } from '@/data/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) => (Object.keys(legal) as (keyof typeof legal)[]).map((slug) => ({ params: { lang, slug } })));
+}
+
+const lang = Astro.params.lang as Lang;
+const slug = Astro.params.slug as keyof typeof legal;
+const doc = legal[slug];
+const crumbs = [{ name: doc.title[lang], path: href(lang, `legal/${slug}`) }];
+const updated = lang === 'fa' ? 'آخرین به‌روزرسانی' : 'Last updated';
+---
+<BaseLayout lang={lang} path={`legal/${slug}`} title={`${doc.title[lang]} | ${site.name[lang]}`} description={doc.body[lang][0].p} breadcrumbs={crumbs}>
+  <article class="container legal">
+    <Breadcrumbs lang={lang} items={crumbs} />
+    <h1 class="h2 legal__title">{doc.title[lang]}</h1>
+    <p class="small muted">{updated}: <time datetime={doc.updated}>{formatDate(lang, doc.updated)}</time></p>
+    <div class="legal__body">
+      {doc.body[lang].map((s) => (
+        <section>
+          <h2 class="h3">{s.h}</h2>
+          <p>{s.p}</p>
+        </section>
+      ))}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-block: clamp(2rem, 1rem + 3vw, 4rem) var(--section);
+  }
+  .legal__title {
+    margin-top: var(--stack-xl);
+    margin-bottom: 1rem;
+  }
+  .legal__body {
+    display: grid;
+    gap: var(--stack-lg);
+    max-width: 40rem;
+    margin-top: var(--stack-xl);
+  }
+  .legal__body section {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .legal__body p {
+    color: var(--ink-2);
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Trail after Home. The last item is the current page. */
+  items: { name: string; path: string }[];
+}
+const { lang, items } = Astro.props;
+const t = useTranslations(lang);
+const trail = [{ name: t.breadcrumbHome, path: href(lang) }, ...items];
+const label = lang === 'fa' ? 'مسیر صفحه' : 'Breadcrumb';
+---
+<nav class="crumbs" aria-label={label}>
+  <ol role="list">
+    {trail.map((c, i) => (
+      <li>
+        {i < trail.length - 1 ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    color: var(--line-strong);
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    transition: color 0.2s;
+  }
+  .crumbs a:hover {
+    color: var(--green);
+  }
+  .crumbs [aria-current] {
+    color: var(--ink-2);
+  }
+</style>

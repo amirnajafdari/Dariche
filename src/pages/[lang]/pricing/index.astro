@@ -1,0 +1,125 @@
+---
+import { getStaticLangPaths, href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { packages, addOns } from '@/data/packages';
+import { pricingFaqs } from '@/data/faqs';
+import { pricingPage } from '@/data/pages';
+import { pageSeo } from '@/data/seo';
+import { faqSchema } from '@/lib/schema';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FaqSection from '@/components/FaqSection.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+
+export const getStaticPaths = getStaticLangPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const crumbs = [{ name: lang === 'fa' ? 'تعرفه‌ها' : 'Pricing', path: href(lang, 'pricing') }];
+const faqs = pricingFaqs[lang];
+---
+<BaseLayout
+  lang={lang}
+  path="pricing"
+  title={pageSeo.pricing.title[lang]}
+  description={pageSeo.pricing.description[lang]}
+  breadcrumbs={crumbs}
+  schema={[faqSchema(faqs)]}
+>
+  <PageHero lang={lang} title={pricingPage.title[lang]} lead={pricingPage.lead[lang]} variant="split" breadcrumbs={crumbs} />
+
+  <section class="section pricing-page" aria-label={crumbs[0].name}>
+    <div class="container">
+      <div class="pricing-page__grid">
+        {packages.map((p) => <PricingCard pkg={p} lang={lang} expandable headingLevel="h2" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section addons" aria-labelledby="addons-title">
+    <div class="container addons__grid">
+      <div class="addons__head">
+        <h2 class="h2" id="addons-title" data-reveal>{pricingPage.addOnsTitle[lang]}</h2>
+        <p class="body" data-reveal>{pricingPage.addOnsLead[lang]}</p>
+      </div>
+      <dl class="addons__list">
+        {addOns.map((a) => (
+          <div class="addon" data-reveal>
+            <dt>{a.name[lang]}</dt>
+            <dd class="addon__text">{a.text[lang]}</dd>
+            <dd class="addon__price">{a.price[lang]}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <FaqSection lang={lang} items={faqs} />
+  <FinalCTA lang={lang} />
+</BaseLayout>
+
+<style>
+  .pricing-page {
+    padding-top: 0;
+  }
+  .pricing-page__grid {
+    display: grid;
+    gap: var(--stack-lg) var(--col-gap);
+  }
+  @media (min-width: 900px) {
+    .pricing-page__grid {
+      grid-template-columns: repeat(3, 1fr);
+      align-items: start;
+    }
+  }
+  @media (max-width: 899px) {
+    .pricing-page__grid > :global(.plan--featured) {
+      order: -1;
+    }
+  }
+  .addons__grid {
+    display: grid;
+    gap: var(--stack-lg);
+  }
+  .addons__head {
+    display: grid;
+    gap: var(--stack-md);
+    align-content: start;
+  }
+  @media (min-width: 960px) {
+    .addons__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .addons__head {
+      grid-column: 1 / span 4;
+    }
+    .addons__list {
+      grid-column: 6 / -1;
+    }
+  }
+  .addon {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 2rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .addon dt {
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  .addon__text {
+    grid-column: 1;
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+  }
+  .addon__price {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    color: var(--green);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+</style>

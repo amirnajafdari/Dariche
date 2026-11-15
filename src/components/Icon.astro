@@ -1,0 +1,40 @@
+---
+// Minimal line icons. Decorative by default (aria-hidden); pass a label to expose one.
+interface Props {
+  name: 'arrow' | 'whatsapp' | 'phone' | 'mail' | 'plus' | 'menu' | 'close' | 'instagram' | 'linkedin' | 'external';
+  class?: string;
+  label?: string;
+}
+const { name, class: className, label } = Astro.props;
+const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
+---
+{name === 'arrow' && (
+  <svg class:list={['icon', 'arrow', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" {...a11y}><path d="M4 12h16M14 6l6 6-6 6" /></svg>
+)}
+{name === 'external' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" {...a11y}><path d="M7 17 17 7M8 7h9v9" /></svg>
+)}
+{name === 'whatsapp' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="currentColor" {...a11y}><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.98L2 22l5.16-1.5A9.93 9.93 0 1 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.07.89.9-2.98-.2-.31a8.2 8.2 0 1 1 6.87 3.73Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.17.25-.64.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.32-2.9c-.25-.43.25-.4.72-1.33.08-.16.04-.3-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47a.9.9 0 0 0-.65.3 2.74 2.74 0 0 0-.86 2.04 4.76 4.76 0 0 0 1 2.53 10.9 10.9 0 0 0 4.18 3.7c1.56.67 2.17.73 2.95.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.15-1.17-.06-.11-.22-.17-.47-.29Z"/></svg>
+)}
+{name === 'phone' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" {...a11y}><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" /></svg>
+)}
+{name === 'mail' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" {...a11y}><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="m3.5 6 8.5 7 8.5-7" /></svg>
+)}
+{name === 'plus' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" {...a11y}><path d="M12 4v16M4 12h16" /></svg>
+)}
+{name === 'menu' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" {...a11y}><path d="M3 8h18M3 16h12" /></svg>
+)}
+{name === 'close' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" {...a11y}><path d="m5 5 14 14M19 5 5 19" /></svg>
+)}
+{name === 'instagram' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" {...a11y}><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" /></svg>
+)}
+{name === 'linkedin' && (
+  <svg class:list={['icon', className]} viewBox="0 0 24 24" fill="currentColor" {...a11y}><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.05c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-4.93c0-1.18-.02-2.7-1.64-2.7-1.65 0-1.9 1.28-1.9 2.6V21h-4V9.75Z"/></svg>
+)}

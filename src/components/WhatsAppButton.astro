@@ -1,0 +1,116 @@
+---
+import type { Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { whatsappUrl } from '@/data/site';
+import Icon from './Icon.astro';
+
+/**
+ * variant:
+ *  - primary   green button (final CTA)
+ *  - secondary outlined button
+ *  - quiet     restrained text link with icon (hero)
+ *  - floating  fixed corner button — rendered once by the layout
+ */
+interface Props {
+  lang: Lang;
+  variant?: 'primary' | 'secondary' | 'quiet' | 'floating';
+  label?: string;
+  message?: string;
+  class?: string;
+}
+const { lang, variant = 'quiet', label, message, class: className } = Astro.props;
+const t = useTranslations(lang);
+const url = whatsappUrl(lang, message);
+const common = { href: url, target: '_blank', rel: 'noopener' };
+---
+{variant === 'floating' ? (
+  <a {...common} class:list={['wa-float', className]} aria-label={t.whatsappFloating} data-wa-float>
+    <Icon name="whatsapp" class="wa-float__icon" />
+    <span class="wa-float__label" aria-hidden="true">{t.whatsappFloating}</span>
+  </a>
+) : variant === 'quiet' ? (
+  <a {...common} class:list={['wa-quiet', className]}>
+    <Icon name="whatsapp" />
+    <span>{label ?? t.whatsappMessage}</span>
+  </a>
+) : (
+  <a {...common} class:list={['btn', variant === 'primary' ? 'btn-primary' : 'btn-secondary', className]}>
+    <Icon name="whatsapp" />
+    <span>{label ?? t.whatsapp}</span>
+  </a>
+)}
+
+<style>
+  .wa-quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.75rem;
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+    transition: color 0.25s;
+  }
+  .wa-quiet :global(.icon) {
+    color: var(--green);
+  }
+  .wa-quiet:hover {
+    color: var(--ink);
+  }
+  .wa-quiet span {
+    border-bottom: 1px solid var(--line-strong);
+    transition: border-color 0.25s;
+  }
+  .wa-quiet:hover span {
+    border-color: var(--red);
+  }
+
+  .wa-float {
+    position: fixed;
+    z-index: 40;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 3.25rem;
+    min-width: 3.25rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: var(--green);
+    color: #fff;
+    box-shadow: 0 6px 20px -8px rgb(29 31 34 / 0.35);
+    transition: opacity 0.4s, translate 0.4s var(--ease), background-color 0.3s;
+  }
+  .wa-float:hover {
+    background: var(--green-deep);
+  }
+  .wa-float__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+  /* the label is a quiet extra on wide screens only */
+  .wa-float__label {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  @media (max-width: 899px) {
+    .wa-float {
+      padding: 0;
+      justify-content: center;
+    }
+    .wa-float__label {
+      display: none;
+    }
+  }
+  .wa-float.is-hidden,
+  :global(.js) .wa-float:not(.is-ready) {
+    opacity: 0;
+    visibility: hidden;
+    translate: 0 1rem;
+    pointer-events: none;
+  }
+  .wa-float {
+    transition: opacity 0.4s, translate 0.4s var(--ease), visibility 0.4s, background-color 0.3s;
+  }
+</style>

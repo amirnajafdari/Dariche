@@ -1,0 +1,47 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { home } from '@/data/pages';
+import { packages } from '@/data/packages';
+import SectionHeading from '../SectionHeading.astro';
+import PricingCard from '../PricingCard.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section class="pricing section" aria-labelledby="pricing-title">
+  <div class="container">
+    <SectionHeading eyebrow={home.pricing.eyebrow[lang]} title={home.pricing.title[lang]} lead={home.pricing.lead[lang]} id="pricing-title" layout="split" />
+    <div class="pricing__grid" data-reveal>
+      {packages.map((p) => <PricingCard pkg={p} lang={lang} />)}
+    </div>
+    <div class="pricing__cta" data-reveal>
+      <a href={href(lang, 'pricing')} class="link-arrow">{t.fullPricing}<Icon name="arrow" /></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing__grid {
+    display: grid;
+    gap: var(--stack-lg) var(--col-gap);
+  }
+  @media (min-width: 900px) {
+    .pricing__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  /* on small screens, the package most people choose comes first */
+  @media (max-width: 899px) {
+    .pricing__grid > :global(.plan--featured) {
+      order: -1;
+    }
+  }
+  .pricing__cta {
+    margin-top: var(--stack-lg);
+  }
+</style>

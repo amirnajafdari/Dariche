@@ -1,0 +1,145 @@
+---
+import { href, num, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { home } from '@/data/pages';
+import Headline from '../Headline.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const s = home.seo;
+// Labels for the three illustrative searches
+const searchLabels = lang === 'fa' ? ['فارسی', 'فینگلیش', 'انگلیسی'] : ['Persian', 'Finglish', 'English'];
+const caption = lang === 'fa' ? 'یه مشتری، سه جور جستجو.' : 'One customer, three ways to search.';
+---
+<section class="seo section" aria-labelledby="seo-title">
+  <div class="container">
+    <div class="seo__top">
+      <div class="seo__copy">
+        <Headline lines={s.title[lang]} id="seo-title" />
+        <p class="body" data-reveal>{s.text[lang]}</p>
+        <a href={href(lang, 'seo')} class="link-arrow" data-reveal>{t.seeSeo}<Icon name="arrow" /></a>
+      </div>
+
+      <figure class="seo__searches" data-reveal>
+        <ul role="list">
+          {s.searches.map((q, i) => (
+            <li class="seo__search" style={`--delay:${i * 0.12}s`}>
+              <svg class="seo__glass" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span class="seo__q">{q}</span>
+              <span class="seo__lang">{searchLabels[i]}</span>
+            </li>
+          ))}
+        </ul>
+        <figcaption class="small muted">{caption}</figcaption>
+      </figure>
+    </div>
+
+    <ol class="seo__items" role="list">
+      {s.items[lang].map((item, i) => (
+        <li data-reveal style={`--delay:${i * 0.06}s`}>
+          <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+          <h3 class="seo__name">{item.name}</h3>
+          <p class="seo__text">{item.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .seo__top {
+    display: grid;
+    gap: var(--stack-xl);
+  }
+  .seo__copy {
+    display: grid;
+    gap: var(--stack-md);
+    justify-items: start;
+    align-content: start;
+  }
+  .seo__searches {
+    display: grid;
+    gap: 1rem;
+    align-content: center;
+  }
+  .seo__searches ul {
+    display: grid;
+    gap: 0.85rem;
+  }
+  .seo__search {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-height: 3.6rem;
+    padding: 0 1.25rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--paper);
+  }
+  .seo__search:nth-child(2) {
+    margin-inline-start: clamp(1rem, 4vw, 3rem);
+    border-color: var(--green);
+  }
+  .seo__search:nth-child(3) {
+    margin-inline-start: clamp(2rem, 8vw, 6rem);
+  }
+  .seo__glass {
+    width: 1.1rem;
+    flex: none;
+    color: var(--ink-3);
+  }
+  .seo__q {
+    flex: 1;
+    font-size: 1.05rem;
+  }
+  .seo__lang {
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .seo__items {
+    display: grid;
+    gap: 0 var(--col-gap);
+    margin-top: var(--stack-xl);
+  }
+  .seo__items li {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .seo__name {
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  .seo__text {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  @media (min-width: 640px) {
+    .seo__items {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 960px) {
+    .seo__top {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .seo__copy {
+      grid-column: 1 / span 6;
+    }
+    .seo__searches {
+      grid-column: 8 / -1;
+    }
+    .seo__items {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+</style>

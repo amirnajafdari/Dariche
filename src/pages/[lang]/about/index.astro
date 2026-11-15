@@ -1,0 +1,111 @@
+---
+import { getStaticLangPaths, href, type Lang } from '@/i18n';
+import { founders } from '@/data/founders';
+import { about } from '@/data/pages';
+import { pageSeo } from '@/data/seo';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import FounderCard from '@/components/FounderCard.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+
+export const getStaticPaths = getStaticLangPaths;
+const lang = Astro.params.lang as Lang;
+const crumbs = [{ name: lang === 'fa' ? 'درباره ما' : 'About', path: href(lang, 'about') }];
+---
+<BaseLayout lang={lang} path="about" title={pageSeo.about.title[lang]} description={pageSeo.about.description[lang]} breadcrumbs={crumbs}>
+  <PageHero lang={lang} title={about.hero.title[lang]} lead={about.hero.lead[lang]} variant="type" breadcrumbs={crumbs} />
+
+  <section class="section--sm about-people" aria-label={lang === 'fa' ? 'بنیان‌گذارها' : 'Founders'}>
+    <div class="container about-people__grid">
+      {founders.map((f, i) => <FounderCard founder={f} lang={lang} showBio class={i === 1 ? 'about-people__offset' : undefined} />)}
+    </div>
+  </section>
+
+  <section class="section about-story">
+    <div class="container">
+      {about.story[lang].map((part) => (
+        <div class="about-story__part">
+          <h2 class="h3" data-reveal>{part.title}</h2>
+          <p class="about-story__text" data-reveal>{part.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section about-name" aria-labelledby="name-title">
+    <div class="container about-name__grid">
+      <h2 class="eyebrow" id="name-title" data-reveal="fade">{about.name.title[lang]}</h2>
+      <p class="display about-name__text" data-reveal>{about.name.text[lang]}</p>
+      <p class="lead about-name__direct" data-reveal>{about.direct[lang]}</p>
+    </div>
+  </section>
+
+  <FinalCTA lang={lang} />
+</BaseLayout>
+
+<style>
+  .about-people__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.25rem, 0.5rem + 4vw, 5rem);
+    align-items: start;
+  }
+  .about-people__offset {
+    margin-top: clamp(3rem, 1rem + 8vw, 10rem);
+  }
+  @media (min-width: 960px) {
+    .about-people__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .about-people__grid > :first-child {
+      grid-column: 2 / span 4;
+    }
+    .about-people__offset {
+      grid-column: 8 / span 4;
+    }
+  }
+  @media (max-width: 599px) {
+    .about-people__grid {
+      grid-template-columns: 1fr;
+    }
+    .about-people__offset {
+      margin-top: 0;
+    }
+  }
+  .about-story__part {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: var(--stack-lg);
+    border-top: 1px solid var(--line);
+  }
+  @media (min-width: 960px) {
+    .about-story__part {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .about-story__part > h2 {
+      grid-column: 1 / span 4;
+    }
+    .about-story__text {
+      grid-column: 6 / span 6;
+    }
+  }
+  .about-story__text {
+    font-size: var(--fs-lead);
+    font-weight: 300;
+    color: var(--ink-2);
+  }
+  .about-name__grid {
+    display: grid;
+    gap: var(--stack-md);
+    justify-items: center;
+    text-align: center;
+  }
+  .about-name__text {
+    max-width: 14ch;
+  }
+  .about-name__direct {
+    margin-top: var(--stack-lg);
+  }
+</style>

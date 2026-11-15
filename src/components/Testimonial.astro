@@ -1,0 +1,82 @@
+---
+import type { Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import type { Testimonial } from '@/data/testimonials';
+
+interface Props {
+  item: Testimonial;
+  lang: Lang;
+  size?: 'md' | 'lg';
+}
+const { item, lang, size = 'md' } = Astro.props;
+const t = useTranslations(lang);
+---
+<figure class:list={['quote', `quote--${size}`]} data-reveal>
+  <svg class="quote__mark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13.6C0 5.9 4.3 1.3 12.2 0l1.1 2.6C8.7 4 6.6 6.9 6.4 11H12v13H0Zm19 0V13.6C19 5.9 23.3 1.3 31.2 0l1.1 2.6C27.7 4 25.6 6.9 25.4 11H31v13H19Z" fill="currentColor"></path></svg>
+  <blockquote class="quote__text">
+    <p>{item.quote[lang]}</p>
+  </blockquote>
+  <figcaption class="quote__by">
+    {item.image && <img src={item.image.src} alt="" width="48" height="48" loading="lazy" decoding="async" class="quote__img" />}
+    <span>
+      <span class="quote__name">{item.name[lang]}</span>
+      <span class="quote__biz">{item.business[lang]}</span>
+    </span>
+    {item.sample && <span class="sample-tag" title={t.sampleNote}>{t.sample}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .quote {
+    display: grid;
+    gap: 1.75rem;
+    align-content: start;
+  }
+  .quote__mark {
+    width: 1.75rem;
+    color: var(--red);
+    opacity: 0.85;
+  }
+  :global([dir='rtl']) .quote__mark {
+    transform: scaleX(-1);
+  }
+  .quote__text {
+    font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 34rem;
+  }
+  :global(:root[lang='en-GB']) .quote__text {
+    line-height: 1.45;
+  }
+  .quote--lg .quote__text {
+    font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.4rem);
+  }
+  .quote__by {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    max-width: 34rem;
+  }
+  .quote__by > span:first-of-type {
+    display: grid;
+  }
+  .quote__img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .quote__name {
+    font-weight: 500;
+  }
+  .quote__biz {
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .quote__by .sample-tag {
+    margin-inline-start: auto;
+  }
+</style>

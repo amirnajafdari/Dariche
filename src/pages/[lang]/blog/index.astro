@@ -1,0 +1,110 @@
+---
+import { getStaticLangPaths, href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { categories, postsFor } from '@/data/blog';
+import { visible } from '@/data/site';
+import { blogPage } from '@/data/pages';
+import { pageSeo } from '@/data/seo';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import BlogCard from '@/components/BlogCard.astro';
+
+export const getStaticPaths = getStaticLangPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const posts = visible(postsFor(lang));
+const [featured, ...rest] = posts;
+const used = categories.filter((c) => posts.some((p) => p.category === c.id));
+const crumbs = [{ name: lang === 'fa' ? 'مقالات' : 'Journal', path: href(lang, 'blog') }];
+---
+<BaseLayout lang={lang} path="blog" title={pageSeo.blog.title[lang]} description={pageSeo.blog.description[lang]} breadcrumbs={crumbs}>
+  <PageHero lang={lang} title={blogPage.title[lang]} lead={blogPage.lead[lang]} variant="split" breadcrumbs={crumbs} />
+
+  <section class="section blog" aria-label={crumbs[0].name}>
+    <div class="container">
+      {posts.length === 0 && <p class="lead">{blogPage.empty[lang]}</p>}
+
+      {used.length > 1 && (
+        <div class="blog__filters" role="group" aria-label={lang === 'fa' ? 'دسته‌بندی‌ها' : 'Categories'} hidden data-filters>
+          <button type="button" aria-pressed="true" data-filter="all">{t.allPosts}</button>
+          {used.map((c) => (
+            <button type="button" aria-pressed="false" data-filter={c.id}>{c.name[lang]}</button>
+          ))}
+        </div>
+      )}
+
+      {featured && <div class="blog__featured"><BlogCard post={featured} featured headingLevel="h2" /></div>}
+
+      <div class="blog__grid">
+        {rest.map((p) => <BlogCard post={p} headingLevel="h2" />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Progressive enhancement: category filters only appear when JS is available.
+  const bar = document.querySelector<HTMLElement>('[data-filters]');
+  if (bar) {
+    bar.hidden = false;
+    const cards = document.querySelectorAll<HTMLElement>('[data-category]');
+    bar.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      const f = btn.dataset.filter;
+      bar.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      cards.forEach((c) => {
+        const show = f === 'all' || c.dataset.category === f;
+        (c.closest('.blog__featured') ?? c).toggleAttribute('hidden', !show);
+      });
+    });
+  }
+</script>
+
+<style>
+  .blog {
+    padding-top: 0;
+  }
+  .blog__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: var(--stack-xl);
+  }
+  .blog__filters[hidden] {
+    display: none;
+  }
+  .blog__filters button {
+    min-height: 2.75rem;
+    color: var(--ink-3);
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .blog__filters button:hover {
+    color: var(--ink);
+  }
+  .blog__filters button[aria-pressed='true'] {
+    color: var(--ink);
+    border-color: var(--green);
+  }
+  .blog__featured {
+    margin-bottom: var(--stack-xl);
+  }
+  .blog__grid {
+    display: grid;
+    gap: var(--stack-lg) var(--col-gap);
+  }
+  @media (min-width: 800px) {
+    .blog__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1200px) {
+    .blog__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  [hidden] {
+    display: none !important;
+  }
+</style>

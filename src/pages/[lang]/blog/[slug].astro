@@ -1,0 +1,189 @@
+---
+import { formatDate, href, num, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { categoryName, posts, translationOf, type Post } from '@/data/blog';
+import { getService } from '@/data/services';
+import { visible } from '@/data/site';
+import { site } from '@/data/site';
+import { articleSchema } from '@/lib/schema';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+import Icon from '@/components/Icon.astro';
+
+export function getStaticPaths() {
+  return visible(posts).map((post) => ({ params: { lang: post.lang, slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const translation = translationOf(post);
+// hreflang only where a real translation exists
+const alternates: Partial<Record<Lang, string>> = { [lang]: href(lang, `blog/${post.slug}`) };
+if (translation && (site.showSampleContent || !translation.sample)) alternates[translation.lang] = href(translation.lang, `blog/${translation.slug}`);
+const service = getService(post.relatedService ?? '');
+const crumbs = [
+  { name: lang === 'fa' ? 'مقالات' : 'Journal', path: href(lang, 'blog') },
+  { name: post.title, path: href(lang, `blog/${post.slug}`) },
+];
+---
+<BaseLayout
+  lang={lang}
+  path={`blog/${post.slug}`}
+  alternates={alternates}
+  title={post.seo?.title ?? `${post.title} | ${site.name[lang]}`}
+  description={post.seo?.description ?? post.excerpt}
+  keywords={post.seo?.searchPhrases}
+  breadcrumbs={crumbs}
+  schema={[articleSchema(post)]}
+  type="article"
+  publishedTime={post.date}
+  image={post.cover?.src}
+>
+  <article class="post">
+    <header class="container post__head">
+      <Breadcrumbs lang={lang} items={crumbs} />
+      <div class="post__intro">
+        <p class="post__meta">
+          <span class="post__cat">{categoryName(post.category, lang)}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={post.date}>{formatDate(lang, post.date)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{t.readingTime(num(lang, post.readingMinutes))}</span>
+          {post.sample && <span class="sample-tag" title={t.sampleNote}>{t.sample}</span>}
+        </p>
+        <h1 class="h2 post__title">{post.title}</h1>
+        <p class="lead">{post.excerpt}</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="prose">
+        {post.body.map((b) =>
+          b.type === 'h2' ? <h2>{b.text}</h2>
+          : b.type === 'ul' ? <ul>{b.items.map((i) => <li>{i}</li>)}</ul>
+          : b.type === 'quote' ? <blockquote><p>{b.text}</p></blockquote>
+          : <p>{b.text}</p>
+        )}
+      </div>
+
+      <footer class="post__foot">
+        {service && (
+          <a href={href(lang, service.slug)} class="post__service">
+            <span class="eyebrow">{t.relatedService}</span>
+            <span class="post__service-name">{service.name[lang]}</span>
+            <span class="post__service-blurb">{service.menuBlurb[lang]}</span>
+            <Icon name="arrow" />
+          </a>
+        )}
+        <a href={href(lang, 'blog')} class="link-arrow">{t.backToBlog}<Icon name="arrow" /></a>
+      </footer>
+    </div>
+  </article>
+
+  <FinalCTA lang={lang} />
+</BaseLayout>
+
+<style>
+  .post__head {
+    padding-top: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .post__intro {
+    display: grid;
+    gap: var(--stack-md);
+    max-width: 50rem;
+    margin: clamp(3rem, 1.5rem + 5vw, 6rem) auto var(--stack-xl);
+  }
+  .post__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .post__cat {
+    color: var(--red);
+  }
+  .post__title {
+    font-size: clamp(2rem, 1.3rem + 2.8vw, 3.6rem);
+  }
+  .prose {
+    max-width: 40rem;
+    margin-inline: auto;
+    font-size: 1.125rem;
+    color: var(--ink);
+  }
+  .prose > * + * {
+    margin-top: 1.5rem;
+  }
+  .prose h2 {
+    margin-top: 3.5rem;
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.85rem);
+    font-weight: 500;
+  }
+  .prose ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .prose li {
+    position: relative;
+    padding-inline-start: 1.5rem;
+  }
+  .prose li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.95em;
+    width: 0.6rem;
+    height: 1px;
+    background: var(--green);
+  }
+  .prose blockquote {
+    margin-block: 3rem;
+    padding-inline-start: 1.5rem;
+    border-inline-start: 2px solid var(--red);
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .post__foot {
+    max-width: 40rem;
+    margin: var(--stack-xl) auto 0;
+    display: grid;
+    gap: 2rem;
+    justify-items: start;
+  }
+  .post__service {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.4rem 1rem;
+    padding: 2rem 0;
+    border-block: 1px solid var(--line);
+  }
+  .post__service .eyebrow {
+    grid-column: 1 / -1;
+  }
+  .post__service-name {
+    font-size: 1.6rem;
+    font-weight: 300;
+    transition: color 0.25s;
+  }
+  .post__service-blurb {
+    grid-column: 1;
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+  }
+  .post__service .icon {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: center;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .post__service:hover .post__service-name {
+    color: var(--green);
+  }
+</style>

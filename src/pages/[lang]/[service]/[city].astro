@@ -1,0 +1,21 @@
+---
+// Future city landing pages, e.g. /fa/web-design/london/. Built only from entries in src/data/locations.ts,
+// which is empty at launch on purpose.
+import { languages, type Lang } from '@/i18n';
+import { getService, type Service } from '@/data/services';
+import { locationPages, type LocationPage } from '@/data/locations';
+import ServicePage from '@/components/service/ServicePage.astro';
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) =>
+    locationPages.map((location) => ({
+      params: { lang, service: location.service, city: location.city },
+      props: { location, service: getService(location.service)! },
+    })),
+  );
+}
+
+const lang = Astro.params.lang as Lang;
+const { service, location } = Astro.props as { service: Service; location: LocationPage };
+---
+<ServicePage lang={lang} service={service} location={location} />

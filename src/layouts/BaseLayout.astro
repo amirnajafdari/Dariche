@@ -1,0 +1,240 @@
+---
+import '@fontsource-variable/outfit';
+import '@fontsource-variable/vazirmatn';
+import '@/styles/global.css';
+import vazirArabic from '@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2?url';
+import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
+
+import { href, langMeta, languages, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { site } from '@/data/site';
+import { graph, organization, website, breadcrumbSchema } from '@/lib/schema';
+import Seo from '@/components/Seo.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import WhatsAppButton from '@/components/WhatsAppButton.astro';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Path without language prefix: '' for home, 'web-design', 'blog/my-post' */
+  path: string;
+  /**
+   * Override equivalent pages per language. Defaults to the same path in every language.
+   * Pass only the languages where the page exists (e.g. an untranslated article).
+   */
+  alternates?: Partial<Record<Lang, string>>;
+  breadcrumbs?: { name: string; path: string }[];
+  schema?: object[];
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  keywords?: string[];
+  publishedTime?: string;
+}
+
+const { lang, title, description, path, breadcrumbs, schema = [], image, type, noindex, keywords, publishedTime } = Astro.props;
+const t = useTranslations(lang);
+const canonical = href(lang, path);
+const alternates = Astro.props.alternates ?? Object.fromEntries(languages.map((l) => [l, href(l, path)]));
+const meta = langMeta[lang];
+
+const crumbs = breadcrumbs ? [{ name: t.breadcrumbHome, path: href(lang) }, ...breadcrumbs] : null;
+const jsonLd = graph(organization(lang), website(lang), ...(crumbs ? [breadcrumbSchema(crumbs)] : []), ...schema);
+
+// Dana is licensed separately; @font-face is only emitted once the files are in /public/fonts/dana/.
+const danaFaces = [
+  [200, 'dana-200'],
+  [300, 'dana-300'],
+  [400, 'dana-400'],
+  [500, 'dana-500'],
+  [700, 'dana-700'],
+]
+  .map(([w, f]) => `@font-face{font-family:'Dana';font-style:normal;font-weight:${w};font-display:swap;src:local('Dana'),url('/fonts/dana/${f}.woff2') format('woff2');}`)
+  .join('');
+---
+<!doctype html>
+<html lang={meta.htmlLang} dir={meta.dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+
+    {lang === 'fa' && !site.danaInstalled && <link rel="preload" href={vazirArabic} as="font" type="font/woff2" crossorigin />}
+    {lang === 'fa' && site.danaInstalled && <link rel="preload" href="/fonts/dana/dana-300.woff2" as="font" type="font/woff2" crossorigin />}
+    {lang === 'en' && <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />}
+    {site.danaInstalled && <style is:inline set:html={danaFaces} />}
+
+    <Seo
+      lang={lang}
+      title={title}
+      description={description}
+      canonical={canonical}
+      alternates={alternates}
+      image={image}
+      type={type}
+      noindex={noindex}
+      keywords={keywords}
+      schema={jsonLd}
+      publishedTime={publishedTime}
+    />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="sitemap" href="/sitemap.xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skipToContent}</a>
+    <Header lang={lang} alternates={alternates} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} alternates={alternates} />
+    <WhatsAppButton lang={lang} variant="floating" />
+
+    <script>
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* Sticky header compacts after a little scroll */
+      const header = document.querySelector<HTMLElement>('[data-header]');
+
+      /* Gentle parallax — wide screens only */
+      const parallax = reduceMotion || !window.matchMedia('(min-width: 900px)').matches ? [] : [...document.querySelectorAll<HTMLElement>('[data-parallax]')];
+
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          header?.classList.toggle('is-compact', window.scrollY > 24);
+          for (const el of parallax) {
+            const r = el.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > innerHeight) continue;
+            const speed = Number(el.dataset.parallax) || 0.06;
+            el.style.translate = `0 ${((r.top + r.height / 2 - innerHeight / 2) * -speed).toFixed(1)}px`;
+          }
+          ticking = false;
+        });
+      };
+      addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* Reveal on scroll */
+      const revealables = document.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-lines]');
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealables.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        // A fully clipped element never "intersects", so masked reveals watch their parent instead.
+        const targets = new Map<Element, HTMLElement[]>();
+        revealables.forEach((el) => {
+          const watch = el.dataset.reveal === 'mask' && el.parentElement ? el.parentElement : el;
+          targets.set(watch, [...(targets.get(watch) ?? []), el]);
+        });
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              targets.get(e.target)?.forEach((el) => el.classList.add('is-visible'));
+              io.unobserve(e.target);
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.1 },
+        );
+        targets.forEach((_, watch) => io.observe(watch));
+      }
+
+      /* Services mega menu */
+      const toggle = document.querySelector<HTMLButtonElement>('[data-mega-toggle]');
+      const mega = document.querySelector<HTMLElement>('[data-mega]');
+      if (toggle && mega) {
+        let hoverTimer: number | undefined;
+        let hoverOpenedAt = 0;
+        const setMega = (open: boolean) => {
+          toggle.setAttribute('aria-expanded', String(open));
+          mega.hidden = !open;
+        };
+        // A click right after hover-open shouldn't immediately close the menu again.
+        toggle.addEventListener('click', () => setMega(mega.hidden || Date.now() - hoverOpenedAt < 600));
+        const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (canHover) {
+          const open = () => {
+            clearTimeout(hoverTimer);
+            if (mega.hidden) hoverOpenedAt = Date.now();
+            setMega(true);
+          };
+          const close = () => {
+            hoverTimer = window.setTimeout(() => setMega(false), 220);
+          };
+          toggle.addEventListener('mouseenter', open);
+          mega.addEventListener('mouseenter', open);
+          toggle.addEventListener('mouseleave', close);
+          mega.addEventListener('mouseleave', close);
+        }
+        document.addEventListener('click', (e) => {
+          const target = e.target as Node;
+          if (!mega.hidden && !mega.contains(target) && !toggle.contains(target)) setMega(false);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !mega.hidden) {
+            setMega(false);
+            toggle.focus();
+          }
+        });
+        mega.addEventListener('focusout', (e) => {
+          const next = e.relatedTarget as Node | null;
+          if (next && !mega.contains(next) && next !== toggle) setMega(false);
+        });
+      }
+
+      /* Mobile drawer (native <dialog> handles focus trapping and Esc) */
+      const drawer = document.querySelector<HTMLDialogElement>('[data-drawer]');
+      const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+      if (drawer && openBtn) {
+        openBtn.setAttribute('aria-expanded', 'false');
+        openBtn.addEventListener('click', () => {
+          drawer.showModal();
+          openBtn.setAttribute('aria-expanded', 'true');
+          document.documentElement.style.overflow = 'hidden';
+        });
+        drawer.addEventListener('close', () => {
+          openBtn.setAttribute('aria-expanded', 'false');
+          document.documentElement.style.overflow = '';
+        });
+        drawer.querySelector('[data-menu-close]')?.addEventListener('click', () => drawer.close());
+        drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => drawer.close()));
+        addEventListener('resize', () => {
+          if (drawer.open && innerWidth >= 1080) drawer.close();
+        });
+      }
+
+      /* Floating WhatsApp steps aside where a WhatsApp CTA or the footer is already visible */
+      const float = document.querySelector<HTMLElement>('[data-wa-float]');
+      const asides = document.querySelectorAll('[data-hide-wa]');
+      if (float) {
+        // Appears once the visitor has scrolled past the first screen, never over the hero CTAs.
+        const seen = new Set<Element>();
+        let pastHero = false;
+        const update = () => float.classList.toggle('is-hidden', !pastHero || seen.size > 0);
+        addEventListener('scroll', () => {
+          const next = window.scrollY > innerHeight * 0.6;
+          if (next !== pastHero) {
+            pastHero = next;
+            update();
+          }
+        }, { passive: true });
+        if (asides.length && 'IntersectionObserver' in window) {
+          const wo = new IntersectionObserver((entries) => {
+            for (const e of entries) e.isIntersecting ? seen.add(e.target) : seen.delete(e.target);
+            update();
+          });
+          asides.forEach((el) => wo.observe(el));
+        }
+        update();
+        float.classList.add('is-ready');
+      }
+    </script>
+  </body>
+</html>

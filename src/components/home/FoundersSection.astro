@@ -1,0 +1,65 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { home } from '@/data/pages';
+import { founders } from '@/data/founders';
+import FounderCard from '../FounderCard.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section class="founders section" aria-labelledby="founders-title">
+  <div class="container founders__grid">
+    <div class="founders__copy">
+      <p class="eyebrow" data-reveal="fade">{home.founders.eyebrow[lang]}</p>
+      <h2 class="h2 founders__title" id="founders-title" data-reveal>{home.founders.title[lang]}</h2>
+      <p class="body" data-reveal>{home.founders.text[lang]}</p>
+      <a href={href(lang, 'about')} class="link-arrow" data-reveal>{t.moreAboutUs}<Icon name="arrow" /></a>
+    </div>
+    <div class="founders__people">
+      {founders.map((f, i) => <FounderCard founder={f} lang={lang} class={i === 1 ? 'founders__offset' : undefined} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .founders__grid {
+    display: grid;
+    gap: var(--stack-xl);
+  }
+  .founders__copy {
+    display: grid;
+    gap: var(--stack-md);
+    align-content: start;
+    justify-items: start;
+  }
+  .founders__title {
+    font-size: clamp(1.8rem, 1.2rem + 2.2vw, 3rem);
+  }
+  .founders__people {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.25rem, 0.5rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+  .founders__people > :global(.founders__offset) {
+    margin-top: clamp(3rem, 1rem + 6vw, 7rem);
+  }
+  @media (min-width: 960px) {
+    .founders__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: center;
+    }
+    .founders__copy {
+      grid-column: 1 / span 5;
+    }
+    .founders__people {
+      grid-column: 7 / -1;
+    }
+  }
+</style>

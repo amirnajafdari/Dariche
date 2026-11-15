@@ -1,0 +1,35 @@
+---
+import { href } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PrimaryButton from '@/components/PrimaryButton.astro';
+
+const fa = useTranslations('fa');
+const en = useTranslations('en');
+---
+<BaseLayout lang="fa" path="" title={`۴۰۴ — ${fa.notFoundTitle}`} description={fa.notFoundText} noindex alternates={{}}>
+  <section class="nf container">
+    <p class="nf__code" aria-hidden="true">۴۰۴</p>
+    <h1 class="h2">{fa.notFoundTitle}</h1>
+    <p class="lead">{fa.notFoundText}</p>
+    <div class="btn-row">
+      <PrimaryButton href={href('fa')}>{fa.backHome}</PrimaryButton>
+      <a href={href('en')} class="link-arrow" lang="en-GB" dir="ltr">{en.backHome}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    display: grid;
+    gap: var(--stack-md);
+    justify-items: start;
+    padding-block: var(--section);
+  }
+  .nf__code {
+    font-size: clamp(5rem, 3rem + 10vw, 12rem);
+    font-weight: 200;
+    line-height: 1;
+    color: var(--line-strong);
+  }
+</style>

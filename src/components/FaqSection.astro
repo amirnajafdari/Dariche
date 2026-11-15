@@ -1,0 +1,50 @@
+---
+import type { Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import type { QA } from '@/data/services';
+import Headline from './Headline.astro';
+import FAQAccordion from './FAQAccordion.astro';
+
+interface Props {
+  lang: Lang;
+  items: QA[];
+  title?: string;
+  id?: string;
+}
+const { lang, items, id = 'faq' } = Astro.props;
+const t = useTranslations(lang);
+const title = Astro.props.title ?? t.faqTitle;
+---
+<section class="faq-section section" aria-labelledby={`${id}-title`}>
+  <div class="container faq-section__grid">
+    <Headline lines={title} id={`${id}-title`} class="faq-section__title" />
+    <div class="faq-section__list">
+      <FAQAccordion items={items} name={id} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section__grid {
+    display: grid;
+    gap: var(--stack-lg);
+  }
+  .faq-section__title {
+    font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3.2rem);
+  }
+  @media (min-width: 960px) {
+    .faq-section__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: start;
+    }
+    .faq-section__title {
+      grid-column: 1 / span 4;
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+    .faq-section__list {
+      grid-column: 6 / -1;
+    }
+  }
+</style>

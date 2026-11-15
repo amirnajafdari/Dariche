@@ -1,0 +1,57 @@
+---
+import { languages, langMeta, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Equivalent URL in each language. Missing entries fall back to that language's home. */
+  alternates: Partial<Record<Lang, string>>;
+  class?: string;
+}
+const { lang, alternates, class: className } = Astro.props;
+const t = useTranslations(lang);
+---
+<nav class:list={['lang-switch', className]} aria-label={t.languageSwitch}>
+  {languages.map((l, i) => (
+    <>
+      {i > 0 && <span class="lang-switch__sep" aria-hidden="true">|</span>}
+      {l === lang ? (
+        <span class="lang-switch__item is-current" aria-current="true" lang={langMeta[l].htmlLang}>{langMeta[l].label}</span>
+      ) : (
+        <a class="lang-switch__item" href={alternates[l] ?? `/${l}/`} hreflang={langMeta[l].hreflang} lang={langMeta[l].htmlLang}>
+          {langMeta[l].label}
+        </a>
+      )}
+    </>
+  ))}
+</nav>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-en);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    direction: ltr;
+  }
+  .lang-switch__item {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.25rem;
+    min-height: 2.75rem;
+    color: var(--ink-3);
+    transition: color 0.2s;
+  }
+  a.lang-switch__item:hover {
+    color: var(--green);
+  }
+  .is-current {
+    color: var(--ink);
+  }
+  .lang-switch__sep {
+    color: var(--line-strong);
+  }
+</style>

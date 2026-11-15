@@ -1,0 +1,368 @@
+---
+import { href, num, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import type { Service } from '@/data/services';
+import type { LocationPage } from '@/data/locations';
+import { getCaseStudy } from '@/data/caseStudies';
+import { getPackage } from '@/data/packages';
+import { process, serviceLabels } from '@/data/pages';
+import { finglishPhrases } from '@/data/seo';
+import { site } from '@/data/site';
+import { faqSchema, serviceSchema } from '@/lib/schema';
+import { price } from '@/lib/text';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import PrimaryButton from '../PrimaryButton.astro';
+import WhatsAppButton from '../WhatsAppButton.astro';
+import CaseStudyCard from '../CaseStudyCard.astro';
+import ScreenMock from '../ScreenMock.astro';
+import FaqSection from '../FaqSection.astro';
+import FinalCTA from '../FinalCTA.astro';
+import Icon from '../Icon.astro';
+
+/**
+ * One template for every service page (and future city pages).
+ * `service.variant` changes the composition: frame | split | type.
+ */
+interface Props {
+  lang: Lang;
+  service: Service;
+  location?: LocationPage;
+}
+const { lang, service: s, location } = Astro.props;
+const t = useTranslations(lang);
+const related = getCaseStudy(s.relatedCaseStudy);
+const showRelated = related && (site.showSampleContent || !related.sample);
+const pkg = getPackage(s.startingPackage);
+const path = location ? `${s.slug}/${location.city}` : s.slug;
+const crumbs = [
+  { name: s.name[lang], path: href(lang, s.slug) },
+  ...(location ? [{ name: location.cityName[lang], path: href(lang, path) }] : []),
+];
+const title = location ? location.title[lang] : s.seo.title[lang];
+const description = location ? location.description[lang] : s.seo.description[lang];
+const keywords = [...(finglishPhrases[s.slug] ?? []), ...(location?.searchPhrases ?? [])];
+---
+<BaseLayout
+  lang={lang}
+  path={path}
+  title={title}
+  description={description}
+  keywords={keywords}
+  breadcrumbs={crumbs}
+  schema={[serviceSchema(s, lang), faqSchema(s.faqs[lang])]}
+>
+  <PageHero lang={lang} title={s.hero.title[lang]} lead={location ? location.intro[lang] : s.hero.lead[lang]} variant={s.variant} breadcrumbs={crumbs} eyebrow={s.name[lang]}>
+    <PrimaryButton href={href(lang, 'contact')}>{t.letsTalk}</PrimaryButton>
+    <WhatsAppButton lang={lang} variant="quiet" />
+    {s.variant === 'frame' && (
+      <div slot="visual" class="svc-visual window" aria-hidden="true">
+        <div class="window__pane" data-reveal="mask">
+          <ScreenMock kind={s.slug === 'ecommerce' ? 'shop' : 'restaurant'} bg="#F3F5F2" accent="#226F54" title={lang === 'fa' ? 'بیزینس تو' : 'Your business'} />
+        </div>
+      </div>
+    )}
+  </PageHero>
+
+  <!-- problem -->
+  <section class="section svc-problem" aria-labelledby="problem-title">
+    <div class="container svc-problem__grid">
+      <p class="eyebrow" data-reveal="fade">{serviceLabels.problem[lang]}</p>
+      <h2 class="h2" id="problem-title" data-reveal>{s.problem.title[lang]}</h2>
+      <p class="lead" data-reveal>{s.problem.text[lang]}</p>
+    </div>
+  </section>
+
+  <!-- includes -->
+  <section class:list={['section', 'svc-includes', `svc-includes--${s.variant}`]} aria-labelledby="includes-title">
+    <div class="container svc-includes__grid">
+      <h2 class="h2 svc-includes__title" id="includes-title" data-reveal>{serviceLabels.includes[lang]}</h2>
+      <ol class="svc-includes__list" role="list">
+        {s.includes[lang].map((item, i) => (
+          <li data-reveal style={`--delay:${(i % 4) * 0.05}s`}>
+            <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- audience + benefits -->
+  <section class="section svc-fit" aria-labelledby="audience-title">
+    <div class="container">
+      <div class="svc-fit__audience">
+        <h2 class="eyebrow" id="audience-title" data-reveal="fade">{serviceLabels.audience[lang]}</h2>
+        <ul role="list">
+          {s.audience[lang].map((a) => <li data-reveal>{a}</li>)}
+        </ul>
+      </div>
+      <div class="svc-fit__benefits">
+        <h2 class="eyebrow" data-reveal="fade">{serviceLabels.benefits[lang]}</h2>
+        <div class="svc-fit__cols">
+          {s.benefits[lang].map((b, i) => (
+            <div data-reveal style={`--delay:${i * 0.08}s`}>
+              <h3 class="h3">{b.title}</h3>
+              <p class="body">{b.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- process -->
+  <section class="section svc-process" aria-labelledby="process-title">
+    <div class="container">
+      <h2 class="h2" id="process-title" data-reveal>{serviceLabels.process[lang]}</h2>
+      <ol class="svc-process__steps" role="list">
+        {process[lang].map((step, i) => (
+          <li data-reveal style={`--delay:${i * 0.07}s`}>
+            <span class="svc-process__n">{num(lang, i + 1)}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {showRelated && related && (
+    <section class="section svc-related" aria-labelledby="related-title">
+      <div class="container">
+        <h2 class="eyebrow" id="related-title" data-reveal="fade">{serviceLabels.related[lang]}</h2>
+        <CaseStudyCard cs={related} lang={lang} shape="wide" class="svc-related__card" />
+      </div>
+    </section>
+  )}
+
+  <section class="section--sm svc-price" aria-labelledby="price-title">
+    <div class="container">
+      <div class="svc-price__row" data-reveal>
+        <h2 class="eyebrow" id="price-title">{serviceLabels.pricing[lang]}</h2>
+        {pkg ? (
+          <p class="svc-price__value">
+            <span class="muted small">{t.startingFrom}</span>
+            <strong>{price(pkg.price, lang)}</strong>
+            <span>{pkg.name[lang]}</span>
+          </p>
+        ) : (
+          <p class="svc-price__value"><span>{serviceLabels.supportPricing[lang]}</span></p>
+        )}
+        <a href={href(lang, 'pricing')} class="link-arrow">{t.fullPricing}<Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <FaqSection lang={lang} items={s.faqs[lang]} />
+  <FinalCTA lang={lang} />
+</BaseLayout>
+
+<style>
+  .svc-visual .window__pane {
+    aspect-ratio: 4 / 3.3;
+  }
+
+  .svc-problem__grid {
+    display: grid;
+    gap: var(--stack-md);
+  }
+  @media (min-width: 960px) {
+    .svc-problem__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .svc-problem__grid > * {
+      grid-column: 3 / span 8;
+    }
+    .svc-problem__grid > .lead {
+      grid-column: 6 / span 6;
+      margin-top: var(--stack-md);
+    }
+  }
+
+  .svc-includes__grid {
+    display: grid;
+    gap: var(--stack-lg);
+  }
+  .svc-includes__list {
+    display: grid;
+    gap: 0 var(--col-gap);
+  }
+  .svc-includes__list li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: baseline;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--line);
+    font-size: 1.1rem;
+  }
+  @media (min-width: 700px) {
+    .svc-includes__list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 960px) {
+    .svc-includes__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    /* split: title stays put while the list scrolls */
+    .svc-includes--split .svc-includes__title {
+      grid-column: 1 / span 4;
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+    .svc-includes--split .svc-includes__list {
+      grid-column: 6 / -1;
+      grid-template-columns: 1fr;
+    }
+    .svc-includes--frame .svc-includes__title,
+    .svc-includes--frame .svc-includes__list {
+      grid-column: 1 / -1;
+    }
+    /* type: big numbered list */
+    .svc-includes--type .svc-includes__title {
+      grid-column: 1 / -1;
+    }
+    .svc-includes--type .svc-includes__list {
+      grid-column: 3 / -1;
+    }
+    .svc-includes--type .svc-includes__list li {
+      font-size: clamp(1.2rem, 1rem + 0.7vw, 1.6rem);
+      font-weight: 300;
+      padding-block: 1.6rem;
+    }
+  }
+
+  .svc-fit .container {
+    display: grid;
+    gap: var(--section-sm);
+  }
+  .svc-fit__audience {
+    display: grid;
+    gap: var(--stack-md);
+  }
+  .svc-fit__audience ul {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .svc-fit__audience li {
+    font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.7rem);
+    font-weight: 300;
+    line-height: 1.4;
+    max-width: 30ch;
+  }
+  .svc-fit__audience li::before {
+    content: '— ';
+    color: var(--green);
+  }
+  .svc-fit__benefits {
+    display: grid;
+    gap: var(--stack-lg);
+  }
+  .svc-fit__cols {
+    display: grid;
+    gap: var(--stack-lg) var(--col-gap);
+  }
+  .svc-fit__cols > div {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 900px) {
+    .svc-fit__cols {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .svc-process {
+    background: var(--paper-2);
+  }
+  .svc-process__steps {
+    display: grid;
+    gap: 2.5rem var(--col-gap);
+    margin-top: var(--stack-xl);
+    counter-reset: step;
+  }
+  .svc-process__steps li {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-strong);
+    position: relative;
+  }
+  .svc-process__steps li::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    inset-inline-start: 0;
+    width: 7px;
+    height: 7px;
+    background: var(--green);
+  }
+  .svc-process__n {
+    font-size: 2.6rem;
+    font-weight: 200;
+    line-height: 1;
+    color: var(--ink-3);
+  }
+  .svc-process__steps h3 {
+    font-weight: 500;
+    font-size: 1.15rem;
+  }
+  .svc-process__steps p {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+    line-height: 1.85;
+  }
+  @media (min-width: 700px) {
+    .svc-process__steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .svc-process__steps {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  .svc-related .container {
+    display: grid;
+    gap: var(--stack-lg);
+  }
+  @media (min-width: 960px) {
+    .svc-related__card {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: end;
+      column-gap: var(--col-gap);
+    }
+  }
+
+  .svc-price__row {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: 2.5rem;
+    border-block: 1px solid var(--line);
+  }
+  @media (min-width: 900px) {
+    .svc-price__row {
+      grid-template-columns: 1fr 2fr auto;
+      align-items: center;
+    }
+  }
+  .svc-price__value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+  }
+  .svc-price__value strong {
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+    font-weight: 200;
+  }
+</style>

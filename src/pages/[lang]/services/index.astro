@@ -1,0 +1,123 @@
+---
+import { getStaticLangPaths, href, num, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { services, supportingOfferings } from '@/data/services';
+import { home } from '@/data/pages';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+import Icon from '@/components/Icon.astro';
+
+export const getStaticPaths = getStaticLangPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const title = lang === 'fa' ? 'خدمات دریچه | طراحی سایت، سئو و سئو محلی' : 'Services | Web Design, SEO & Local SEO | Daricheh';
+const description =
+  lang === 'fa'
+    ? 'طراحی سایت، سئو، سئو محلی، فروشگاه اینترنتی، بازطراحی و پشتیبانی سایت برای بیزینس‌های ایرانی در بریتانیا.'
+    : 'Web design, SEO, local SEO, ecommerce, redesigns and website support for Iranian-owned businesses in the UK.';
+const crumbs = [{ name: t.services, path: href(lang, 'services') }];
+---
+<BaseLayout lang={lang} path="services" title={title} description={description} breadcrumbs={crumbs}>
+  <PageHero lang={lang} title={home.services.title[lang]} lead={home.intro.text[lang]} variant="split" breadcrumbs={crumbs} />
+
+  <section class="section all-svc" aria-label={t.services}>
+    <div class="container">
+      <ol role="list" class="all-svc__list">
+        {services.map((s, i) => (
+          <li class="all-svc__item" data-reveal>
+            <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+            <h2 class="all-svc__name"><a href={href(lang, s.slug)}>{s.name[lang]}</a></h2>
+            <p class="all-svc__blurb">{s.homeBlurb[lang]}</p>
+            <span class="all-svc__go" aria-hidden="true"><Icon name="arrow" /></span>
+          </li>
+        ))}
+      </ol>
+
+      <ul role="list" class="all-svc__extra">
+        {supportingOfferings.map((o) => (
+          <li data-reveal>
+            <a href={href(lang, o.link)}>
+              <strong>{o.name[lang]}</strong>
+              <span>{o.blurb[lang]}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <FinalCTA lang={lang} />
+</BaseLayout>
+
+<style>
+  .all-svc__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 0.5rem 1rem;
+    padding-block: 2.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .all-svc__name {
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.6rem);
+    font-weight: 300;
+    line-height: 1.2;
+    transition: color 0.3s;
+  }
+  .all-svc__name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .all-svc__item:hover .all-svc__name {
+    color: var(--green);
+  }
+  .all-svc__blurb {
+    grid-column: 2;
+    color: var(--ink-2);
+    max-width: 32rem;
+  }
+  .all-svc__go {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .all-svc__item {
+      grid-template-columns: 5rem 1.2fr 1fr 2rem;
+      align-items: center;
+      column-gap: var(--col-gap);
+    }
+    .all-svc__blurb {
+      grid-column: 3;
+    }
+    .all-svc__go {
+      display: block;
+    }
+  }
+  .all-svc__extra {
+    display: grid;
+    gap: 0 var(--col-gap);
+    margin-top: var(--stack-xl);
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 800px) {
+    .all-svc__extra {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .all-svc__extra a {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 1.5rem;
+  }
+  .all-svc__extra strong {
+    font-weight: 500;
+  }
+  .all-svc__extra a:hover strong {
+    color: var(--green);
+  }
+  .all-svc__extra span {
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+</style>

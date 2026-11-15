@@ -1,0 +1,141 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { home } from '@/data/pages';
+import { site, phoneUrl } from '@/data/site';
+import WhatsAppButton from './WhatsAppButton.astro';
+import SecondaryButton from './SecondaryButton.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  text?: string;
+}
+const { lang, title = home.finalCta.title[lang], text = home.finalCta.text[lang] } = Astro.props;
+const t = useTranslations(lang);
+---
+<section class="final section" aria-labelledby="final-cta-title" data-hide-wa>
+  <div class="container">
+    <div class="final__frame" data-reveal="fade">
+      <!-- four edges draw in: the window opens -->
+      <span class="edge edge--t" aria-hidden="true"></span>
+      <span class="edge edge--e" aria-hidden="true"></span>
+      <span class="edge edge--b" aria-hidden="true"></span>
+      <span class="edge edge--s" aria-hidden="true"></span>
+      <span class="final__latch" aria-hidden="true"></span>
+
+      <h2 class="display final__title" id="final-cta-title">{title}</h2>
+      <p class="lead final__text">{text}</p>
+      <div class="btn-row final__actions">
+        <WhatsAppButton lang={lang} variant="primary" />
+        <SecondaryButton href={href(lang, 'contact#form')} icon="arrow">{t.contactForm}</SecondaryButton>
+        {site.booking.enabled && site.booking.url && (
+          <SecondaryButton href={site.booking.url} external>{t.bookCall}</SecondaryButton>
+        )}
+      </div>
+      <p class="final__phone">
+        <span class="muted">{t.orCall}</span>
+        <a href={phoneUrl()} class="link"><Icon name="phone" /><span class="ltr">{site.contact.phoneDisplay}</span></a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final__frame {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--stack-md);
+    padding: clamp(4rem, 2rem + 8vw, 10rem) clamp(1.25rem, 0.5rem + 4vw, 6rem);
+  }
+  .final__title {
+    max-width: 14ch;
+  }
+  .final__text {
+    margin-inline: auto;
+  }
+  .final__actions {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .final__phone {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--fs-small);
+  }
+  .final__phone .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+  }
+
+  .edge {
+    position: absolute;
+    background: var(--line-strong);
+    transition: transform 1.4s var(--ease);
+  }
+  .edge--t,
+  .edge--b {
+    height: 1px;
+    inset-inline: 0;
+  }
+  .edge--t {
+    top: 0;
+    transform-origin: left;
+  }
+  .edge--b {
+    bottom: 0;
+    transform-origin: right;
+  }
+  .edge--e,
+  .edge--s {
+    width: 1px;
+    inset-block: 0;
+  }
+  .edge--e {
+    right: 0;
+    transform-origin: top;
+  }
+  .edge--s {
+    left: 0;
+    transform-origin: bottom;
+  }
+  .final__latch {
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 7px;
+    height: 7px;
+    background: var(--red);
+    transition: opacity 0.6s 1.2s;
+  }
+  :global([dir='rtl']) .final__latch {
+    right: auto;
+    left: -4px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .final__frame:not(.is-visible) .edge--t,
+    :global(.js) .final__frame:not(.is-visible) .edge--b {
+      transform: scaleX(0);
+    }
+    :global(.js) .final__frame:not(.is-visible) .edge--e,
+    :global(.js) .final__frame:not(.is-visible) .edge--s {
+      transform: scaleY(0);
+    }
+    :global(.js) .final__frame:not(.is-visible) .final__latch {
+      opacity: 0;
+    }
+    .edge--e,
+    .edge--b {
+      transition-delay: 0.3s;
+    }
+  }
+</style>

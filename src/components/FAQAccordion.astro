@@ -1,0 +1,95 @@
+---
+import type { QA } from '@/data/services';
+
+// Native <details>: keyboard and screen-reader friendly with no JavaScript.
+interface Props {
+  items: QA[];
+  name?: string;
+}
+const { items, name = 'faq' } = Astro.props;
+---
+<div class="faq">
+  {items.map((item, i) => (
+    <details class="faq__item" name={name} data-reveal style={`--delay:${Math.min(i, 5) * 0.05}s`}>
+      <summary class="faq__q">
+        <h3>{item.q}</h3>
+        <span class="faq__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="faq__a">
+        <p>{item.a}</p>
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 4.5rem;
+    padding-block: 1.25rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+  .faq__q h3 {
+    font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.6;
+    transition: color 0.25s;
+  }
+  .faq__q:hover h3 {
+    color: var(--green);
+  }
+  .faq__icon {
+    position: relative;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1px;
+    background: currentColor;
+    transition: transform 0.4s var(--ease), background-color 0.3s;
+  }
+  .faq__icon::after {
+    transform: rotate(90deg);
+  }
+  .faq__item[open] .faq__icon::after {
+    transform: rotate(0deg);
+  }
+  .faq__item[open] .faq__icon::before,
+  .faq__item[open] .faq__icon::after {
+    background: var(--red);
+  }
+  .faq__a {
+    padding-bottom: 1.75rem;
+    max-width: 44rem;
+    color: var(--ink-2);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .faq__item[open] .faq__a {
+      animation: faq-open 0.5s var(--ease);
+    }
+  }
+  @keyframes faq-open {
+    from {
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+  }
+</style>
