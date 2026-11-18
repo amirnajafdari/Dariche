@@ -9,24 +9,20 @@ import Icon from './Icon.astro';
 interface Props {
   cs: CaseStudy;
   lang: Lang;
-  /** Shape of the image window */
-  shape?: 'wide' | 'tall' | 'square';
   headingLevel?: 'h2' | 'h3';
   class?: string;
   style?: string;
 }
-const { cs, lang, shape = 'wide', headingLevel: H = 'h3', class: className, style } = Astro.props;
+const { cs, lang, headingLevel: H = 'h3', class: className, style } = Astro.props;
 const t = useTranslations(lang);
 const url = href(lang, `work/${cs.slug}`);
 const services = cs.services.map((s) => getService(s)?.name[lang]).filter(Boolean).join(' / ');
 ---
-<article class:list={['case-card', `case-card--${shape}`, className]} style={style}>
-  <div class="window case-card__window">
-    <div class="window__pane case-card__pane" data-reveal="mask">
-      <ProjectVisual cs={cs} lang={lang} sizes={shape === 'wide' ? '(min-width: 900px) 65vw, 100vw' : '(min-width: 900px) 40vw, 100vw'} />
-    </div>
+<article class:list={['case-card', className]} style={style} data-reveal>
+  <div class="case-card__pane">
+    <ProjectVisual cs={cs} lang={lang} sizes="(min-width: 700px) 50vw, 100vw" />
   </div>
-  <div class="case-card__meta" data-reveal>
+  <div class="case-card__meta">
     <p class="case-card__info">
       <span>{cs.industry[lang]}</span>
       <span aria-hidden="true">·</span>
@@ -48,30 +44,27 @@ const services = cs.services.map((s) => getService(s)?.name[lang]).filter(Boolea
 <style>
   .case-card {
     position: relative;
-    display: grid;
-    gap: 2rem;
-    align-content: start;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(0.75rem, 0.5rem + 0.6vw, 1.25rem);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+    box-shadow: 0 8px 24px rgb(29 31 34 / 4%);
+    transition: box-shadow 0.35s var(--ease);
   }
   .case-card__pane {
-    aspect-ratio: 16 / 10;
-  }
-  .case-card--tall .case-card__pane {
-    aspect-ratio: 4 / 5;
-  }
-  .case-card--square .case-card__pane {
-    aspect-ratio: 1 / 1;
-  }
-  @media (max-width: 699px) {
-    .case-card__pane,
-    .case-card--tall .case-card__pane,
-    .case-card--square .case-card__pane {
-      aspect-ratio: 4 / 3.4;
-    }
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--paper);
   }
   .case-card__meta {
-    display: grid;
-    gap: 0.6rem;
-    max-width: 34rem;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 0.8rem + 1vw, 2rem) clamp(0.25rem, 1vw, 1rem) 0.5rem;
   }
   .case-card__info {
     display: flex;
@@ -99,7 +92,7 @@ const services = cs.services.map((s) => getService(s)?.name[lang]).filter(Boolea
   .case-card__link:focus-visible {
     outline: none;
   }
-  .case-card:has(.case-card__link:focus-visible) .case-card__window {
+  .case-card:has(.case-card__link:focus-visible) {
     outline: 2px solid var(--green);
     outline-offset: 6px;
   }
@@ -115,9 +108,8 @@ const services = cs.services.map((s) => getService(s)?.name[lang]).filter(Boolea
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-top: 0.9rem;
-    margin-top: 0.4rem;
-    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+    margin-top: auto;
     font-size: var(--fs-small);
     color: var(--ink-3);
   }
@@ -126,25 +118,22 @@ const services = cs.services.map((s) => getService(s)?.name[lang]).filter(Boolea
     place-items: center;
     width: 2.5rem;
     height: 2.5rem;
-    border: 1px solid var(--line);
+    flex-shrink: 0;
+    background: var(--green-tint);
     border-radius: 50%;
-    color: var(--ink);
-    transition: background-color 0.35s, color 0.35s, border-color 0.35s, transform 0.5s var(--ease);
+    color: var(--green);
+    transition: background-color 0.35s, color 0.35s;
   }
-  .case-card:hover .case-card__go {
+  .case-card:hover .case-card__go,
+  .case-card:focus-within .case-card__go {
     background: var(--green);
-    border-color: var(--green);
     color: #fff;
   }
-  .case-card:hover .case-card__title a {
+  .case-card:hover .case-card__title a,
+  .case-card:focus-within .case-card__title a {
     color: var(--green);
   }
-  .case-card:hover .window::before {
-    --wx: 22px;
-    --wy: 22px;
-    border-color: var(--green);
-  }
-  .case-card:hover .window__pane > :global(*) {
-    scale: 1.025;
+  .case-card:hover {
+    box-shadow: 0 12px 32px rgb(29 31 34 / 8%);
   }
 </style>

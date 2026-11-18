@@ -29,7 +29,7 @@ Everything marked `PLACEHOLDER` or `SAMPLE` in `src/data/` needs real content:
 
 `site.showSampleContent = false` hides every sample item at once; sections with nothing real left disappear.
 
-The portfolio contains 10 real projects from the OmniGrowth Studio case-studies page, with English and Persian copy and supplied screenshots in `public/images/work/`. All projects appear on both homepages and work indexes, with individual case-study pages included in the sitemap. Project dates and measured results are omitted where not supplied.
+The portfolio contains 6 selected real projects from the OmniGrowth Studio case-studies page, with English and Persian copy and supplied screenshots in `public/images/work/`. All projects appear on both homepages and work indexes, with individual case-study pages included in the sitemap. Project dates and measured results are omitted where not supplied.
 
 ## Structure
 

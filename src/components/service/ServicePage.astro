@@ -131,7 +131,7 @@ const keywords = [...(finglishPhrases[s.slug] ?? []), ...(location?.searchPhrase
     <section class="section svc-related" aria-labelledby="related-title">
       <div class="container">
         <h2 class="eyebrow" id="related-title" data-reveal="fade">{serviceLabels.related[lang]}</h2>
-        <CaseStudyCard cs={related} lang={lang} shape="wide" class="svc-related__card" />
+        <CaseStudyCard cs={related} lang={lang} class="svc-related__card" />
       </div>
     </section>
   )}

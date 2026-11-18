@@ -206,7 +206,6 @@ export const services: Service[] = [
         { title: 'Reports in plain English', text: "Each month: what we did, what changed and what's next. No jargon." },
       ],
     },
-    relatedCaseStudy: 'ultimate-repairs',
     startingPackage: 'growth',
     faqs: {
       fa: [
@@ -363,7 +362,6 @@ export const services: Service[] = [
         { title: 'Products people can find', text: 'Every product gets a page Google understands.' },
       ],
     },
-    relatedCaseStudy: 'caf-farsley',
     startingPackage: 'complete',
     faqs: {
       fa: [
@@ -438,7 +436,6 @@ export const services: Service[] = [
         { title: 'Built to grow', text: 'A structure that is easy to add to later.' },
       ],
     },
-    relatedCaseStudy: 'ultimate-repairs',
     startingPackage: 'growth',
     faqs: {
       fa: [

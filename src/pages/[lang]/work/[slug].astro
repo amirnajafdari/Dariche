@@ -74,8 +74,8 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
         </div>
       </div>
       <div class="container cs-cover">
-        <div class="window">
-          <div class="window__pane cs-cover__pane" data-reveal="mask">
+        <div class="cs-media">
+          <div class="cs-media__pane cs-cover__pane" data-reveal="mask">
             <ProjectVisual cs={cs} lang={lang} eager sizes="100vw" />
           </div>
         </div>
@@ -102,8 +102,8 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
       <div class="container">
         <h2 class="eyebrow" id="cs-design">{L.design[lang]}</h2>
         <div class:list={['cs-shots__grid', { 'cs-shots__grid--with-phone': cs.mobile || cs.sample }]}>
-          <div class="cs-shots__desktop window">
-            <div class="window__pane" data-reveal="mask"><ProjectVisual cs={cs} lang={lang} image={cs.gallery?.[0] ?? cs.cover} /></div>
+          <div class="cs-shots__desktop cs-media">
+            <div class="cs-media__pane" data-reveal="mask"><ProjectVisual cs={cs} lang={lang} image={cs.gallery?.[0] ?? cs.cover} /></div>
           </div>
           {(cs.mobile || cs.sample) && <div class="cs-shots__phone" data-reveal>
             <div class="cs-phone"><ProjectVisual cs={cs} lang={lang} device="mobile" /></div>
@@ -112,7 +112,7 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
         {cs.gallery && cs.gallery.length > 1 && (
           <div class="cs-gallery">
             {cs.gallery.slice(1).map((img) => (
-              <div class="window__pane" data-reveal="mask"><ProjectVisual cs={cs} lang={lang} image={img} /></div>
+              <div class="cs-media" data-reveal><div class="cs-media__pane"><ProjectVisual cs={cs} lang={lang} image={img} /></div></div>
             ))}
           </div>
         )}
@@ -218,13 +218,18 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
   .cs-cover {
     margin-top: var(--section-sm);
   }
-  .cs-cover__pane {
-    aspect-ratio: 16 / 9;
+  .cs-media {
+    padding: clamp(0.75rem, 0.5rem + 0.6vw, 1.25rem);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+    box-shadow: 0 8px 24px rgb(29 31 34 / 4%);
   }
-  @media (max-width: 699px) {
-    .cs-cover__pane {
-      aspect-ratio: 4 / 3.4;
-    }
+  .cs-media__pane {
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+  .cs-media__pane > :global(img) {
+    height: auto;
   }
 
   .cs-block__grid {
@@ -286,9 +291,6 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
     gap: var(--stack-lg);
     margin-top: var(--stack-lg);
     align-items: end;
-  }
-  .cs-shots__desktop .window__pane {
-    aspect-ratio: 16 / 10;
   }
   .cs-shots__phone {
     display: flex;
