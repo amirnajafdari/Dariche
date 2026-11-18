@@ -114,7 +114,7 @@ export const services: Service[] = [
         { title: 'Ready for Google', text: 'Structure, speed and content built so SEO works from the start.' },
       ],
     },
-    relatedCaseStudy: 'anar-kitchen',
+    relatedCaseStudy: 'aryana-cakery',
     startingPackage: 'first',
     faqs: {
       fa: [
@@ -206,7 +206,7 @@ export const services: Service[] = [
         { title: 'Reports in plain English', text: "Each month: what we did, what changed and what's next. No jargon." },
       ],
     },
-    relatedCaseStudy: 'nava-dental',
+    relatedCaseStudy: 'ultimate-repairs',
     startingPackage: 'growth',
     faqs: {
       fa: [
@@ -286,7 +286,7 @@ export const services: Service[] = [
         { title: 'Correct details, everywhere', text: 'Hours, address and phone right — for customers and for Google.' },
       ],
     },
-    relatedCaseStudy: 'mahi-salon',
+    relatedCaseStudy: 'afsoo-beauty',
     startingPackage: 'growth',
     faqs: {
       fa: [
@@ -363,7 +363,7 @@ export const services: Service[] = [
         { title: 'Products people can find', text: 'Every product gets a page Google understands.' },
       ],
     },
-    relatedCaseStudy: 'zarin-studio',
+    relatedCaseStudy: 'caf-farsley',
     startingPackage: 'complete',
     faqs: {
       fa: [
@@ -438,7 +438,7 @@ export const services: Service[] = [
         { title: 'Built to grow', text: 'A structure that is easy to add to later.' },
       ],
     },
-    relatedCaseStudy: 'nava-dental',
+    relatedCaseStudy: 'ultimate-repairs',
     startingPackage: 'growth',
     faqs: {
       fa: [

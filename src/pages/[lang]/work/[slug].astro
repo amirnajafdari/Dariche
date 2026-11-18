@@ -98,17 +98,16 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
       </div>
     </section>
 
-    <!-- design: desktop + mobile, side by side -->
-    <section class="section cs-shots" aria-labelledby="cs-design">
+    {(cs.gallery?.length || cs.mobile || cs.sample) && <section class="section cs-shots" aria-labelledby="cs-design">
       <div class="container">
         <h2 class="eyebrow" id="cs-design">{L.design[lang]}</h2>
-        <div class="cs-shots__grid">
+        <div class:list={['cs-shots__grid', { 'cs-shots__grid--with-phone': cs.mobile || cs.sample }]}>
           <div class="cs-shots__desktop window">
             <div class="window__pane" data-reveal="mask"><ProjectVisual cs={cs} lang={lang} image={cs.gallery?.[0] ?? cs.cover} /></div>
           </div>
-          <div class="cs-shots__phone" data-reveal>
+          {(cs.mobile || cs.sample) && <div class="cs-shots__phone" data-reveal>
             <div class="cs-phone"><ProjectVisual cs={cs} lang={lang} device="mobile" /></div>
-          </div>
+          </div>}
         </div>
         {cs.gallery && cs.gallery.length > 1 && (
           <div class="cs-gallery">
@@ -118,7 +117,7 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
           </div>
         )}
       </div>
-    </section>
+    </section>}
 
     {cs.seoWork && (
       <section class="section--sm cs-block" aria-labelledby="cs-seo">
@@ -307,7 +306,7 @@ const title = `${cs.client[lang]} — ${cs.industry[lang]} | ${site.name[lang]}`
     border-radius: 1.5rem;
   }
   @media (min-width: 960px) {
-    .cs-shots__grid {
+    .cs-shots__grid--with-phone {
       grid-template-columns: 2fr 1fr;
       column-gap: var(--col-gap);
     }

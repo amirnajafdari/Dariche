@@ -22,13 +22,14 @@ Everything marked `PLACEHOLDER` or `SAMPLE` in `src/data/` needs real content:
 | Contact form endpoint (Formspree, a Vercel function…) — until set, the form opens the visitor's email app | `site.formEndpoint` |
 | Prices and package inclusions | `src/data/packages.ts` |
 | Founder names, photos | `src/data/founders.ts` |
-| Case studies (all 4 are samples, `noindex`, excluded from the sitemap) | `src/data/caseStudies.ts` |
 | Testimonials (placeholders — never invent quotes) | `src/data/testimonials.ts` |
 | Blog posts (useful drafts, flagged sample) | `src/data/blog.ts` |
 | Legal copy — have it reviewed | `legal` in `src/data/pages.ts` |
 | Dana font files | `public/fonts/dana/README.txt` |
 
 `site.showSampleContent = false` hides every sample item at once; sections with nothing real left disappear.
+
+The portfolio contains 10 real projects from the OmniGrowth Studio case-studies page, with English and Persian copy and supplied screenshots in `public/images/work/`. All projects appear on both homepages and work indexes, with individual case-study pages included in the sitemap. Project dates and measured results are omitted where not supplied.
 
 ## Structure
 

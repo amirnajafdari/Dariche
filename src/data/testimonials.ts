@@ -23,7 +23,6 @@ export const testimonials: Testimonial[] = [
       fa: 'اینجا جای نظر واقعی یکی از مشتری‌هاست. بعد از اولین پروژه‌ها، با حرف‌های خودشون جایگزین می‌شه.',
       en: "This space is for a real client's words. It will be replaced once the first projects are live.",
     },
-    caseStudy: 'anar-kitchen',
   },
   {
     id: 'sample-2',
@@ -34,7 +33,6 @@ export const testimonials: Testimonial[] = [
       fa: 'نظر دوم هم همین‌طور. ترجیح می‌دیم این قسمت خالی بمونه تا اینکه یه نظر ساختگی اینجا باشه.',
       en: "Same for this one. We'd rather leave this empty than fill it with something made up.",
     },
-    caseStudy: 'mahi-salon',
   },
 ];
 

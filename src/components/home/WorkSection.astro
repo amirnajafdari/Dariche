@@ -13,7 +13,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const items = visible(caseStudies).slice(0, 4);
+const items = visible(caseStudies);
 // Asymmetric rhythm: wide, tall offset, tall, wide offset.
 const shapes = ['wide', 'tall', 'tall', 'wide'] as const;
 ---
@@ -23,7 +23,7 @@ const shapes = ['wide', 'tall', 'tall', 'wide'] as const;
       <SectionHeading eyebrow={home.work.eyebrow[lang]} title={home.work.title[lang]} id="work-title" />
       <div class="work__grid">
         {items.map((cs, i) => (
-          <CaseStudyCard cs={cs} lang={lang} shape={shapes[i % 4]} class={`work__item work__item--${i + 1}`} />
+          <CaseStudyCard cs={cs} lang={lang} shape={shapes[i % 4]} class={`work__item work__item--${(i % 4) + 1}`} />
         ))}
       </div>
       <div class="work__cta" data-reveal>
