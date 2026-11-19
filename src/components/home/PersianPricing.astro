@@ -1,0 +1,112 @@
+---
+import Headline from '../Headline.astro';
+import PersianText from './PersianText.astro';
+import { oneOffServices, monthlyPackages, contactForm } from '@/data/persianHome';
+const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#callback`;
+---
+<section class="section" id="pricing" aria-labelledby="pricing-title">
+  <div class="container">
+    <header class="section-intro">
+      <p class="eyebrow">تعرفه‌های دریچه</p>
+      <Headline lines={['قیمت‌ها مشخصه.', 'انتخاب با تو.']} id="pricing-title" />
+      <p class="lead">از یه سایت ساده و حرفه‌ای تا فروشگاه اینترنتی یا خدمات ماهانه سئو و پشتیبانی، سعی کردیم قیمت‌ها روشن باشن تا راحت‌تر بتونی تصمیم بگیری.</p>
+    </header>
+    <div class="group-heading">
+      <h3 class="h3">طراحی و راه‌اندازی سایت</h3>
+      <p><strong>سه راه برای شروع حضور آنلاین بیزینست.</strong></p>
+    </div>
+    <div class="plans">
+      {oneOffServices.map((plan) => (
+        <article class="plan" id={plan.id} aria-labelledby={`${plan.id}-title`}>
+          <h4 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h4>
+          <p class="price">{plan.from && <span class="price-prefix">از </span>}<bdi dir="ltr">{plan.price}</bdi></p>
+          <p class="tagline"><strong>{plan.tagline}</strong></p>
+          <p class="description"><PersianText text={plan.text} /></p>
+          <div class="features">
+            <p class="list-label">{plan.listLabel}</p>
+            <ul role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
+          </div>
+          <a class="btn btn-secondary" href={enquiry(plan.title)}>{plan.cta}</a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="section monthly" id="monthly" aria-labelledby="monthly-title">
+  <div class="container">
+    <header class="section-intro">
+      <p class="eyebrow">همکاری ماهانه با دریچه</p>
+      <Headline lines={['سایتت رو ساختی؟', 'حالا نذار همون‌جا بمونه.']} id="monthly-title" />
+      <p class="lead">ساختن یه سایت پایان کار نیست. محتوا باید به‌روز بشه، سئو نیاز به کار مداوم داره و خود سایت هم باید مرتب نگهداری بشه.</p>
+      <p class="body">برای همین سه تا پکیج ماهانه داریم؛ از نگهداری و سئوی پایه تا مدیریت گسترده‌تر حضور آنلاین بیزینست.</p>
+    </header>
+    <div class="plans subscriptions">
+      {monthlyPackages.map((plan) => (
+        <article class:list={['plan', { featured: plan.featured }]} id={plan.id} aria-labelledby={`${plan.id}-title`}>
+          <div class="plan-heading">
+            <h3 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h3>
+            <bdi dir="ltr" class="english-name">{plan.en}</bdi>
+            {plan.featured && <span class="badge">برای رشد بیشتر</span>}
+          </div>
+          <p class="price"><bdi dir="ltr">{plan.price}</bdi><span class="period"> / ماه</span></p>
+          <p class="tagline"><strong>{plan.tagline}</strong></p>
+          <div class="description">{plan.paragraphs.map((p) => <p>{p}</p>)}</div>
+          <details class="features" data-monthly-features open>
+            <summary>خدمات این پکیج:<span aria-hidden="true" class="toggle"></span></summary>
+            <ul role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
+          </details>
+          <a class:list={['btn', plan.featured ? 'btn-primary' : 'btn-secondary']} href={enquiry(plan.title)}>{plan.cta}</a>
+        </article>
+      ))}
+    </div>
+    <div class="pricing-help">
+      <h3 class="h3">هنوز نمی‌دونی کدوم پکیج مناسبته؟</h3>
+      <p class="body">لازم نیست گرون‌ترین گزینه رو انتخاب کنی. درباره بیزینست و چیزی که می‌خوای بهش برسی حرف می‌زنیم تا ببینیم کدوم خدمات واقعاً به کارت میاد.</p>
+      <a class="btn btn-primary" href={contactForm}>بیا با هم بررسی کنیم</a>
+    </div>
+    <div class="pricing-note">
+      <p>هزینه تبلیغات پرداختی به گوگل، متا و سایر پلتفرم‌ها جدا از هزینه مدیریت تبلیغاته. جزئیات خدمات و هزینه‌های احتمالی سرویس‌های جانبی قبل از شروع همکاری مشخص می‌شه.</p>
+      <a class="link" href="/fa/pricing/">جزئیات کامل تعرفه‌ها</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // All inclusions remain available without JS. Mobile starts collapsed, prices and CTAs stay visible.
+  const wide = window.matchMedia('(min-width: 960px)');
+  const lists = document.querySelectorAll<HTMLDetailsElement>('[data-monthly-features]');
+  const sync = () => lists.forEach((list) => { list.open = wide.matches; });
+  sync();
+  wide.addEventListener('change', sync);
+</script>
+
+<style>
+  .section-intro { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); }
+  .group-heading { display:grid; gap:.75rem; margin-bottom:2.5rem; }
+  .plans { display:grid; gap:2rem var(--col-gap); align-items:start; }
+  .plan { display:flex; flex-direction:column; gap:1.4rem; padding:2rem 1.5rem; border-top:1px solid var(--ink); min-width:0; scroll-margin-top:7rem; }
+  .plan-title { font-size:1.45rem; line-height:1.6; font-weight:500; }
+  .plan-heading { position:relative; display:grid; gap:.3rem; }
+  .english-name { color:var(--ink-3); font-size:1rem; }
+  .price { color:var(--green); font-size:clamp(2.8rem, 2rem + 2vw, 4rem); line-height:1.35; white-space:nowrap; font-weight:300; }
+  .period, .price-prefix { font-size:1.1rem; font-weight:400; }
+  .description { color:var(--ink-2); display:grid; gap:1rem; }
+  .tagline { font-size:1.05rem; }
+  .features { border-top:1px solid var(--line); padding-top:1.25rem; }
+  .features ul { display:grid; gap:.7rem; margin-top:1rem; }
+  .features li { padding-inline-start:1rem; position:relative; font-size:1rem; }
+  .features li::before { content:''; width:4px; height:4px; background:var(--green); position:absolute; inset-inline-start:0; top:.85em; }
+  .list-label, summary { font-weight:500; }
+  summary { display:flex; justify-content:space-between; align-items:center; gap:1rem; cursor:pointer; list-style:none; min-height:2.75rem; }
+  summary::-webkit-details-marker { display:none; }
+  .toggle::after { content:'+'; color:var(--green); font-size:1.5rem; }
+  details[open] .toggle::after { content:'−'; }
+  .plan .btn { white-space:normal; padding:.9rem 1rem; line-height:1.7; margin-top:auto; text-align:center; }
+  .featured { border:1px solid var(--green); border-top:3px solid var(--green); border-radius:var(--radius); }
+  .badge { align-self:start; justify-self:start; color:var(--red); font-size:.9rem; margin-top:.5rem; }
+  .monthly { padding-top:var(--section-sm); }
+  .pricing-help { display:grid; gap:1.5rem; justify-items:start; margin-top:var(--stack-xl); padding-top:var(--stack-lg); border-top:1px solid var(--line); }
+  .pricing-note { display:grid; gap:1.5rem; justify-items:start; margin-top:3rem; max-width:52rem; color:var(--ink-3); font-size:1rem; }
+  @media(min-width:960px) { .plans { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+</style>

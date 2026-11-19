@@ -1,0 +1,320 @@
+---
+import Headline from '../Headline.astro';
+import ProjectVisual from '../ProjectVisual.astro';
+import WhatsAppButton from '../WhatsAppButton.astro';
+import ContactForm from '../ContactForm.astro';
+import PersianHero from './PersianHero.astro';
+import PersianPricing from './PersianPricing.astro';
+import PersianText from './PersianText.astro';
+import { caseStudies } from '@/data/caseStudies';
+import { site } from '@/data/site';
+import { primaryServices, supportingServices, projects, beliefs, persianHomeFounders, searchExamples, seoServices, persianHomeFaqs, contactForm, homeWhatsApp, persianHomeContact } from '@/data/persianHome';
+const number = (i: number) => (i + 1).toLocaleString('fa-IR', { minimumIntegerDigits: 2 });
+const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) => cs.slug === project.slug)! }));
+---
+<div class="persian-home">
+  <PersianHero />
+
+  <section class="section intro" id="intro" aria-labelledby="intro-title">
+    <div class="container intro-grid">
+      <Headline lines={['زبان همدیگرو می‌فهمیم.', 'بازار بریتانیا رو هم می‌شناسیم.']} id="intro-title" />
+      <div class="prose intro-copy lead">
+        <p>راه انداختن یه بیزینس توی بریتانیا آسون نیست. کلی کار هست که باید بهش فکر کنی، و داشتن یه سایت خوب فقط یکی از اوناست.</p>
+        <p>ما دریچه رو ساختیم تا این بخش از کار رو برات ساده‌تر کنیم.</p>
+        <p>یه استودیوی کوچیک طراحی و سئو که هم با فرهنگ و دغدغه‌های بیزینس‌های ایرانی آشناست، هم می‌دونه مشتری‌های اینجا از یه سایت حرفه‌ای چه انتظاری دارن.</p>
+        <p>فرقی نمی‌کنه مشتری‌هات ایرانی باشن یا انگلیسی‌زبان؛ چیزی که برای ما مهمه اینه که سایتت برای آدم‌های درست طراحی بشه و به رشد بیزینست کمک کنه.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services" aria-labelledby="services-title">
+    <div class="container">
+      <header class="section-intro">
+        <p class="eyebrow">خدمات دریچه</p>
+        <Headline lines={['از ایده تا اجرا،', 'کنارتیم.']} id="services-title" />
+        <p class="lead">هر بیزینسی یه داستان داره و طبیعتاً نیازهاش هم متفاوته. شاید تازه شروع کردی و سایت نداری، شاید سایتت قدیمی شده، یا شاید می‌خوای مشتری‌های بیشتری از گوگل بگیری.</p>
+        <p class="body">هر کدوم که باشه، می‌تونیم از همون‌جا شروع کنیم.</p>
+      </header>
+      <div class="services-primary">
+        {primaryServices.map((service, i) => (
+          <article class="service" data-reveal>
+            <h3 class="h3"><span class="number">{number(i)} — </span>{service.title}</h3>
+            <div class="prose">
+              <p class="service-tagline">{service.tagline}</p>
+              <p class="body">{service.text}</p>
+              <a class="link" href={`/fa/${service.path}/`}>{service.link}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="supporting">
+        <h3 class="h3">کارهای دیگه‌ای هم انجام می‌دیم.</h3>
+        <div class="supporting-grid">
+          {supportingServices.map((service) => (
+            <article>
+              <h4><a href={service.path.includes('#') ? contactForm : `/fa/${service.path}/`}><PersianText text={service.title} /></a></h4>
+              <p>{service.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+      <a class="btn btn-secondary section-action" href="/fa/services/">همه خدمات رو ببین</a>
+    </div>
+  </section>
+
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="container">
+      <header class="section-intro">
+        <p class="eyebrow">نمونه‌کارها</p>
+        <Headline lines={['چند تا از کارهایی که', 'با علاقه ساختیم.']} id="work-title" />
+        <p class="lead">هیچ دو تا بیزینسی دقیقاً شبیه هم نیستن و قرار هم نیست سایت‌هاشون شبیه هم باشه.</p>
+        <p class="body">اینجا چند تا از پروژه‌هایی رو می‌بینی که هر کدوم با یه ایده، یه نیاز و یه حال‌وهوای متفاوت شروع شدن.</p>
+      </header>
+      <div class="work-grid">
+        {work.map((project) => (
+          <article class="project" data-reveal>
+            <a class="project-image" href={`/fa/work/${project.slug}/`} aria-label={`نمونه‌کار ${project.fa}`}>
+              <ProjectVisual cs={project.cs} lang="fa" sizes="(min-width: 700px) 50vw, 100vw" />
+            </a>
+            <div class="project-copy">
+              <h3 class="h3"><a href={`/fa/work/${project.slug}/`}><bdi dir="ltr">{project.en}</bdi> — {project.fa}</a></h3>
+              <p class="project-context"><strong>{project.context}</strong></p>
+              <p class="body">{project.text}</p>
+              <p class="project-services">خدمات: {project.services}</p>
+              {project.cs.url && <a class="link project-url" href={project.cs.url} target="_blank" rel="noopener" aria-label={`وب‌سایت ${project.en}`}><bdi dir="ltr">{new URL(project.cs.url).hostname}</bdi></a>}
+            </div>
+          </article>
+        ))}
+      </div>
+      <a class="btn btn-secondary section-action" href="/fa/work/">همه نمونه‌کارها رو ببین</a>
+    </div>
+  </section>
+
+  <section class="section" id="beliefs" aria-labelledby="beliefs-title">
+    <div class="container">
+      <header class="section-intro">
+        <p class="eyebrow">چرا دریچه؟</p>
+        <Headline lines={['قشنگ بودن خوبه.', 'درست کار کردن مهم‌تره.']} id="beliefs-title" />
+        <p class="lead">یه سایت خوب فقط قرار نیست قشنگ باشه. باید بتونه بیزینست رو درست معرفی کنه، اعتماد مشتری رو جلب کنه و کاری که ازش انتظار داری رو انجام بده.</p>
+        <p class="body">ما از همون اول طراحی، تجربه کاربری و سئو رو کنار هم می‌بینیم.</p>
+      </header>
+      <ol class="beliefs" role="list">
+        {beliefs.map((belief, i) => (
+          <li class="belief" data-reveal>
+            <span class="number">{number(i)}</span>
+            <div class="prose"><h3>{belief.title}</h3><p class="body">{belief.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <PersianPricing />
+
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="container about-grid">
+      <div class="section-intro">
+        <p class="eyebrow">پشت دریچه</p>
+        <Headline lines={['ما دو تا دوستیم', 'که طراحی ما رو کنار هم آورد.']} id="about-title" />
+        <div class="prose body">
+          <p>هر دومون توی بریتانیا طراحی خوندیم و یه علاقه مشترک داریم: اینکه چیزهایی بسازیم که هم ظاهر خوبی داشته باشن، هم واقعاً کاربردی باشن.</p>
+          <p>دریچه از همین علاقه شروع شد.</p>
+          <p>تجربه طراحی، وب و سئو رو کنار هم گذاشتیم تا به بیزینس‌های ایرانی توی بریتانیا کمک کنیم حضور آنلاین حرفه‌ای‌تری داشته باشن.</p>
+          <p>استودیومون کوچیکه و اتفاقاً همین رو دوست داریم. ارتباطمون با مشتری مستقیمه و برای هر پروژه وقت و دقت می‌ذاریم.</p>
+        </div>
+        <a class="btn btn-secondary" href="/fa/about/">بیشتر باهامون آشنا شو</a>
+      </div>
+      <div class="founders">
+        {persianHomeFounders.map((founder) => (
+          <div class="founder-role">
+            {founder.name && <h3 class="h3">{founder.name}</h3>}
+            <p>{founder.role}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="bilingual" aria-labelledby="bilingual-title">
+    <div class="container bilingual-grid">
+      <div class="section-intro">
+        <p class="eyebrow">فارسی، انگلیسی یا هر دو؟</p>
+        <Headline lines={['زبان سایتت رو', 'مشتری‌هات مشخص می‌کنن.']} id="bilingual-title" />
+        <div class="prose body">
+          <p>اگه مشتری‌هات بیشتر انگلیسی‌زبان هستن، سایتت باید برای همون مخاطب طراحی بشه.</p>
+          <p>اگه هم با مشتری‌های ایرانی و انگلیسی‌زبان کار می‌کنی، می‌تونیم هر دو زبان رو کنار هم داشته باشیم؛ بدون اینکه طراحی و تجربه استفاده از سایت به‌هم بریزه.</p>
+          <p>قرار نیست صرفاً متن‌ها رو ترجمه کنیم. هر زبان باید برای مخاطب خودش طبیعی و قابل فهم باشه.</p>
+        </div>
+        <ul class="tags" role="list">
+          {['طراحی متناسب با مخاطب', 'فارسی و انگلیسی', 'تجربه کاربری درست', 'پشتیبانی از RTL و LTR', 'سئوی متناسب با هر زبان'].map((tag) => <li><PersianText text={tag} /></li>)}
+        </ul>
+      </div>
+      <div class="bilingual-window window" data-reveal>
+        <div class="window__pane">
+          <div class="language-sample"><span class="eyebrow">فارسی</span><p>بیزینست رو همون‌طور که باید معرفی کن.</p></div>
+          <div class="language-sample english" lang="en-GB" dir="ltr"><span class="eyebrow">English</span><p>Make your business stand out.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="seo" aria-labelledby="seo-title">
+    <div class="container">
+      <div class="seo-grid">
+        <header class="section-intro">
+          <p class="eyebrow">دیده شدن توی گوگل</p>
+          <Headline lines={['یه سایت خوب داری.', 'حالا باید پیداش کنن.']} id="seo-title" />
+          <div class="prose body">
+            <p>تصور کن یه مغازه قشنگ داری، با خدمات عالی، ولی توی خیابونی هست که کسی ازش رد نمی‌شه.</p>
+            <p>یه سایت بدون سئو هم می‌تونه همین مشکل رو داشته باشه.</p>
+            <p>سئو کمک می‌کنه وقتی مشتری توی گوگل دنبال چیزی می‌گرده که تو ارائه می‌دی، سایتت شانس بیشتری برای دیده شدن داشته باشه.</p>
+            <p>البته فقط بازدید بیشتر مهم نیست. مهم اینه که آدم‌هایی وارد سایتت بشن که واقعاً دنبال خدمات یا محصولات تو هستن.</p>
+          </div>
+          <a class="btn btn-secondary" href="/fa/seo/">بیشتر درباره سئو بدون</a>
+        </header>
+        <div class="search-examples">
+          <h3 class="h3">مشتری‌های تو چی توی گوگل سرچ می‌کنن؟</h3>
+          <ul role="list">
+            {searchExamples.map((example) => <li><p class="search-query"><bdi dir="ltr">{example.query}</bdi></p><p class="body">{example.text}</p></li>)}
+          </ul>
+          <p><strong>این فقط چند تا مثال ساده‌ست.</strong></p>
+          <p class="body">برای هر بیزینس باید جدا بررسی کنیم مشتری‌هاش چی سرچ می‌کنن و کدوم جستجوها ارزش هدف گرفتن دارن.</p>
+        </div>
+      </div>
+      <div class="seo-services">
+        <h3 class="h3">برای بهتر دیده شدنت چه کار می‌کنیم؟</h3>
+        <ol class="supporting-grid" role="list">
+          {seoServices.map((service, i) => <li><h4><span class="number">{number(i)} — </span><PersianText text={service.title} /></h4><p>{service.text}</p></li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  {/* Testimonials intentionally not rendered. Only add genuine, approved reviews here. */}
+
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="container faq-grid">
+      <Headline lines={['سؤال داری؟', 'شاید جوابش همین‌جا باشه.']} id="faq-title" />
+      <div class="faq-list">
+        {persianHomeFaqs.map((item) => (
+          <details class="faq-item" name="persian-home-faq">
+            <summary><h3>{item.q}</h3><span aria-hidden="true" class="faq-toggle"></span></summary>
+            <div class="prose body">{item.a.split('\n\n').map((paragraph) => <p><PersianText text={paragraph} /></p>)}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta" id="contact" aria-labelledby="contact-title" data-hide-wa>
+    <div class="container">
+      <div class="section-intro">
+        <Headline lines={['یه چیزی تو ذهنت داری؟', 'بیا درباره‌ش حرف بزنیم.']} id="contact-title" />
+        <div class="prose lead">
+          <p>شاید یه سایت جدید لازم داری، شاید می‌خوای توی گوگل بیشتر دیده بشی، یا شاید هنوز دقیق نمی‌دونی از کجا باید شروع کنی.</p>
+          <p>هر چی هست، می‌تونیم درباره‌ش صحبت کنیم.</p>
+          <p>بدون پیچیده کردن ماجرا و بدون اینکه از همون اول بخوایم چیزی بهت بفروشیم.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <WhatsAppButton lang="fa" variant="primary" urlOverride={homeWhatsApp} label={persianHomeContact.whatsapp ? 'توی واتساپ پیام بده' : 'بیا حرف بزنیم'} />
+        <a class="btn btn-secondary" href={contactForm}>درخواست تماس ثبت کن</a>
+      </div>
+      {persianHomeContact.phone && <a class="link phone-link" href={`tel:${persianHomeContact.phone}`}>یا مستقیم زنگ بزن</a>}
+      <details class="callback" id="callback" open>
+        <summary class="h3">درخواست تماس ثبت کن</summary>
+        {!site.formEndpoint && <p class="body callback-note">فرم رو پر کن تا متن درخواستت توی برنامه ایمیلت آماده بشه؛ برای ثبت درخواست، ایمیل رو ارسال کن.</p>}
+        <ContactForm lang="fa" email={persianHomeContact.email} successText={!site.formEndpoint ? 'درخواستت برای ارسال با ایمیل آماده شد. برای ثبت نهایی، ارسالش کن؛ اگه برنامه ایمیل باز نشد، توی واتساپ پیام بده.' : undefined} />
+      </details>
+    </div>
+  </section>
+</div>
+
+<script>
+  const callback = document.querySelector<HTMLDetailsElement>('#callback');
+  if (callback) {
+    callback.open = window.location.hash === '#callback';
+    const revealCallback = () => {
+      if (window.location.hash === '#callback') {
+        callback.open = true;
+        callback.scrollIntoView({ block: 'start' });
+      }
+    };
+    window.addEventListener('hashchange', revealCallback);
+    document.querySelectorAll<HTMLAnchorElement>('a[href="#callback"], a[href="/fa/#callback"]').forEach((link) => {
+      link.addEventListener('click', () => { callback.open = true; });
+    });
+    if (callback.open) revealCallback();
+  }
+</script>
+
+<style>
+  .persian-home { overflow-wrap:break-word; }
+  .persian-home :global(.h2) { line-height:1.5; }
+  .section-intro { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); justify-items:start; }
+  .prose { display:grid; gap:1.25rem; justify-items:start; }
+  .intro { padding-top:0; }
+  .intro-grid { display:grid; gap:var(--stack-lg); }
+  .number { color:var(--red); font-size:1rem; font-weight:500; }
+  .service { display:grid; gap:2rem; padding-block:var(--stack-lg); border-top:1px solid var(--line); }
+  .service-tagline { font-weight:500; font-size:var(--fs-h3); line-height:1.7; }
+  .supporting { margin-top:var(--stack-lg); display:grid; gap:2rem; }
+  .supporting-grid { display:grid; gap:2rem var(--col-gap); }
+  .supporting-grid :is(article,li) { border-top:1px solid var(--line); padding-top:1.5rem; }
+  .supporting-grid h4 { font-size:1.2rem; font-weight:500; line-height:1.6; margin-bottom:.6rem; }
+  .supporting-grid p { color:var(--ink-3); font-size:1rem; }
+  .section-action { margin-top:var(--stack-lg); }
+  .work-grid { display:grid; gap:var(--stack-lg) var(--col-gap); }
+  .project { min-width:0; }
+  .project-image { display:block; aspect-ratio:3 / 2; overflow:hidden; border:1px solid var(--line); border-radius:var(--radius); }
+  .project-copy { display:grid; gap:1rem; padding-block:1.5rem; }
+  .project-copy h3 { line-height:1.65; }
+  .project-context, .project-services { color:var(--ink-3); font-size:.95rem; }
+  .project-context strong { font-weight:500; }
+  .project-url { justify-self:start; font-size:.9rem; }
+  .beliefs { display:grid; gap:var(--stack-lg); margin-top:var(--section-sm); }
+  .belief { display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:baseline; }
+  .belief h3 { font-size:clamp(1.6rem,1.1rem + 2vw,3rem); line-height:1.5; font-weight:300; }
+  .about-grid,.bilingual-grid,.seo-grid,.faq-grid { display:grid; gap:var(--stack-xl); }
+  .founders { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--col-gap); align-items:start; }
+  .founder-role { border-top:1px solid var(--green); padding:1.5rem 0; display:grid; gap:1rem; color:var(--ink-2); }
+  .founder-role:nth-child(2) { margin-top:4rem; border-color:var(--red); }
+  .tags { display:flex; flex-wrap:wrap; gap:.7rem; }
+  .tags li { border:1px solid var(--line); border-radius:var(--radius); padding:.3rem .8rem; font-size:.9rem; color:var(--ink-2); }
+  .bilingual-window { margin-inline-end:1rem; align-self:center; }
+  .language-sample { padding:clamp(1.5rem,3vw,3rem); }
+  .language-sample p { margin-top:1.5rem; font-size:clamp(1.6rem,2.5vw,2.5rem); line-height:1.6; font-weight:300; }
+  .language-sample.english { background:var(--green-tint); font-family:var(--font-en); }
+  .search-examples { display:grid; gap:1.5rem; align-content:start; }
+  .search-examples li { padding-block:1.5rem; border-bottom:1px solid var(--line); display:grid; gap:1rem; }
+  .search-query { padding:.8rem 1rem; border:1px solid var(--line); border-radius:2rem; font-size:1.05rem; color:var(--green); text-align:left; }
+  .seo-services { display:grid; gap:2.5rem; margin-top:var(--stack-lg); }
+  .faq-list { border-top:1px solid var(--line); }
+  .faq-item { border-bottom:1px solid var(--line); }
+  .faq-item summary { cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:1.5rem; align-items:center; min-height:4.5rem; padding-block:1.25rem; }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item h3 { font-size:1.2rem; line-height:1.6; }
+  .faq-toggle::after { content:'+'; color:var(--green); font-size:1.5rem; }
+  .faq-item[open] .faq-toggle::after { content:'−'; color:var(--red); }
+  .faq-item .prose { padding-bottom:1.75rem; }
+  .final-cta { border-top:1px solid var(--line); }
+  .phone-link { display:inline-block; margin-top:1.5rem; }
+  .callback { margin-top:var(--stack-lg); max-width:52rem; border-block:1px solid var(--line); scroll-margin-top:7rem; }
+  .callback summary { cursor:pointer; padding-block:1.5rem; }
+  .callback :global(.cform) { padding-block:1rem 2rem; }
+  .persian-home :global(.btn) { white-space:normal; line-height:1.7; padding-block:.8rem; text-align:center; }
+  @media(min-width:700px) { .work-grid,.supporting-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(min-width:960px) {
+    .intro-grid { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:var(--col-gap); }
+    .intro-grid :global(.h2) { grid-column:2 / span 10; }
+    .intro-copy { grid-column:6 / -1; }
+    .service { grid-template-columns:1fr 1.5fr; }
+    .supporting-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .beliefs { grid-template-columns:repeat(12,minmax(0,1fr)); }
+    .belief { grid-column:1 / span 8; grid-template-columns:4rem 1fr; }
+    .belief:nth-child(even) { grid-column:5 / span 8; }
+    .about-grid { grid-template-columns:1.4fr 1fr; align-items:center; }
+    .bilingual-grid,.seo-grid { grid-template-columns:1.1fr 1fr; align-items:center; }
+    .faq-grid { grid-template-columns:1fr 1.4fr; }
+  }
+</style>

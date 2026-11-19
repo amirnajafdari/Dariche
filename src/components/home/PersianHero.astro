@@ -1,0 +1,193 @@
+---
+import { contactForm, homeWhatsApp, persianHomeContact } from '@/data/persianHome';
+import Headline from '../Headline.astro';
+import PrimaryButton from '../PrimaryButton.astro';
+import SecondaryButton from '../SecondaryButton.astro';
+import WhatsAppButton from '../WhatsAppButton.astro';
+import ScreenMock from '../ScreenMock.astro';
+
+const lang = 'fa';
+const yours = 'بیزینس تو';
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <Headline lines={['یه دریچه برای', 'دیده شدن بیزینست.']} as="h1" size="display" id="hero-title" class="hero__title" />
+      <div class="hero__text" data-reveal style="--delay:.25s">
+        <p class="lead">طراحی سایت، سئو و خدمات دیجیتال برای بیزینس‌های ایرانی در بریتانیا. از ساخت یه سایت حرفه‌ای تا بهتر دیده شدن توی گوگل، کمک می‌کنیم مشتری‌های بیشتری با بیزینست آشنا بشن.</p>
+        <p class="hero__sub"><strong>دو تا طراح، یه استودیوی کوچیک و کلی وسواس روی جزئیات.</strong></p>
+      </div>
+      <div class="hero__actions" data-reveal style="--delay:.35s" data-hide-wa>
+        <div class="btn-row">
+          <PrimaryButton href={contactForm} icon="none">بیا حرف بزنیم</PrimaryButton>
+          <SecondaryButton href="#work">کارامون رو ببین</SecondaryButton>
+        </div>
+        <WhatsAppButton lang={lang} variant="quiet" urlOverride={homeWhatsApp} label={persianHomeContact.whatsapp ? 'یا مستقیم توی واتساپ پیام بده' : 'درخواست تماس ثبت کن'} />
+      </div>
+    </div>
+
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hwin" data-parallax="0.05">
+        <svg class="hwin__echo" viewBox="0 0 300 420" preserveAspectRatio="none"><path d="M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"></path></svg>
+        <div class="hwin__pane" data-reveal="mask" style="--delay:.15s">
+          <div class="hwin__scene">
+            <ScreenMock kind="clinic" bg="#ffffff" accent="#226F54" title={yours} device="mobile" />
+          </div>
+          <span class="hwin__mullion"></span>
+          <span class="hwin__transom"></span>
+        </div>
+        <svg class="hwin__frame" viewBox="0 0 300 420" preserveAspectRatio="none"><path d="M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z" fill="none" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"></path></svg>
+        <span class="hwin__latch"></span>
+        <span class="hwin__sill"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(3rem, 1rem + 6vw, 7rem) var(--section);
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--stack-xl);
+  }
+  .hero__copy {
+    display: grid;
+    gap: var(--stack-md);
+    align-content: center;
+  }
+  .hero__title {
+    font-size: clamp(2.7rem, 1.2rem + 5.4vw, 6.2rem);
+    line-height: 1.5;
+  }
+  .hero__text {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .hero__sub {
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+  }
+  .hero__actions {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    margin-top: 1rem;
+  }
+
+  .hero__visual {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .hwin {
+    position: relative;
+    width: min(64vw, 22rem);
+    aspect-ratio: 300 / 420;
+    color: var(--ink);
+  }
+  .hwin__echo,
+  .hwin__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .hwin__echo {
+    color: var(--line-strong);
+    translate: 18px 18px;
+  }
+  :global([dir='rtl']) .hwin__echo {
+    translate: -18px 18px;
+  }
+  .hwin__pane {
+    position: absolute;
+    inset: 0;
+    background: var(--green-tint);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 420' preserveAspectRatio='none'%3E%3Cpath d='M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 420' preserveAspectRatio='none'%3E%3Cpath d='M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  }
+  .hwin__scene {
+    position: absolute;
+    inset-inline: 14%;
+    top: 26%;
+    bottom: -12%;
+    box-shadow: 0 30px 60px -30px rgb(25 83 63 / 0.35);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hwin__scene {
+      animation: rise 1.6s 0.5s var(--ease) both;
+    }
+  }
+  @keyframes rise {
+    from {
+      translate: 0 18%;
+    }
+  }
+  .hwin__mullion,
+  .hwin__transom {
+    position: absolute;
+    background: var(--ink);
+    opacity: 0.18;
+  }
+  .hwin__mullion {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+  }
+  .hwin__transom {
+    inset-inline: 0;
+    top: 36%;
+    height: 1px;
+  }
+  .hwin__latch {
+    position: absolute;
+    top: 58%;
+    inset-inline-start: -4px;
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+  }
+  .hwin__sill {
+    position: absolute;
+    bottom: -1px;
+    inset-inline: -12% -20%;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  @media (min-width: 960px) {
+    .hero {
+      padding-top: clamp(3rem, 1rem + 4vw, 6rem);
+    }
+    .hero__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: center;
+      min-height: min(78vh, 52rem);
+    }
+    .hero__copy {
+      grid-column: 1 / span 7;
+    }
+    .hero__visual {
+      grid-column: 9 / -1;
+    }
+    .hwin {
+      width: 100%;
+      max-width: 25rem;
+    }
+  }
+  /* English: the window sits a touch lower and closer to the text */
+  :global(:root[lang='en-GB']) .hero__visual {
+    padding-top: 4rem;
+  }
+  @media (max-width: 959px) {
+    .hero__visual {
+      padding-inline-end: 1.5rem;
+    }
+  }
+</style>

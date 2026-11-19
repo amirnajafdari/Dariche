@@ -14,9 +14,12 @@ interface Props {
   lang: Lang;
   /** Pre-select a service option (by index in form.helpOptions) */
   preselect?: number;
+  /** Page-specific recipient; defaults preserve existing contact-page behavior. */
+  email?: string;
+  successText?: string;
 }
-const { lang, preselect } = Astro.props;
-const action = site.formEndpoint || `mailto:${site.contact.email}`;
+const { lang, preselect, email = site.contact.email, successText = form.success[lang] } = Astro.props;
+const action = site.formEndpoint || `mailto:${email}`;
 const method = site.formEndpoint ? 'post' : 'get';
 ---
 <form
@@ -27,7 +30,7 @@ const method = site.formEndpoint ? 'post' : 'get';
   novalidate
   data-contact-form
   data-endpoint={site.formEndpoint}
-  data-email={site.contact.email}
+  data-email={email}
   data-msg-required={form.required[lang]}
   data-msg-email={form.invalidEmail[lang]}
   data-msg-sending={form.sending[lang]}
@@ -91,7 +94,7 @@ const method = site.formEndpoint ? 'post' : 'get';
   </div>
 
   <div class="cform__status" role="status" aria-live="polite" tabindex="-1" data-status>
-    <p class="cform__success" hidden data-success>{form.success[lang]}</p>
+    <p class="cform__success" hidden data-success>{successText}</p>
     <p class="cform__error" hidden data-error>{form.error[lang]}</p>
   </div>
 </form>

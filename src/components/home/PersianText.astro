@@ -1,0 +1,6 @@
+---
+// Isolate Latin names and GBP amounts without changing the authoritative text.
+interface Props { text: string }
+const parts = Astro.props.text.split(/([£A-Za-z][£A-Za-z0-9 .&+–—/-]*[A-Za-z0-9]|[A-Za-z])/g);
+---
+{parts.map((part, i) => i % 2 ? <bdi dir="ltr">{part}</bdi> : part)}

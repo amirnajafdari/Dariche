@@ -34,11 +34,29 @@ export const home = {
     title: { fa: ['چند تا کاری که', '*دوستشون* داریم.'], en: ['A few things', 'we *love*.'] } as Localized<string[]>,
   },
   beliefs: {
-    title: { fa: ['سایت ساختن آسونه.', 'ساختن سایت *درست*، نه خیلی.'], en: ['Building a website is easy.', "Building the *right* one isn't."] } as Localized<string[]>,
-    items: {
-      fa: ['ظاهر مهمه. ولی کافی نیست.', 'سئو از روز اول شروع می‌شه، نه بعد از طراحی.', 'فارسی نباید شبیه Google Translate باشه.', 'هر بیزینسی یه سایت متفاوت لازم داره.'],
-      en: ["Looks matter. They're just not enough.", 'SEO starts on day one, not after the design.', "Persian shouldn't read like Google Translate.", 'Every business needs a different website.'],
+    eyebrow: { fa: 'چرا دریچه؟', en: 'Why Daricheh?' } as Localized,
+    title: {
+      fa: ['یه سایت خوب،', 'فقط یه طراحی *قشنگ* نیست.'],
+      en: ['A great website is more', 'than just *good looks*.'],
     } as Localized<string[]>,
+    lead: {
+      fa: 'ما طراحی، تجربه کاربری و سئو رو کنار هم می‌ذاریم تا سایتت فقط یه ویترین آنلاین نباشه؛ بخشی از رشد بیزینست باشه.',
+      en: 'We bring design, user experience and SEO together to make your website more than an online shop window. It should play a real part in growing your business.',
+    } as Localized,
+    items: {
+      fa: [
+        { title: 'طراحی با هدف', text: 'هر بخش سایت باید دلیلی داشته باشه؛ از اولین چیزی که مشتری می‌بینه تا دکمه‌ای که روش کلیک می‌کنه.' },
+        { title: 'سئو از همون اول', text: 'ساختار سایت رو از روز اول با در نظر گرفتن گوگل و جستجوهای مشتری‌های بریتانیایی طراحی می‌کنیم.' },
+        { title: 'متناسب با بازار بریتانیا', text: 'محتوا، طراحی و تجربه کاربری رو برای مخاطب انگلیسی‌زبان و انتظارات مشتری‌های این بازار آماده می‌کنیم.' },
+        { title: 'متناسب با بیزینس تو', text: 'نه قالب تکراری، نه راه‌حل یکسان برای همه. سایت باید با خدمات، مشتری‌ها و هدف بیزینست هماهنگ باشه.' },
+      ],
+      en: [
+        { title: 'Design with Purpose', text: 'Every element should have a reason to be there, from the first thing visitors see to the button they decide to click.' },
+        { title: 'SEO from Day One', text: 'We build your website with search engines and how people in the UK actually search in mind, right from the start.' },
+        { title: 'Made for the UK Market', text: 'From content and design to user experience, we create websites that connect with English-speaking audiences and meet the expectations of UK customers.' },
+        { title: 'Built Around Your Business', text: 'No recycled templates or one-size-fits-all solutions. Your website should reflect your services, your customers and your business goals.' },
+      ],
+    } as Localized<{ title: string; text: string }[]>,
   },
   pricing: {
     eyebrow: { fa: 'تعرفه‌ها', en: 'Pricing' } as Localized,

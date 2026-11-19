@@ -1,0 +1,62 @@
+---
+import Logo from '../Logo.astro';
+import { oneOffServices, monthlyPackages, persianHomeContact, homeWhatsApp, contactForm } from '@/data/persianHome';
+const pages = [['خانه',''],['خدمات','services/'],['نمونه‌کارها','work/'],['تعرفه‌ها','pricing/'],['درباره ما','about/'],['مقالات','blog/'],['تماس با ما','#callback']];
+const services = [['طراحی سایت','web-design'],['بازطراحی سایت','website-redesign'],['فروشگاه اینترنتی','ecommerce'],['سئو','seo'],['سئو محلی','local-seo'],['Google Maps','local-seo'],['پشتیبانی سایت','website-support']];
+const legal = [['حریم خصوصی','privacy'],['سیاست کوکی‌ها','cookies'],['شرایط استفاده','terms']];
+---
+<footer class="persian-footer" data-hide-wa>
+  <div class="container">
+    <div class="footer-brand">
+      <Logo lang="fa" size="lg" />
+      <p class="lead">یه استودیوی کوچیک طراحی سایت و سئو برای بیزینس‌های ایرانی در بریتانیا.</p>
+    </div>
+    <div class="footer-columns">
+      <nav aria-labelledby="footer-pages">
+        <h2 id="footer-pages">صفحات</h2>
+        <ul role="list">{pages.map(([label,path]) => <li><a href={`/fa/${path}`}>{label}</a></li>)}</ul>
+      </nav>
+      <nav aria-labelledby="footer-services">
+        <h2 id="footer-services">خدمات</h2>
+        <ul role="list">{services.map(([label,path]) => <li><a href={`/fa/${path}/`}><bdi>{label}</bdi></a></li>)}</ul>
+      </nav>
+      <nav aria-labelledby="footer-pricing">
+        <h2 id="footer-pricing">تعرفه‌ها</h2>
+        <ul role="list">
+          {oneOffServices.map((plan) => <li><a href={`#${plan.id}`}>{plan.footer} — {plan.from && 'از '}<bdi dir="ltr">{plan.price}</bdi></a></li>)}
+          {monthlyPackages.map((plan) => <li><a href={`#${plan.id}`}>{plan.title} — <bdi dir="ltr">{plan.price}</bdi>/ماه</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-labelledby="footer-contact">
+        <h2 id="footer-contact">ارتباط با ما</h2>
+        <ul role="list">
+          {persianHomeContact.whatsapp && <li><a href={homeWhatsApp} target="_blank" rel="noopener">واتساپ</a></li>}
+          {persianHomeContact.phone && <li><a href={`tel:${persianHomeContact.phone}`}>تماس تلفنی</a></li>}
+          <li><a href={`mailto:${persianHomeContact.email}`}>ایمیل</a></li>
+          {persianHomeContact.instagram && <li><a href={persianHomeContact.instagram} target="_blank" rel="noopener me">اینستاگرام</a></li>}
+          {persianHomeContact.linkedin && <li><a href={persianHomeContact.linkedin} target="_blank" rel="noopener me">لینکدین</a></li>}
+          {!persianHomeContact.phone && <li><a href={contactForm}>درخواست تماس ثبت کن</a></li>}
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <nav aria-label="قوانین و اطلاعات"><h2>قوانین و اطلاعات</h2><ul role="list">{legal.map(([label,path]) => <li><a href={`/fa/legal/${path}/`}>{label}</a></li>)}</ul></nav>
+      <nav aria-label="تغییر زبان" class="languages"><span>تغییر زبان:</span><a href="/fa/" lang="fa" aria-current="page">فارسی</a><span aria-hidden="true">|</span><a href="/en/" lang="en-GB" dir="ltr" hreflang="en-GB">English</a></nav>
+    </div>
+    <div class="colophon"><p>با دقت طراحی شده، توسط دریچه.</p><p dir="ltr" lang="en-GB">© Daricheh — All rights reserved.</p></div>
+  </div>
+</footer>
+<style>
+  .persian-footer { border-top:1px solid var(--line); padding-block:var(--section-sm) 2rem; }
+  .footer-brand { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); }
+  .footer-columns { display:grid; gap:2.5rem var(--col-gap); }
+  h2 { font-size:1rem; color:var(--ink-3); font-weight:500; margin-bottom:1rem; }
+  a { display:inline-block; padding-block:.4rem; min-height:2.75rem; }
+  a:hover { color:var(--green); }
+  .footer-columns ul { display:grid; gap:.1rem; }
+  .footer-bottom { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1.5rem; border-top:1px solid var(--line); padding-top:2rem; margin-top:var(--stack-lg); }
+  .footer-bottom ul,.languages { display:flex; flex-wrap:wrap; gap:.5rem 1.5rem; align-items:center; }
+  .colophon { display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; font-size:.9rem; color:var(--ink-3); margin-top:2rem; }
+  @media(min-width:600px) { .footer-columns { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(min-width:1100px) { .footer-columns { grid-template-columns:1fr 1fr 1.5fr 1fr; } }
+</style>

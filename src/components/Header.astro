@@ -13,8 +13,11 @@ import Icon from './Icon.astro';
 interface Props {
   lang: Lang;
   alternates: Partial<Record<Lang, string>>;
+  whatsappHref?: string;
+  whatsappLabel?: string;
+  contactHref?: string;
 }
-const { lang, alternates } = Astro.props;
+const { lang, alternates, whatsappHref, whatsappLabel, contactHref = href(lang, 'contact') } = Astro.props;
 const t = useTranslations(lang);
 const path = Astro.url.pathname;
 const isCurrent = (p: string) => (p === '' ? path === href(lang) : path.startsWith(href(lang, p)));
@@ -54,7 +57,7 @@ const navLabel = lang === 'fa' ? 'منوی اصلی' : 'Main';
 
     <div class="site-header__actions">
       <LanguageSwitcher lang={lang} alternates={alternates} class="site-header__lang" />
-      <PrimaryButton href={href(lang, 'contact')} icon="none" class="site-header__cta">{t.letsTalk}</PrimaryButton>
+      <PrimaryButton href={contactHref} icon="none" class="site-header__cta">{t.letsTalk}</PrimaryButton>
       <button type="button" class="menu-btn" aria-haspopup="dialog" aria-controls="mobile-menu" data-menu-open>
         <Icon name="menu" />
         <span>{t.menu}</span>
@@ -105,8 +108,8 @@ const navLabel = lang === 'fa' ? 'منوی اصلی' : 'Main';
   </nav>
 
   <div class="drawer__foot">
-    <PrimaryButton href={href(lang, 'contact')}>{t.letsTalk}</PrimaryButton>
-    <WhatsAppButton lang={lang} variant="quiet" />
+    <PrimaryButton href={contactHref}>{t.letsTalk}</PrimaryButton>
+    <WhatsAppButton lang={lang} variant="quiet" urlOverride={whatsappHref} label={whatsappLabel} />
     <LanguageSwitcher lang={lang} alternates={alternates} />
   </div>
 </dialog>

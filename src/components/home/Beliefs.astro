@@ -10,12 +10,19 @@ const { lang } = Astro.props;
 ---
 <section class="beliefs section" aria-labelledby="beliefs-title">
   <div class="container">
-    <Headline lines={home.beliefs.title[lang]} id="beliefs-title" size="display" class="beliefs__title" />
+    <header class="beliefs__intro">
+      <p class="eyebrow" data-reveal="fade">{home.beliefs.eyebrow[lang]}</p>
+      <Headline lines={home.beliefs.title[lang]} id="beliefs-title" size="display" class="beliefs__title" />
+      <p class="lead" data-reveal>{home.beliefs.lead[lang]}</p>
+    </header>
     <ol class="beliefs__list" role="list">
-      {home.beliefs.items[lang].map((text, i) => (
+      {home.beliefs.items[lang].map((item, i) => (
         <li class:list={['belief', `belief--${i % 2 ? 'b' : 'a'}`]} data-reveal>
           <span class="belief__n">{num(lang, String(i + 1).padStart(2, '0'))}</span>
-          <p class="belief__text">{text}</p>
+          <div class="belief__body">
+            <h3 class="belief__text">{item.title}</h3>
+            <p class="belief__description">{item.text}</p>
+          </div>
         </li>
       ))}
     </ol>
@@ -23,6 +30,18 @@ const { lang } = Astro.props;
 </section>
 
 <style>
+  .beliefs__intro {
+    display: grid;
+    gap: var(--stack-md);
+  }
+  .belief__body {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .belief__description {
+    color: var(--ink-2);
+    max-width: var(--max-text);
+  }
   .beliefs__title {
     font-size: clamp(2.3rem, 1.3rem + 4.4vw, 5.6rem);
     max-width: 16ch;

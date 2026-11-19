@@ -17,7 +17,8 @@ import TestimonialsSection from '@/components/home/TestimonialsSection.astro';
 import FaqSection from '@/components/FaqSection.astro';
 import FinalCTA from '@/components/FinalCTA.astro';
 
-export const getStaticPaths = getStaticLangPaths;
+// Persian has its own homepage entry so its CSS and scripts never enter the English page.
+export const getStaticPaths = () => getStaticLangPaths().filter(({ params }) => params.lang !== 'fa');
 const lang = Astro.params.lang as Lang;
 const faqs = homeFaqs[lang];
 ---
