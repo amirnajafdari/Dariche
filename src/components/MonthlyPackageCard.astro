@@ -1,0 +1,199 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { formatGbp, type MonthlyPackage } from '@/data/pricing';
+import PersianText from './home/PersianText.astro';
+import PrimaryButton from './PrimaryButton.astro';
+import SecondaryButton from './SecondaryButton.astro';
+
+interface Props {
+  pkg: MonthlyPackage;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3' | 'h4';
+  ctaHref?: string;
+}
+
+const { pkg, lang, headingLevel: H = 'h3', ctaHref } = Astro.props;
+const t = useTranslations(lang);
+const contactUrl = ctaHref ?? `${href(lang, 'contact')}?package=${encodeURIComponent(pkg.id)}#form`;
+const amount = formatGbp(pkg.price);
+---
+<article
+  class:list={['monthly-card', { 'monthly-card--featured': pkg.featured }]}
+  id={pkg.id}
+  aria-labelledby={`monthly-${pkg.id}`}
+>
+  <div class="monthly-card__head">
+    <div class="monthly-card__titles">
+      <H class="monthly-card__title" id={`monthly-${pkg.id}`}>{pkg.title[lang]}</H>
+      <bdi dir={lang === 'fa' ? 'ltr' : 'rtl'} lang={lang === 'fa' ? 'en-GB' : 'fa'} class="monthly-card__alt">
+        {pkg.secondaryName[lang]}
+      </bdi>
+      {pkg.featured && pkg.featuredLabel && (
+        <span class="monthly-card__badge">{pkg.featuredLabel[lang]}</span>
+      )}
+    </div>
+
+    <p class="monthly-card__price">
+      <bdi dir="ltr" class="monthly-card__amount">{amount}</bdi>
+      <span class="monthly-card__period">{t.perMonth}</span>
+    </p>
+
+    <p class="monthly-card__tagline"><strong>{pkg.tagline[lang]}</strong></p>
+
+    <div class="monthly-card__desc">
+      {pkg.paragraphs[lang].map((paragraph) => (
+        <p>{lang === 'fa' ? <PersianText text={paragraph} /> : paragraph}</p>
+      ))}
+    </div>
+  </div>
+
+  <details class="monthly-card__features" data-monthly-features open>
+    <summary>
+      <span>{t.packageFeatures}</span>
+      <span aria-hidden="true" class="monthly-card__toggle"></span>
+    </summary>
+    <ul role="list">
+      {pkg.features[lang].map((feature) => (
+        <li>{lang === 'fa' ? <PersianText text={feature} /> : feature}</li>
+      ))}
+    </ul>
+  </details>
+
+  <div class="monthly-card__cta">
+    {pkg.featured ? (
+      <PrimaryButton href={contactUrl} icon="arrow">{pkg.cta[lang]}</PrimaryButton>
+    ) : (
+      <SecondaryButton href={contactUrl} icon="arrow">{pkg.cta[lang]}</SecondaryButton>
+    )}
+  </div>
+</article>
+
+<style>
+  .monthly-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--ink);
+    min-width: 0;
+    scroll-margin-top: 7rem;
+  }
+  .monthly-card--featured {
+    border: 1px solid var(--green);
+    border-top: 3px solid var(--green);
+    border-radius: var(--radius);
+  }
+  .monthly-card__head {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .monthly-card__titles {
+    display: grid;
+    gap: 0.25rem;
+    justify-items: start;
+  }
+  .monthly-card__title {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .monthly-card__alt {
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+  }
+  .monthly-card__badge {
+    color: var(--red);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    margin-top: 0.25rem;
+  }
+  .monthly-card__price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    color: var(--green);
+  }
+  .monthly-card__amount {
+    font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem);
+    font-weight: 200;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .monthly-card__period {
+    font-size: var(--fs-small);
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  .monthly-card__tagline {
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .monthly-card__desc {
+    display: grid;
+    gap: 0.75rem;
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+    line-height: 1.8;
+  }
+  .monthly-card__features {
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+  .monthly-card__features summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    min-height: 2.75rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .monthly-card__features summary::-webkit-details-marker {
+    display: none;
+  }
+  .monthly-card__toggle::after {
+    content: '+';
+    color: var(--green);
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .monthly-card__features[open] .monthly-card__toggle::after {
+    content: '−';
+  }
+  .monthly-card__features ul {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 0.9rem;
+  }
+  .monthly-card__features li {
+    position: relative;
+    padding-inline-start: 1rem;
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .monthly-card__features li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.85em;
+    width: 4px;
+    height: 4px;
+    background: var(--green);
+  }
+  .monthly-card__cta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+  .monthly-card__cta :global(.btn) {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    padding-block: 0.85rem;
+  }
+</style>

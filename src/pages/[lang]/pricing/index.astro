@@ -1,20 +1,21 @@
 ---
 import { getStaticLangPaths, href, type Lang } from '@/i18n';
-import { useTranslations } from '@/i18n/ui';
-import { packages, addOns } from '@/data/packages';
+import { oneOffServices, monthlyPackages, pricingNote } from '@/data/pricing';
 import { pricingFaqs } from '@/data/faqs';
 import { pricingPage } from '@/data/pages';
 import { pageSeo } from '@/data/seo';
-import { faqSchema } from '@/lib/schema';
+import { faqSchema, pricingCatalogSchema } from '@/lib/schema';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
-import PricingCard from '@/components/PricingCard.astro';
+import OneOffPricingCard from '@/components/OneOffPricingCard.astro';
+import MonthlyPackageCard from '@/components/MonthlyPackageCard.astro';
+import MonthlyComparisonTable from '@/components/MonthlyComparisonTable.astro';
+import PrimaryButton from '@/components/PrimaryButton.astro';
 import FaqSection from '@/components/FaqSection.astro';
 import FinalCTA from '@/components/FinalCTA.astro';
 
 export const getStaticPaths = getStaticLangPaths;
 const lang = Astro.params.lang as Lang;
-const t = useTranslations(lang);
 const crumbs = [{ name: lang === 'fa' ? 'تعرفه‌ها' : 'Pricing', path: href(lang, 'pricing') }];
 const faqs = pricingFaqs[lang];
 ---
@@ -24,33 +25,50 @@ const faqs = pricingFaqs[lang];
   title={pageSeo.pricing.title[lang]}
   description={pageSeo.pricing.description[lang]}
   breadcrumbs={crumbs}
-  schema={[faqSchema(faqs)]}
+  schema={[pricingCatalogSchema(lang), faqSchema(faqs)]}
 >
   <PageHero lang={lang} title={pricingPage.title[lang]} lead={pricingPage.lead[lang]} variant="split" breadcrumbs={crumbs} />
 
-  <section class="section pricing-page" aria-label={crumbs[0].name}>
+  <section class="section pricing-section pricing-section--first" id="one-off" aria-labelledby="oneoff-title">
     <div class="container">
+      <header class="pricing-section__head" data-reveal>
+        <p class="eyebrow">{pricingPage.oneOffEyebrow[lang]}</p>
+        <h2 class="h2" id="oneoff-title">{pricingPage.oneOffTitle[lang]}</h2>
+        <p class="lead">{pricingPage.oneOffLead[lang]}</p>
+      </header>
       <div class="pricing-page__grid">
-        {packages.map((p) => <PricingCard pkg={p} lang={lang} expandable headingLevel="h2" />)}
+        {oneOffServices.map((s) => <OneOffPricingCard service={s} lang={lang} headingLevel="h3" />)}
       </div>
     </div>
   </section>
 
-  <section class="section addons" aria-labelledby="addons-title">
-    <div class="container addons__grid">
-      <div class="addons__head">
-        <h2 class="h2" id="addons-title" data-reveal>{pricingPage.addOnsTitle[lang]}</h2>
-        <p class="body" data-reveal>{pricingPage.addOnsLead[lang]}</p>
+  <section class="section pricing-section" id="monthly" aria-labelledby="monthly-title">
+    <div class="container">
+      <header class="pricing-section__head" data-reveal>
+        <p class="eyebrow">{pricingPage.monthlyEyebrow[lang]}</p>
+        <h2 class="h2" id="monthly-title">{pricingPage.monthlyTitle[lang]}</h2>
+        <p class="lead">{pricingPage.monthlyLead[lang]}</p>
+      </header>
+      <div class="pricing-page__grid pricing-page__grid--monthly">
+        {monthlyPackages.map((p) => <MonthlyPackageCard pkg={p} lang={lang} headingLevel="h3" />)}
       </div>
-      <dl class="addons__list">
-        {addOns.map((a) => (
-          <div class="addon" data-reveal>
-            <dt>{a.name[lang]}</dt>
-            <dd class="addon__text">{a.text[lang]}</dd>
-            <dd class="addon__price">{a.price[lang]}</dd>
-          </div>
-        ))}
-      </dl>
+      <div class="pricing-page__help" data-reveal>
+        <h3 class="h3">{pricingPage.helpTitle[lang]}</h3>
+        <p class="body">{pricingPage.helpText[lang]}</p>
+        <PrimaryButton href={href(lang, 'contact#form')} icon="arrow">{pricingPage.helpCta[lang]}</PrimaryButton>
+      </div>
+      <p class="pricing-page__note" data-reveal>{pricingNote[lang]}</p>
+    </div>
+  </section>
+
+  <section class="section pricing-compare" id="compare" aria-labelledby="compare-title">
+    <div class="container">
+      <header class="pricing-section__head" data-reveal>
+        <p class="eyebrow">{pricingPage.compareEyebrow[lang]}</p>
+        <h2 class="h2" id="compare-title">{pricingPage.compareTitle[lang]}</h2>
+        <p class="lead">{pricingPage.compareLead[lang]}</p>
+      </header>
+      <MonthlyComparisonTable lang={lang} />
     </div>
   </section>
 
@@ -58,68 +76,54 @@ const faqs = pricingFaqs[lang];
   <FinalCTA lang={lang} />
 </BaseLayout>
 
+<script>
+  const wide = window.matchMedia('(min-width: 960px)');
+  const lists = document.querySelectorAll<HTMLDetailsElement>('[data-monthly-features]');
+  const sync = () => lists.forEach((list) => { list.open = wide.matches; });
+  sync();
+  wide.addEventListener('change', sync);
+</script>
+
 <style>
-  .pricing-page {
+  .pricing-section--first {
     padding-top: 0;
+  }
+  .pricing-section__head {
+    display: grid;
+    gap: 1.15rem;
+    margin-bottom: var(--stack-lg);
+    justify-items: start;
   }
   .pricing-page__grid {
     display: grid;
-    gap: var(--stack-lg) var(--col-gap);
+    gap: 2rem var(--col-gap);
+    align-items: start;
   }
-  @media (min-width: 900px) {
+  @media (min-width: 960px) {
     .pricing-page__grid {
-      grid-template-columns: repeat(3, 1fr);
-      align-items: start;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-  @media (max-width: 899px) {
-    .pricing-page__grid > :global(.plan--featured) {
+  @media (max-width: 959px) {
+    .pricing-page__grid--monthly > :global(.monthly-card--featured) {
       order: -1;
     }
   }
-  .addons__grid {
+  .pricing-page__help {
     display: grid;
-    gap: var(--stack-lg);
-  }
-  .addons__head {
-    display: grid;
-    gap: var(--stack-md);
-    align-content: start;
-  }
-  @media (min-width: 960px) {
-    .addons__grid {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--col-gap);
-    }
-    .addons__head {
-      grid-column: 1 / span 4;
-    }
-    .addons__list {
-      grid-column: 6 / -1;
-    }
-  }
-  .addon {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.25rem 2rem;
-    padding-block: 1.5rem;
+    gap: 1.25rem;
+    justify-items: start;
+    margin-top: var(--stack-xl);
+    padding-top: var(--stack-lg);
     border-top: 1px solid var(--line);
   }
-  .addon dt {
-    font-weight: 500;
-    font-size: 1.1rem;
-  }
-  .addon__text {
-    grid-column: 1;
+  .pricing-page__note {
+    margin-top: 2.5rem;
+    max-width: 50rem;
     color: var(--ink-3);
     font-size: var(--fs-small);
   }
-  .addon__price {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: center;
-    color: var(--green);
-    font-weight: 500;
-    white-space: nowrap;
+  .pricing-compare {
+    background: var(--paper-2);
   }
 </style>

@@ -7,8 +7,5 @@ export const rich = (s: string) => escape(s).replace(/\*([^*]+)\*/g, '<strong>$1
 /** Plain version of a rich headline, for meta tags and aria labels. */
 export const plain = (s: string | string[]) => (Array.isArray(s) ? s.join(' ') : s).replace(/\*/g, '');
 
-/** "£1,950" in either language */
-export const price = (amount: number, lang: 'fa' | 'en') => {
-  const s = `£${amount.toLocaleString('en-GB')}`;
-  return lang === 'fa' ? s.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]).replace(/,/g, '٬') : s;
-};
+/** Formats a GBP integer amount consistently across both languages, e.g. "£399". */
+export const price = (amount: number, _lang?: 'fa' | 'en') => `£${amount.toLocaleString('en-GB')}`;

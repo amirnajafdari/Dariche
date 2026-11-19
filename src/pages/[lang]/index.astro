@@ -2,7 +2,7 @@
 import { getStaticLangPaths, type Lang } from '@/i18n';
 import { pageSeo, finglishPhrases } from '@/data/seo';
 import { homeFaqs } from '@/data/faqs';
-import { faqSchema, professionalService } from '@/lib/schema';
+import { faqSchema, pricingCatalogSchema, professionalService } from '@/lib/schema';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Intro from '@/components/home/Intro.astro';
@@ -28,7 +28,7 @@ const faqs = homeFaqs[lang];
   title={pageSeo.home.title[lang]}
   description={pageSeo.home.description[lang]}
   keywords={finglishPhrases.home}
-  schema={[professionalService(lang), faqSchema(faqs)]}
+  schema={[professionalService(lang), pricingCatalogSchema(lang), faqSchema(faqs)]}
 >
   <Hero lang={lang} />
   <Intro lang={lang} />

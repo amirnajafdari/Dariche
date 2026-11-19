@@ -1,0 +1,137 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { formatGbp, type OneOffService } from '@/data/pricing';
+import PersianText from './home/PersianText.astro';
+import SecondaryButton from './SecondaryButton.astro';
+
+interface Props {
+  service: OneOffService;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3' | 'h4';
+  /** Optional custom CTA URL override (e.g. homepage callback anchor) */
+  ctaHref?: string;
+}
+
+const { service, lang, headingLevel: H = 'h3', ctaHref } = Astro.props;
+const t = useTranslations(lang);
+const contactUrl = ctaHref ?? `${href(lang, 'contact')}?package=${encodeURIComponent(service.id)}#form`;
+const amount = formatGbp(service.price);
+---
+<article class="oneoff-card" id={service.id} aria-labelledby={`oneoff-${service.id}`}>
+  <div class="oneoff-card__head">
+    <H class="oneoff-card__title" id={`oneoff-${service.id}`}>{service.title[lang]}</H>
+    <p class="oneoff-card__price">
+      {service.from && <span class="oneoff-card__prefix">{t.from} </span>}
+      <bdi dir="ltr" class="oneoff-card__amount">{amount}</bdi>
+      <span class="oneoff-card__billing">{service.billingNote[lang]}</span>
+    </p>
+    <p class="oneoff-card__tagline"><strong>{service.tagline[lang]}</strong></p>
+    <p class="oneoff-card__desc">
+      {lang === 'fa' ? <PersianText text={service.description.fa} /> : service.description.en}
+    </p>
+  </div>
+
+  <div class="oneoff-card__features">
+    <p class="oneoff-card__list-label">{service.listLabel[lang]}</p>
+    <ul role="list">
+      {service.features[lang].map((feature) => (
+        <li>{lang === 'fa' ? <PersianText text={feature} /> : feature}</li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="oneoff-card__cta">
+    <SecondaryButton href={contactUrl} icon="arrow">{service.cta[lang]}</SecondaryButton>
+  </div>
+</article>
+
+<style>
+  .oneoff-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--ink);
+    min-width: 0;
+    scroll-margin-top: 7rem;
+  }
+  .oneoff-card__head {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .oneoff-card__title {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .oneoff-card__price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    color: var(--green);
+  }
+  .oneoff-card__prefix,
+  .oneoff-card__billing {
+    font-size: var(--fs-small);
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  .oneoff-card__amount {
+    font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem);
+    font-weight: 200;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .oneoff-card__tagline {
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .oneoff-card__desc {
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+    line-height: 1.8;
+  }
+  .oneoff-card__features {
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+    display: grid;
+    gap: 0.85rem;
+  }
+  .oneoff-card__list-label {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .oneoff-card__features ul {
+    display: grid;
+    gap: 0.65rem;
+  }
+  .oneoff-card__features li {
+    position: relative;
+    padding-inline-start: 1rem;
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .oneoff-card__features li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.85em;
+    width: 4px;
+    height: 4px;
+    background: var(--green);
+  }
+  .oneoff-card__cta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+  .oneoff-card__cta :global(.btn) {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    padding-block: 0.85rem;
+  }
+</style>

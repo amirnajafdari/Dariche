@@ -2,9 +2,10 @@
 import { href, type Lang } from '@/i18n';
 import { useTranslations } from '@/i18n/ui';
 import { home } from '@/data/pages';
-import { packages } from '@/data/packages';
+import { oneOffServices, monthlyPackages, pricingNote } from '@/data/pricing';
 import SectionHeading from '../SectionHeading.astro';
-import PricingCard from '../PricingCard.astro';
+import OneOffPricingCard from '../OneOffPricingCard.astro';
+import MonthlyPackageCard from '../MonthlyPackageCard.astro';
 import Icon from '../Icon.astro';
 
 interface Props {
@@ -13,35 +14,91 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
-<section class="pricing section" aria-labelledby="pricing-title">
+<section class="pricing section" id="pricing" aria-labelledby="pricing-title">
   <div class="container">
-    <SectionHeading eyebrow={home.pricing.eyebrow[lang]} title={home.pricing.title[lang]} lead={home.pricing.lead[lang]} id="pricing-title" layout="split" />
-    <div class="pricing__grid" data-reveal>
-      {packages.map((p) => <PricingCard pkg={p} lang={lang} />)}
+    <SectionHeading
+      eyebrow={home.pricing.eyebrow[lang]}
+      title={home.pricing.title[lang]}
+      lead={home.pricing.lead[lang]}
+      id="pricing-title"
+      layout="split"
+    />
+
+    <div class="pricing__group-head" data-reveal>
+      <h3 class="h3">{home.pricing.oneOffTitle[lang]}</h3>
+      <p class="body">{home.pricing.oneOffLead[lang]}</p>
     </div>
-    <div class="pricing__cta" data-reveal>
+
+    <div class="pricing__grid" data-reveal>
+      {oneOffServices.map((s) => <OneOffPricingCard service={s} lang={lang} headingLevel="h4" />)}
+    </div>
+  </div>
+</section>
+
+<section class="pricing pricing--monthly section" id="monthly" aria-labelledby="monthly-title">
+  <div class="container">
+    <SectionHeading
+      eyebrow={home.pricing.monthlyEyebrow[lang]}
+      title={home.pricing.monthlyTitle[lang]}
+      lead={home.pricing.monthlyLead[lang]}
+      id="monthly-title"
+      layout="split"
+    />
+
+    <div class="pricing__grid pricing__grid--monthly" data-reveal>
+      {monthlyPackages.map((p) => <MonthlyPackageCard pkg={p} lang={lang} headingLevel="h3" />)}
+    </div>
+
+    <div class="pricing__foot" data-reveal>
+      <p class="pricing__note">{pricingNote[lang]}</p>
       <a href={href(lang, 'pricing')} class="link-arrow">{t.fullPricing}<Icon name="arrow" /></a>
     </div>
   </div>
 </section>
 
+<script>
+  const wide = window.matchMedia('(min-width: 960px)');
+  const lists = document.querySelectorAll<HTMLDetailsElement>('[data-monthly-features]');
+  const sync = () => lists.forEach((list) => { list.open = wide.matches; });
+  sync();
+  wide.addEventListener('change', sync);
+</script>
+
 <style>
+  .pricing--monthly {
+    padding-top: var(--section-sm);
+  }
+  .pricing__group-head {
+    display: grid;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+  }
   .pricing__grid {
     display: grid;
-    gap: var(--stack-lg) var(--col-gap);
+    gap: 2rem var(--col-gap);
+    align-items: start;
   }
-  @media (min-width: 900px) {
+  @media (min-width: 960px) {
     .pricing__grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-  /* on small screens, the package most people choose comes first */
-  @media (max-width: 899px) {
-    .pricing__grid > :global(.plan--featured) {
+  @media (max-width: 959px) {
+    .pricing__grid--monthly > :global(.monthly-card--featured) {
       order: -1;
     }
   }
-  .pricing__cta {
+  .pricing__foot {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
     margin-top: var(--stack-lg);
+    padding-top: var(--stack-md);
+    border-top: 1px solid var(--line);
+  }
+  .pricing__note {
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+    max-width: 48rem;
   }
 </style>

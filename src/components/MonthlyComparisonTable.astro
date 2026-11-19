@@ -1,0 +1,122 @@
+---
+import type { Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { comparisonRows, formatGbp, monthlyPackages } from '@/data/pricing';
+import PersianText from './home/PersianText.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<div class="compare-wrap" role="region" aria-label={t.comparePackages} tabindex="0">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th scope="col" class="compare-table__feature-head">{t.featureCol}</th>
+        {monthlyPackages.map((pkg) => (
+          <th scope="col" class:list={['compare-table__plan', { 'compare-table__plan--featured': pkg.featured }]}>
+            <span class="compare-table__name">{pkg.title[lang]}</span>
+            <bdi dir={lang === 'fa' ? 'ltr' : 'rtl'} lang={lang === 'fa' ? 'en-GB' : 'fa'} class="compare-table__alt">
+              {pkg.secondaryName[lang]}
+            </bdi>
+            <span class="compare-table__price">
+              <bdi dir="ltr">{formatGbp(pkg.price)}</bdi>
+              <span> {t.perMonth}</span>
+            </span>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {comparisonRows.map((row) => (
+        <tr>
+          <th scope="row" class="compare-table__label">
+            {lang === 'fa' ? <PersianText text={row.label.fa} /> : row.label.en}
+          </th>
+          {monthlyPackages.map((pkg) => {
+            const val = pkg.comparison[row.key][lang];
+            const isDash = val === '—';
+            return (
+              <td class:list={['compare-table__cell', { 'compare-table__cell--muted': isDash, 'compare-table__cell--featured': pkg.featured }]}>
+                {lang === 'fa' ? <PersianText text={val} /> : val}
+              </td>
+            );
+          })}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .compare-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-top: 1px solid var(--ink);
+  }
+  .compare-table {
+    width: 100%;
+    min-width: 40rem;
+    border-collapse: collapse;
+    text-align: start;
+  }
+  .compare-table th,
+  .compare-table td {
+    padding: 1.05rem 1rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: var(--fs-small);
+  }
+  .compare-table thead th {
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .compare-table__feature-head {
+    width: 38%;
+    color: var(--ink-3);
+    font-weight: 500;
+    vertical-align: bottom;
+  }
+  .compare-table__plan {
+    width: 20.66%;
+    font-weight: 400;
+  }
+  .compare-table__plan--featured,
+  .compare-table__cell--featured {
+    background: var(--green-tint);
+  }
+  .compare-table__name {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .compare-table__alt {
+    display: block;
+    font-size: var(--fs-micro);
+    color: var(--ink-3);
+    margin-top: 0.15rem;
+  }
+  .compare-table__price {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--green);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .compare-table__label {
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .compare-table__cell {
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+  .compare-table__cell--muted {
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+</style>

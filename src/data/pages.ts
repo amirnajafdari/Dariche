@@ -62,8 +62,19 @@ export const home = {
     eyebrow: { fa: 'تعرفه‌ها', en: 'Pricing' } as Localized,
     title: { fa: ['قیمت‌ها،', '*روشن* و بی‌دردسر.'], en: ['Prices,', 'out in the *open*.'] } as Localized<string[]>,
     lead: {
-      fa: 'سه تا بسته برای شروع. اگه هیچ‌کدوم دقیقاً به کارت نخورد، بگو؛ با هم یه چیز درست می‌چینیم.',
-      en: "Three packages to start with. If none fits exactly, tell us and we'll put together the right thing.",
+      fa: 'قیمت‌های یک‌باره و شفاف برای طراحی سایت و فروشگاه اینترنتی، به همراه پکیج‌های ماهانه اختیاری برای سئو، محتوا، پشتیبانی و تبلیغات.',
+      en: 'Clear one-off pricing for websites and online shops, plus optional monthly packages for ongoing SEO, content, support and ads.',
+    } as Localized,
+    oneOffTitle: { fa: 'خدمات یک‌باره طراحی و راه‌اندازی', en: 'One-off Services' } as Localized,
+    oneOffLead: {
+      fa: 'پرداخت یک‌باره برای ساخت سایت یا فروشگاه اینترنتی؛ بدون اشتراک اجباری.',
+      en: 'Single one-off project fees — not recurring subscriptions.',
+    } as Localized,
+    monthlyEyebrow: { fa: 'همکاری ماهانه', en: 'Monthly Packages' } as Localized,
+    monthlyTitle: { fa: ['سایتت رو ساختی؟', 'حالا *رشدش* بده.'], en: ['Ongoing growth,', 'month by *month*.'] } as Localized<string[]>,
+    monthlyLead: {
+      fa: 'سه پکیج ماهانه اختیاری برای سئو، تولید محتوا، نگهداری، پشتیبانی، بهینه‌سازی هوش مصنوعی و تبلیغات.',
+      en: 'Three optional monthly subscription packages for ongoing SEO, content, website support, AI optimisation and ads management.',
     } as Localized,
   },
   founders: {
@@ -132,11 +143,7 @@ export const serviceLabels = {
   benefits: { fa: 'چی به دست میاری', en: 'What you get out of it' } as Localized,
   process: { fa: 'چطور کار می‌کنیم', en: 'How we work' } as Localized,
   related: { fa: 'یه نمونه', en: 'An example' } as Localized,
-  pricing: { fa: 'از کجا شروع می‌شه', en: 'Where it starts' } as Localized,
-  supportPricing: {
-    fa: 'پشتیبانی ماهانه‌ست و از £۶۰ در ماه شروع می‌شه. جزئیاتش توی صفحه تعرفه‌هاست.',
-    en: 'Support is monthly, from £60 a month. Details are on the pricing page.',
-  } as Localized,
+  pricing: { fa: 'تعرفه', en: 'Pricing' } as Localized,
 };
 
 export const process: Localized<{ title: string; text: string }[]> = {
@@ -220,11 +227,33 @@ export const workPage = {
 export const pricingPage = {
   title: { fa: ['قیمت‌ها،', '*روشن*.'], en: ['Prices,', 'in *plain sight*.'] } as Localized<string[]>,
   lead: {
-    fa: 'سه تا بسته برای شروع، و هر چیزی که شاید بعداً لازمت بشه. بدون هزینه پنهان، بدون «تماس بگیرید».',
-    en: "Three packages to start with, plus anything you might need later. No hidden costs, no 'call for a quote'.",
+    fa: 'خدمات یک‌باره برای طراحی سایت و فروشگاه اینترنتی، جدا از پکیج‌های ماهانه سئو، محتوا و پشتیبانی. بدون هزینه پنهان، بدون «تماس بگیرید».',
+    en: "Transparent one-off pricing for web design and online shops, kept separate from our optional monthly packages. No hidden costs, no 'call for a quote'.",
   } as Localized,
-  addOnsTitle: { fa: 'افزودنی‌ها', en: 'Add-ons' } as Localized,
-  addOnsLead: { fa: 'هر کدوم رو می‌شه به هر بسته‌ای اضافه کرد.', en: 'Each can be added to any package.' } as Localized,
+  oneOffEyebrow: { fa: 'پرداخت یک‌باره', en: 'One-off Services' } as Localized,
+  oneOffTitle: { fa: 'طراحی و راه‌اندازی سایت و فروشگاه', en: 'Websites and online shops' } as Localized,
+  oneOffLead: {
+    fa: 'هزینه یک‌باره و مشخص، بدون پرداخت ماهانه اجباری.',
+    en: 'Clear one-off project fees, never recurring subscriptions.',
+  } as Localized,
+  monthlyEyebrow: { fa: 'اشتراک ماهانه', en: 'Monthly Packages' } as Localized,
+  monthlyTitle: { fa: 'پکیج‌های ماهانه رشد و پشتیبانی', en: 'Monthly growth & support packages' } as Localized,
+  monthlyLead: {
+    fa: 'سه پکیج ماهانه اختیاری برای سئو، محتوا، نگهداری سایت، بهینه‌سازی هوش مصنوعی و تبلیغات.',
+    en: 'Three optional monthly subscription packages for ongoing SEO, content, maintenance, AI optimisation and ads management.',
+  } as Localized,
+  compareEyebrow: { fa: 'مقایسه', en: 'Comparison' } as Localized,
+  compareTitle: { fa: 'مقایسه پکیج‌های ماهانه', en: 'Compare monthly packages' } as Localized,
+  compareLead: {
+    fa: 'هر چیزی که در پکیج‌های روزن، جامخانه و ارسی قرار دارد، کنار هم.',
+    en: 'Everything included in Ruzan, Jaam Khane and Ersi, side by side.',
+  } as Localized,
+  helpTitle: { fa: 'هنوز نمی‌دونی کدوم گزینه مناسبته؟', en: 'Not sure which option fits your business?' } as Localized,
+  helpText: {
+    fa: 'لازم نیست گرون‌ترین گزینه رو انتخاب کنی. درباره بیزینست و چیزی که می‌خوای بهش برسی حرف می‌زنیم تا ببینیم از کجا شروع کردن منطقی‌تره.',
+    en: 'You do not need the biggest package to start. Tell us about your business and goals, and we will recommend what genuinely makes sense.',
+  } as Localized,
+  helpCta: { fa: 'بیا با هم بررسی کنیم', en: 'Let’s talk it through' } as Localized,
 };
 
 export const blogPage = {

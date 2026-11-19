@@ -4,7 +4,7 @@ import PersianHome from '@/components/home/PersianHome.astro';
 import PersianFooter from '@/components/home/PersianFooter.astro';
 import { pageSeo, finglishPhrases } from '@/data/seo';
 import { persianHomeFaqs, persianHomeContact } from '@/data/persianHome';
-import { professionalService, faqSchema } from '@/lib/schema';
+import { professionalService, faqSchema, pricingCatalogSchema } from '@/lib/schema';
 
 const studio = {
   ...professionalService('fa'),
@@ -19,7 +19,7 @@ const studio = {
   title={pageSeo.home.title.fa}
   description={pageSeo.home.description.fa}
   keywords={finglishPhrases.home}
-  schema={[studio, faqSchema(persianHomeFaqs)]}
+  schema={[studio, pricingCatalogSchema('fa'), faqSchema(persianHomeFaqs)]}
 >
   <PersianHome />
   <PersianFooter slot="footer" />

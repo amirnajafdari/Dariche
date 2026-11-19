@@ -2,6 +2,7 @@
 import Headline from '../Headline.astro';
 import PersianText from './PersianText.astro';
 import { oneOffServices, monthlyPackages, contactForm } from '@/data/persianHome';
+import { pricingNote } from '@/data/pricing';
 const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#callback`;
 ---
 <section class="section" id="pricing" aria-labelledby="pricing-title">
@@ -19,7 +20,7 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
       {oneOffServices.map((plan) => (
         <article class="plan" id={plan.id} aria-labelledby={`${plan.id}-title`}>
           <h4 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h4>
-          <p class="price">{plan.from && <span class="price-prefix">از </span>}<bdi dir="ltr">{plan.price}</bdi></p>
+          <p class="price">{plan.from && <span class="price-prefix">از </span>}<bdi dir="ltr">{plan.price}</bdi><span class="period"> {plan.billingNote}</span></p>
           <p class="tagline"><strong>{plan.tagline}</strong></p>
           <p class="description"><PersianText text={plan.text} /></p>
           <div class="features">
@@ -47,9 +48,9 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
           <div class="plan-heading">
             <h3 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h3>
             <bdi dir="ltr" class="english-name">{plan.en}</bdi>
-            {plan.featured && <span class="badge">برای رشد بیشتر</span>}
+            {plan.featured && <span class="badge">{plan.featuredLabel ?? 'برای رشد بیشتر'}</span>}
           </div>
-          <p class="price"><bdi dir="ltr">{plan.price}</bdi><span class="period"> / ماه</span></p>
+          <p class="price"><bdi dir="ltr">{plan.price}</bdi><span class="period"> در ماه</span></p>
           <p class="tagline"><strong>{plan.tagline}</strong></p>
           <div class="description">{plan.paragraphs.map((p) => <p>{p}</p>)}</div>
           <details class="features" data-monthly-features open>
@@ -66,7 +67,7 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
       <a class="btn btn-primary" href={contactForm}>بیا با هم بررسی کنیم</a>
     </div>
     <div class="pricing-note">
-      <p>هزینه تبلیغات پرداختی به گوگل، متا و سایر پلتفرم‌ها جدا از هزینه مدیریت تبلیغاته. جزئیات خدمات و هزینه‌های احتمالی سرویس‌های جانبی قبل از شروع همکاری مشخص می‌شه.</p>
+      <p>{pricingNote.fa}</p>
       <a class="link" href="/fa/pricing/">جزئیات کامل تعرفه‌ها</a>
     </div>
   </div>

@@ -24,7 +24,7 @@ const legal = [['حریم خصوصی','privacy'],['سیاست کوکی‌ها','
         <h2 id="footer-pricing">تعرفه‌ها</h2>
         <ul role="list">
           {oneOffServices.map((plan) => <li><a href={`#${plan.id}`}>{plan.footer} — {plan.from && 'از '}<bdi dir="ltr">{plan.price}</bdi></a></li>)}
-          {monthlyPackages.map((plan) => <li><a href={`#${plan.id}`}>{plan.title} — <bdi dir="ltr">{plan.price}</bdi>/ماه</a></li>)}
+          {monthlyPackages.map((plan) => <li><a href={`#${plan.id}`}>{plan.title} — <bdi dir="ltr">{plan.price}</bdi> در ماه</a></li>)}
         </ul>
       </nav>
       <nav aria-labelledby="footer-contact">

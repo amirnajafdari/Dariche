@@ -2,9 +2,48 @@ import { href, langMeta, type Lang } from '@/i18n';
 import { site } from '@/data/site';
 import type { QA, Service } from '@/data/services';
 import type { Post } from '@/data/blog';
+import {
+  oneOffServices,
+  monthlyPackages,
+  getServicePricing,
+  type ServicePricingItem,
+} from '@/data/pricing';
 
 const abs = (path: string) => new URL(path, site.url).toString();
 const orgId = `${site.url}/#organization`;
+
+const buildOffer = (item: ServicePricingItem, lang: Lang) => {
+  const url = abs(`${href(lang, 'pricing')}${item.anchor}`);
+  if (item.kind === 'monthly') {
+    return {
+      '@type': 'Offer',
+      name: item.name[lang],
+      description: item.note[lang],
+      url,
+      priceCurrency: 'GBP',
+      price: item.price,
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: item.price,
+        priceCurrency: 'GBP',
+        unitCode: 'MON',
+        referenceQuantity: {
+          '@type': 'QuantitativeValue',
+          value: 1,
+          unitCode: 'MON',
+        },
+      },
+    };
+  }
+  return {
+    '@type': 'Offer',
+    name: item.name[lang],
+    description: item.note[lang],
+    url,
+    priceCurrency: 'GBP',
+    price: item.price,
+  };
+};
 
 export const organization = (lang: Lang) => ({
   '@type': 'Organization',
@@ -29,7 +68,7 @@ export const professionalService = (lang: Lang) => ({
   telephone: site.contact.phoneHref,
   email: site.contact.email,
   areaServed: { '@type': 'Country', name: 'United Kingdom' },
-  priceRange: '££',
+  priceRange: '£49–£699',
   knowsLanguage: ['fa', 'en-GB'],
   parentOrganization: { '@id': orgId },
 });
@@ -43,15 +82,74 @@ export const website = (lang: Lang) => ({
   publisher: { '@id': orgId },
 });
 
-export const serviceSchema = (s: Service, lang: Lang) => ({
-  '@type': 'Service',
-  name: s.name[lang],
-  serviceType: s.name.en,
-  description: s.seo.description[lang],
-  url: abs(href(lang, s.slug)),
-  provider: { '@id': orgId },
-  areaServed: { '@type': 'Country', name: 'United Kingdom' },
+export const serviceSchema = (s: Service, lang: Lang) => {
+  const pricing = getServicePricing(s.slug);
+  const offers = pricing ? pricing.items.map((item) => buildOffer(item, lang)) : undefined;
+  return {
+    '@type': 'Service',
+    name: s.name[lang],
+    serviceType: s.name.en,
+    description: s.seo.description[lang],
+    url: abs(href(lang, s.slug)),
+    provider: { '@id': orgId },
+    areaServed: { '@type': 'Country', name: 'United Kingdom' },
+    inLanguage: langMeta[lang].hreflang,
+    ...(offers ? { offers: offers.length === 1 ? offers[0] : offers } : {}),
+  };
+};
+
+export const pricingCatalogSchema = (lang: Lang) => ({
+  '@type': 'OfferCatalog',
+  name: lang === 'fa' ? 'تعرفه‌های دریچه' : 'Daricheh Pricing',
+  url: abs(href(lang, 'pricing')),
   inLanguage: langMeta[lang].hreflang,
+  itemListElement: [
+    {
+      '@type': 'OfferCatalog',
+      name: lang === 'fa' ? 'خدمات یک‌باره' : 'One-off Services',
+      itemListElement: oneOffServices.map((s) => ({
+        '@type': 'Offer',
+        name: s.title[lang],
+        description: s.summary[lang],
+        url: abs(`${href(lang, 'pricing')}#${s.id}`),
+        priceCurrency: 'GBP',
+        price: s.price,
+        itemOffered: {
+          '@type': 'Service',
+          name: s.title[lang],
+          provider: { '@id': orgId },
+        },
+      })),
+    },
+    {
+      '@type': 'OfferCatalog',
+      name: lang === 'fa' ? 'پکیج‌های ماهانه' : 'Monthly Packages',
+      itemListElement: monthlyPackages.map((p) => ({
+        '@type': 'Offer',
+        name: p.fullName[lang],
+        description: p.features[lang].join(' · '),
+        url: abs(`${href(lang, 'pricing')}#${p.id}`),
+        priceCurrency: 'GBP',
+        price: p.price,
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: p.price,
+          priceCurrency: 'GBP',
+          unitCode: 'MON',
+          referenceQuantity: {
+            '@type': 'QuantitativeValue',
+            value: 1,
+            unitCode: 'MON',
+          },
+        },
+        itemOffered: {
+          '@type': 'Service',
+          name: p.fullName[lang],
+          provider: { '@id': orgId },
+        },
+      })),
+    },
+  ],
 });
 
 /** Only emit when the questions and answers are visible on the page. */

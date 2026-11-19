@@ -1,5 +1,13 @@
 import type { Localized } from '@/i18n';
 import type { ServiceSlug } from './services';
+import { formatGbp, getMonthlyPackage, getOneOffService } from './pricing';
+
+const websitePrice = formatGbp(getOneOffService('website').price);
+const shopPrice = formatGbp(getOneOffService('online-shop').price);
+const setupPrice = formatGbp(getOneOffService('marketplace').price);
+const ruzanPrice = formatGbp(getMonthlyPackage('ruzan').price);
+const jaamPrice = formatGbp(getMonthlyPackage('jaam-khane').price);
+const ersiPrice = formatGbp(getMonthlyPackage('ersi').price);
 
 /**
  * SEO metadata for fixed pages. Service pages keep theirs in services.ts, posts in blog.ts.
@@ -44,10 +52,10 @@ export const pageSeo: Record<PageKey, { title: Localized; description: Localized
     },
   },
   pricing: {
-    title: { fa: 'تعرفه طراحی سایت و سئو | دریچه', en: 'Web Design & SEO Pricing | Daricheh' },
+    title: { fa: 'تعرفه طراحی سایت، فروشگاه اینترنتی و پکیج‌های ماهانه سئو | دریچه', en: 'Web Design, Online Shop & Monthly SEO Pricing | Daricheh' },
     description: {
-      fa: 'قیمت‌های شفاف طراحی سایت، سئو و پشتیبانی. سه بسته روشن، بدون «تماس بگیرید» و هزینه پنهان.',
-      en: 'Clear pricing for web design, SEO and support. Three straightforward packages, no hidden costs.',
+      fa: `تعرفه شفاف خدمات یک‌باره طراحی سایت (${websitePrice})، فروشگاه اینترنتی (${shopPrice}) و راه‌اندازی فروشگاه (از ${setupPrice})، به همراه پکیج‌های ماهانه روزن (${ruzanPrice})، جامخانه (${jaamPrice}) و ارسی (${ersiPrice}) در ماه.`,
+      en: `Transparent one-off pricing for Website Design / Redesign (${websitePrice}), Online Shop (${shopPrice}) and Online Shop Setup (from ${setupPrice}), plus monthly packages Ruzan (${ruzanPrice}/month), Jaam Khane (${jaamPrice}/month) and Ersi (${ersiPrice}/month).`,
     },
   },
   about: {

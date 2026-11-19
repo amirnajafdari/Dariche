@@ -1,5 +1,4 @@
 import type { Localized } from '@/i18n';
-import type { PackageId } from './packages';
 
 export type ServiceSlug = 'web-design' | 'seo' | 'local-seo' | 'ecommerce' | 'website-redesign' | 'website-support';
 
@@ -29,7 +28,6 @@ export interface Service {
   audience: Localized<string[]>;
   benefits: Localized<{ title: string; text: string }[]>;
   relatedCaseStudy?: string;
-  startingPackage?: PackageId;
   faqs: Localized<QA[]>;
 }
 
@@ -115,7 +113,6 @@ export const services: Service[] = [
       ],
     },
     relatedCaseStudy: 'aryana-cakery',
-    startingPackage: 'first',
     faqs: {
       fa: [
         { q: 'از قالب آماده استفاده می‌کنید؟', a: 'نه. هر سایت از اول برای همون بیزینس طراحی می‌شه. البته جایی که منطقیه از ابزارهای آماده استفاده می‌کنیم که هزینه بی‌دلیل بالا نره.' },
@@ -206,7 +203,6 @@ export const services: Service[] = [
         { title: 'Reports in plain English', text: "Each month: what we did, what changed and what's next. No jargon." },
       ],
     },
-    startingPackage: 'growth',
     faqs: {
       fa: [
         { q: 'تضمین می‌کنید صفحه اول گوگل بیام؟', a: 'نه، و اگر کسی تضمین کرد، بهش شک کن. چیزی که تضمین می‌کنیم کار درست و گزارش شفافه.' },
@@ -286,7 +282,6 @@ export const services: Service[] = [
       ],
     },
     relatedCaseStudy: 'afsoo-beauty',
-    startingPackage: 'growth',
     faqs: {
       fa: [
         { q: 'برای سئو محلی حتماً سایت لازمه؟', a: 'نه حتماً، ولی خیلی کمک می‌کنه. پروفایل گوگل و سایت با هم بهتر از هر کدوم به‌تنهایی کار می‌کنن.' },
@@ -362,7 +357,6 @@ export const services: Service[] = [
         { title: 'Products people can find', text: 'Every product gets a page Google understands.' },
       ],
     },
-    startingPackage: 'complete',
     faqs: {
       fa: [
         { q: 'Shopify بهتره یا WooCommerce؟', a: 'بستگی داره. Shopify ساده‌تر و کم‌دردسرتره، WooCommerce انعطاف بیشتری داره. با هم می‌بینیم کدوم برای بیزینست بهتره.' },
@@ -436,7 +430,6 @@ export const services: Service[] = [
         { title: 'Built to grow', text: 'A structure that is easy to add to later.' },
       ],
     },
-    startingPackage: 'growth',
     faqs: {
       fa: [
         { q: 'با بازطراحی رتبه گوگلم از بین نمی‌ره؟', a: 'اگر درست انجام بشه، نه. قبل از انتشار، همه آدرس‌های مهم رو نقشه‌برداری می‌کنیم و ریدایرکت‌ها رو تنظیم می‌کنیم.' },
@@ -512,7 +505,6 @@ export const services: Service[] = [
         { title: 'Always up to date', text: 'Safer, faster and with the right information.' },
       ],
     },
-    startingPackage: undefined,
     faqs: {
       fa: [
         { q: 'سایتم رو کس دیگه‌ای ساخته، باز هم پشتیبانی می‌کنید؟', a: 'معمولاً آره. اول یه بررسی کوتاه می‌کنیم که ببینیم سایت در چه وضعیتیه.' },
