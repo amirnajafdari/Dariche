@@ -21,6 +21,9 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
   <section class="section intro" id="intro" aria-labelledby="intro-title">
     <div class="container intro-grid">
       <Headline lines={['زبان همدیگرو می‌فهمیم.', 'بازار بریتانیا رو هم می‌شناسیم.']} id="intro-title" />
+      <div class="intro-visual" data-reveal>
+        <HomeIllustration scene="website" />
+      </div>
       <div class="prose intro-copy lead">
         <p>راه انداختن یه بیزینس توی بریتانیا آسون نیست. کلی کار هست که باید بهش فکر کنی، و داشتن یه سایت خوب فقط یکی از اوناست.</p>
         <p>ما دریچه رو ساختیم تا این بخش از کار رو برات ساده‌تر کنیم.</p>
@@ -266,11 +269,10 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
   .persian-home :global(.h2) { line-height:1.5; }
   .section-intro { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); justify-items:start; }
   .prose { display:grid; gap:1.25rem; justify-items:start; }
-  .intro { padding-top:0; }
   .illustrated-intro { display:grid; gap:var(--stack-md); align-items:center; margin-bottom:var(--stack-lg); }
   .illustrated-intro .section-intro { margin-bottom:0; }
-  .about-visual,.bilingual-visual { display:grid; gap:var(--stack-md); min-width:0; }
-  .intro-grid { display:grid; gap:var(--stack-lg); }
+  .about-visual,.bilingual-visual,.intro-visual { display:grid; gap:var(--stack-md); min-width:0; }
+  .intro-grid { display:grid; gap:var(--stack-lg); align-items:center; }
   .number { color:var(--red); font-size:1rem; font-weight:500; }
   .service { display:grid; gap:2rem; padding-block:var(--stack-lg); border-top:1px solid var(--line); }
   .service-tagline { font-weight:500; font-size:var(--fs-h3); line-height:1.7; }
@@ -323,7 +325,8 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
     .illustrated-intro { grid-template-columns:1.2fr 1fr; gap:var(--col-gap); }
     .intro-grid { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:var(--col-gap); }
     .intro-grid :global(.h2) { grid-column:2 / span 10; }
-    .intro-copy { grid-column:6 / -1; }
+    .intro-visual { grid-column:1 / span 5; }
+    .intro-copy { grid-column:7 / -1; }
     .service { grid-template-columns:1fr 1.5fr; }
     .supporting-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
     .beliefs { grid-template-columns:repeat(12,minmax(0,1fr)); }
