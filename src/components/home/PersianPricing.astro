@@ -16,11 +16,15 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
       <h3 class="h3">طراحی و راه‌اندازی سایت</h3>
       <p><strong>سه راه برای شروع حضور آنلاین بیزینست.</strong></p>
     </div>
-    <div class="plans">
+    <div class="plans plans--oneoff">
       {oneOffServices.map((plan) => (
-        <article class="plan" id={plan.id} aria-labelledby={`${plan.id}-title`}>
+        <article class="plan plan--oneoff" id={plan.id} aria-labelledby={`${plan.id}-title`}>
           <h4 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h4>
-          <p class="price">{plan.from && <span class="price-prefix">از </span>}<bdi dir="ltr">{plan.price}</bdi><span class="period"> {plan.billingNote}</span></p>
+          <p class="price">
+            {plan.from && <span class="price-prefix">از </span>}
+            <bdi dir="ltr" class="price-amount">{plan.price}</bdi>
+            <span class="period"> — {plan.billingNote}</span>
+          </p>
           <p class="tagline"><strong>{plan.tagline}</strong></p>
           <p class="description"><PersianText text={plan.text} /></p>
           <div class="features">
@@ -50,9 +54,12 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
             <bdi dir="ltr" class="english-name">{plan.en}</bdi>
             {plan.featured && <span class="badge">{plan.featuredLabel ?? 'برای رشد بیشتر'}</span>}
           </div>
-          <p class="price"><bdi dir="ltr">{plan.price}</bdi><span class="period"> در ماه</span></p>
+          <p class="price">
+            <bdi dir="ltr" class="price-amount">{plan.price}</bdi>
+            <span class="period"> در ماه</span>
+          </p>
           <p class="tagline"><strong>{plan.tagline}</strong></p>
-          <div class="description">{plan.paragraphs.map((p) => <p>{p}</p>)}</div>
+          <div class="description description--stack">{plan.paragraphs.map((p) => <p>{p}</p>)}</div>
           <details class="features" data-monthly-features open>
             <summary>خدمات این پکیج:<span aria-hidden="true" class="toggle"></span></summary>
             <ul role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
@@ -86,28 +93,48 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
   .section-intro { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); }
   .group-heading { display:grid; gap:.75rem; margin-bottom:2.5rem; }
   .plans { display:grid; gap:2rem var(--col-gap); align-items:start; }
-  .plan { display:flex; flex-direction:column; gap:1.4rem; padding:2rem 1.5rem; border-top:1px solid var(--ink); min-width:0; scroll-margin-top:7rem; }
-  .plan-title { font-size:1.45rem; line-height:1.6; font-weight:500; }
+  .plan { display:flex; flex-direction:column; gap:1.15rem; padding:2rem 1.5rem; border-top:1px solid var(--ink); min-width:0; scroll-margin-top:7rem; }
+  .plan-title { font-size:1.35rem; line-height:1.55; font-weight:500; }
   .plan-heading { position:relative; display:grid; gap:.3rem; }
   .english-name { color:var(--ink-3); font-size:1rem; }
-  .price { color:var(--green); font-size:clamp(2.8rem, 2rem + 2vw, 4rem); line-height:1.35; white-space:nowrap; font-weight:300; }
-  .period, .price-prefix { font-size:1.1rem; font-weight:400; }
-  .description { color:var(--ink-2); display:grid; gap:1rem; }
-  .tagline { font-size:1.05rem; }
-  .features { border-top:1px solid var(--line); padding-top:1.25rem; }
-  .features ul { display:grid; gap:.7rem; margin-top:1rem; }
-  .features li { padding-inline-start:1rem; position:relative; font-size:1rem; }
-  .features li::before { content:''; width:4px; height:4px; background:var(--green); position:absolute; inset-inline-start:0; top:.85em; }
-  .list-label, summary { font-weight:500; }
+  .price { display:flex; align-items:baseline; flex-wrap:wrap; gap:.35rem; color:var(--green); line-height:1.2; }
+  .price-amount { font-size:clamp(2.5rem, 1.9rem + 1.8vw, 3.6rem); font-weight:300; line-height:1.15; white-space:nowrap; }
+  .period, .price-prefix { font-size:1rem; font-weight:400; color:var(--ink-3); }
+  .price-prefix { color:var(--green); }
+  .tagline { font-size:1.02rem; line-height:1.65; color:var(--ink); }
+  .description { color:var(--ink-2); font-size:.98rem; line-height:1.85; }
+  .description--stack { display:grid; gap:.85rem; }
+  .features { border-top:1px solid var(--line); padding-top:1.15rem; }
+  .features ul { display:grid; gap:.5rem; margin-top:.75rem; }
+  .features li { padding-inline-start:1rem; position:relative; font-size:.96rem; line-height:1.7; color:var(--ink-2); text-align:start; }
+  .features li::before { content:''; width:4px; height:4px; background:var(--green); position:absolute; inset-inline-start:0; top:.78em; }
+  .list-label, summary { font-weight:500; font-size:.96rem; color:var(--ink); }
   summary { display:flex; justify-content:space-between; align-items:center; gap:1rem; cursor:pointer; list-style:none; min-height:2.75rem; }
   summary::-webkit-details-marker { display:none; }
   .toggle::after { content:'+'; color:var(--green); font-size:1.5rem; }
   details[open] .toggle::after { content:'−'; }
-  .plan .btn { white-space:normal; padding:.9rem 1rem; line-height:1.7; margin-top:auto; text-align:center; }
+  .plan .btn { white-space:normal; padding:.85rem 1rem; line-height:1.65; margin-top:auto; text-align:center; width:100%; }
   .featured { border:1px solid var(--green); border-top:3px solid var(--green); border-radius:var(--radius); }
   .badge { align-self:start; justify-self:start; color:var(--red); font-size:.9rem; margin-top:.5rem; }
   .monthly { padding-top:var(--section-sm); }
   .pricing-help { display:grid; gap:1.5rem; justify-items:start; margin-top:var(--stack-xl); padding-top:var(--stack-lg); border-top:1px solid var(--line); }
   .pricing-note { display:grid; gap:1.5rem; justify-items:start; margin-top:3rem; max-width:52rem; color:var(--ink-3); font-size:1rem; }
-  @media(min-width:960px) { .plans { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+
+  @media(min-width:960px) {
+    .plans { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .plans--oneoff { align-items:stretch; }
+    .plan--oneoff { height:100%; }
+    @supports (grid-template-rows: subgrid) {
+      .plans--oneoff { grid-auto-rows:auto; row-gap:1.1rem; }
+      .plan--oneoff {
+        display:grid;
+        grid-row:span 6;
+        grid-template-rows:subgrid;
+        row-gap:1.1rem;
+        align-items:start;
+      }
+      .plan--oneoff .features { align-self:stretch; }
+      .plan--oneoff .btn { margin-top:.5rem; align-self:end; }
+    }
+  }
 </style>

@@ -36,7 +36,7 @@ const faqs = pricingFaqs[lang];
         <h2 class="h2" id="oneoff-title">{pricingPage.oneOffTitle[lang]}</h2>
         <p class="lead">{pricingPage.oneOffLead[lang]}</p>
       </header>
-      <div class="pricing-page__grid">
+      <div class="pricing-page__grid pricing-page__grid--oneoff">
         {oneOffServices.map((s) => <OneOffPricingCard service={s} lang={lang} headingLevel="h3" />)}
       </div>
     </div>
@@ -102,6 +102,10 @@ const faqs = pricingFaqs[lang];
   @media (min-width: 960px) {
     .pricing-page__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .pricing-page__grid--oneoff {
+      align-items: stretch;
+      row-gap: 1.1rem;
     }
   }
   @media (max-width: 959px) {

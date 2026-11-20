@@ -178,7 +178,7 @@ export const oneOffServices: OneOffService[] = [
       en: 'Sell your products where customers already shop.',
     },
     description: {
-      fa: 'اگه می‌خوای فروش رو از طریق Shopify، Amazon، eBay یا پلتفرم‌های مشابه شروع کنی، برای راه‌اندازی و آماده کردن فروشگاهت کنارتیم.',
+      fa: 'برای راه‌اندازی فروشگاه و شروع فروش در پلتفرم‌های مختلف کنارتیم.',
       en: 'If you want to start selling through Shopify, Amazon, eBay or similar platforms, we set up your store and get it ready for customers.',
     },
     listLabel: {

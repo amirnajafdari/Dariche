@@ -1,0 +1,45 @@
+---
+import { getStaticLangPaths, type Lang } from '@/i18n';
+import { pageSeo, finglishPhrases } from '@/data/seo';
+import { homeFaqs } from '@/data/faqs';
+import { faqSchema, pricingCatalogSchema, professionalService } from '@/lib/schema';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import Intro from '@/components/home/Intro.astro';
+import ServicesSection from '@/components/home/ServicesSection.astro';
+import WorkSection from '@/components/home/WorkSection.astro';
+import Beliefs from '@/components/home/Beliefs.astro';
+import PricingSection from '@/components/home/PricingSection.astro';
+import FoundersSection from '@/components/home/FoundersSection.astro';
+import Bilingual from '@/components/home/Bilingual.astro';
+import SeoSection from '@/components/home/SeoSection.astro';
+import TestimonialsSection from '@/components/home/TestimonialsSection.astro';
+import FaqSection from '@/components/FaqSection.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+
+export const getStaticPaths = () => getStaticLangPaths().filter(({ params }) => params.lang !== 'fa');
+const lang = Astro.params.lang as Lang;
+const faqs = homeFaqs[lang];
+---
+<BaseLayout
+  lang={lang}
+  path="home-2-backup"
+  noindex
+  title={pageSeo.home.title[lang]}
+  description={pageSeo.home.description[lang]}
+  keywords={finglishPhrases.home}
+  schema={[professionalService(lang), pricingCatalogSchema(lang), faqSchema(faqs)]}
+>
+  <Hero lang={lang} />
+  <Intro lang={lang} />
+  <ServicesSection lang={lang} />
+  <WorkSection lang={lang} />
+  <Beliefs lang={lang} />
+  <PricingSection lang={lang} />
+  <FoundersSection lang={lang} />
+  <Bilingual lang={lang} />
+  <SeoSection lang={lang} />
+  <TestimonialsSection lang={lang} />
+  <FaqSection lang={lang} items={faqs} />
+  <FinalCTA lang={lang} />
+</BaseLayout>

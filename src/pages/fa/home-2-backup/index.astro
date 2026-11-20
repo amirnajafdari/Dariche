@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PersianHome from '@/components/home/PersianHome.astro';
+import PersianFooter from '@/components/home/PersianFooter.astro';
+import { pageSeo, finglishPhrases } from '@/data/seo';
+import { persianHomeFaqs, persianHomeContact } from '@/data/persianHome';
+import { professionalService, faqSchema, pricingCatalogSchema } from '@/lib/schema';
+
+const studio = {
+  ...professionalService('fa'),
+  telephone: persianHomeContact.phone ?? undefined,
+  email: persianHomeContact.email,
+};
+---
+<BaseLayout
+  lang="fa"
+  path="home-2-backup"
+  persianHome
+  noindex
+  title={pageSeo.home.title.fa}
+  description={pageSeo.home.description.fa}
+  keywords={finglishPhrases.home}
+  schema={[studio, pricingCatalogSchema('fa'), faqSchema(persianHomeFaqs)]}
+>
+  <PersianHome />
+  <PersianFooter slot="footer" />
+</BaseLayout>
