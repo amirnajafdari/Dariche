@@ -1,4 +1,5 @@
 ---
+import HomeIllustration from './HomeIllustration.astro';
 import { href, type Lang } from '@/i18n';
 import { useTranslations } from '@/i18n/ui';
 import { home } from '@/data/pages';
@@ -19,7 +20,10 @@ const lighter = [
 ---
 <section class="services section" id="services" aria-labelledby="services-title">
   <div class="container">
-    <SectionHeading eyebrow={home.services.eyebrow[lang]} title={home.services.title[lang]} id="services-title" />
+    <div class="illustrated-intro">
+      <SectionHeading eyebrow={home.services.eyebrow[lang]} title={home.services.title[lang]} id="services-title" />
+      <HomeIllustration scene="services" />
+    </div>
 
     <div class="services__primary">
       {primaryServices.map((s, i) => <ServiceFeature service={s} index={i} lang={lang} />)}
@@ -46,6 +50,9 @@ const lighter = [
 </section>
 
 <style>
+  .illustrated-intro { display:grid; gap:var(--stack-md); align-items:center; margin-bottom:var(--stack-lg); }
+  .illustrated-intro :global(.section-heading) { margin-bottom:0; }
+  @media(min-width:960px) { .illustrated-intro { grid-template-columns:1.2fr 1fr; gap:var(--col-gap); } }
   .services__more {
     display: grid;
     gap: 2rem;

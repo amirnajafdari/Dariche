@@ -1,4 +1,5 @@
 ---
+import HomeIllustration from './HomeIllustration.astro';
 import { href, type Lang } from '@/i18n';
 import { useTranslations } from '@/i18n/ui';
 import { home } from '@/data/pages';
@@ -20,13 +21,17 @@ const t = useTranslations(lang);
       <p class="body" data-reveal>{home.founders.text[lang]}</p>
       <a href={href(lang, 'about')} class="link-arrow" data-reveal>{t.moreAboutUs}<Icon name="arrow" /></a>
     </div>
-    <div class="founders__people">
-      {founders.map((f, i) => <FounderCard founder={f} lang={lang} class={i === 1 ? 'founders__offset' : undefined} />)}
+    <div class="founders__visual">
+      <HomeIllustration scene="team" />
+      <div class="founders__people">
+        {founders.map((f, i) => <FounderCard founder={f} lang={lang} class={i === 1 ? 'founders__offset' : undefined} />)}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
+  .founders__visual { display:grid; gap:var(--stack-md); min-width:0; }
   .founders__grid {
     display: grid;
     gap: var(--stack-xl);
@@ -58,7 +63,7 @@ const t = useTranslations(lang);
     .founders__copy {
       grid-column: 1 / span 5;
     }
-    .founders__people {
+    .founders__visual {
       grid-column: 7 / -1;
     }
   }

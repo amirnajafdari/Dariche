@@ -6,14 +6,13 @@ import Headline from './Headline.astro';
 import PrimaryButton from './PrimaryButton.astro';
 import SecondaryButton from './SecondaryButton.astro';
 import WhatsAppButton from './WhatsAppButton.astro';
-import ScreenMock from './ScreenMock.astro';
+import HomeIllustration from './home/HomeIllustration.astro';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const yours = lang === 'fa' ? 'بیزینس تو' : 'Your business';
 ---
 <section class="hero" aria-labelledby="hero-title">
   <div class="container hero__grid">
@@ -32,20 +31,8 @@ const yours = lang === 'fa' ? 'بیزینس تو' : 'Your business';
       </div>
     </div>
 
-    <div class="hero__visual" aria-hidden="true">
-      <div class="hwin" data-parallax="0.05">
-        <svg class="hwin__echo" viewBox="0 0 300 420" preserveAspectRatio="none"><path d="M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"></path></svg>
-        <div class="hwin__pane" data-reveal="mask" style="--delay:.15s">
-          <div class="hwin__scene">
-            <ScreenMock kind="clinic" bg="#ffffff" accent="#226F54" title={yours} device="mobile" />
-          </div>
-          <span class="hwin__mullion"></span>
-          <span class="hwin__transom"></span>
-        </div>
-        <svg class="hwin__frame" viewBox="0 0 300 420" preserveAspectRatio="none"><path d="M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z" fill="none" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"></path></svg>
-        <span class="hwin__latch"></span>
-        <span class="hwin__sill"></span>
-      </div>
+    <div class="hero__visual">
+      <HomeIllustration scene="website" priority />
     </div>
   </div>
 </section>
@@ -83,86 +70,9 @@ const yours = lang === 'fa' ? 'بیزینس تو' : 'Your business';
   }
 
   .hero__visual {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .hwin {
-    position: relative;
-    width: min(64vw, 22rem);
-    aspect-ratio: 300 / 420;
-    color: var(--ink);
-  }
-  .hwin__echo,
-  .hwin__frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    pointer-events: none;
-  }
-  .hwin__echo {
-    color: var(--line-strong);
-    translate: 18px 18px;
-  }
-  :global([dir='rtl']) .hwin__echo {
-    translate: -18px 18px;
-  }
-  .hwin__pane {
-    position: absolute;
-    inset: 0;
-    background: var(--green-tint);
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 420' preserveAspectRatio='none'%3E%3Cpath d='M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 420' preserveAspectRatio='none'%3E%3Cpath d='M1 419V150C1 70 60 14 150 1c90 13 149 69 149 149v269Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-  }
-  .hwin__scene {
-    position: absolute;
-    inset-inline: 14%;
-    top: 26%;
-    bottom: -12%;
-    box-shadow: 0 30px 60px -30px rgb(25 83 63 / 0.35);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .hwin__scene {
-      animation: rise 1.6s 0.5s var(--ease) both;
-    }
-  }
-  @keyframes rise {
-    from {
-      translate: 0 18%;
-    }
-  }
-  .hwin__mullion,
-  .hwin__transom {
-    position: absolute;
-    background: var(--ink);
-    opacity: 0.18;
-  }
-  .hwin__mullion {
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-  }
-  .hwin__transom {
-    inset-inline: 0;
-    top: 36%;
-    height: 1px;
-  }
-  .hwin__latch {
-    position: absolute;
-    top: 58%;
-    inset-inline-start: -4px;
-    width: 8px;
-    height: 8px;
-    background: var(--red);
-  }
-  .hwin__sill {
-    position: absolute;
-    bottom: -1px;
-    inset-inline: -12% -20%;
-    height: 1px;
-    background: var(--ink);
+    align-self: center;
+    min-width: 0;
+    background: #fff;
   }
 
   @media (min-width: 960px) {
@@ -179,20 +89,7 @@ const yours = lang === 'fa' ? 'بیزینس تو' : 'Your business';
       grid-column: 1 / span 7;
     }
     .hero__visual {
-      grid-column: 9 / -1;
-    }
-    .hwin {
-      width: 100%;
-      max-width: 25rem;
-    }
-  }
-  /* English: the window sits a touch lower and closer to the text */
-  :global(:root[lang='en-GB']) .hero__visual {
-    padding-top: 4rem;
-  }
-  @media (max-width: 959px) {
-    .hero__visual {
-      padding-inline-end: 1.5rem;
+      grid-column: 8 / -1;
     }
   }
 </style>

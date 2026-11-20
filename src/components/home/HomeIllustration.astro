@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import website from '@/assets/home/40.png';
+import team from '@/assets/home/41.png';
+import search from '@/assets/home/42.png';
+import services from '@/assets/home/43.png';
+import bilingual from '@/assets/home/44.png';
+import approach from '@/assets/home/45.png';
+
+const illustrations = { website, team, search, services, bilingual, approach };
+interface Props {
+  scene: keyof typeof illustrations;
+  priority?: boolean;
+}
+const { scene, priority = false } = Astro.props;
+---
+<div class="home-illustration" aria-hidden="true">
+  <Image
+    src={illustrations[scene]}
+    alt=""
+    width={1440}
+    widths={[360, 640, 960, 1440]}
+    sizes="(min-width: 1440px) 600px, (min-width: 960px) 45vw, 90vw"
+    format="webp"
+    quality={85}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    decoding="async"
+  />
+</div>
+
+<style>
+  .home-illustration {
+    width: 100%;
+    max-width: 40rem;
+    margin-inline: auto;
+    background: #fff;
+  }
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+</style>

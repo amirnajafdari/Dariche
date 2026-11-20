@@ -4,6 +4,7 @@ import ProjectVisual from '../ProjectVisual.astro';
 import WhatsAppButton from '../WhatsAppButton.astro';
 import ContactForm from '../ContactForm.astro';
 import PersianHero from './PersianHero.astro';
+import HomeIllustration from './HomeIllustration.astro';
 import PersianPricing from './PersianPricing.astro';
 import PersianText from './PersianText.astro';
 import { caseStudies } from '@/data/caseStudies';
@@ -29,12 +30,15 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
 
   <section class="section" id="services" aria-labelledby="services-title">
     <div class="container">
-      <header class="section-intro">
-        <p class="eyebrow">خدمات دریچه</p>
-        <Headline lines={['از ایده تا اجرا،', 'کنارتیم.']} id="services-title" />
-        <p class="lead">هر بیزینسی یه داستان داره و طبیعتاً نیازهاش هم متفاوته. شاید تازه شروع کردی و سایت نداری، شاید سایتت قدیمی شده، یا شاید می‌خوای مشتری‌های بیشتری از گوگل بگیری.</p>
-        <p class="body">هر کدوم که باشه، می‌تونیم از همون‌جا شروع کنیم.</p>
-      </header>
+      <div class="illustrated-intro">
+        <header class="section-intro">
+          <p class="eyebrow">خدمات دریچه</p>
+          <Headline lines={['از ایده تا اجرا،', 'کنارتیم.']} id="services-title" />
+          <p class="lead">هر بیزینسی یه داستان داره و طبیعتاً نیازهاش هم متفاوته. شاید تازه شروع کردی و سایت نداری، شاید سایتت قدیمی شده، یا شاید می‌خوای مشتری‌های بیشتری از گوگل بگیری.</p>
+          <p class="body">هر کدوم که باشه، می‌تونیم از همون‌جا شروع کنیم.</p>
+        </header>
+        <HomeIllustration scene="services" />
+      </div>
       <div class="services-primary">
         {primaryServices.map((service, i) => (
           <article class="service" data-reveal>
@@ -92,12 +96,15 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
 
   <section class="section" id="beliefs" aria-labelledby="beliefs-title">
     <div class="container">
-      <header class="section-intro">
-        <p class="eyebrow">چرا دریچه؟</p>
-        <Headline lines={['قشنگ بودن خوبه.', 'درست کار کردن مهم‌تره.']} id="beliefs-title" />
-        <p class="lead">یه سایت خوب فقط قرار نیست قشنگ باشه. باید بتونه بیزینست رو درست معرفی کنه، اعتماد مشتری رو جلب کنه و کاری که ازش انتظار داری رو انجام بده.</p>
-        <p class="body">ما از همون اول طراحی، تجربه کاربری و سئو رو کنار هم می‌بینیم.</p>
-      </header>
+      <div class="illustrated-intro">
+        <header class="section-intro">
+          <p class="eyebrow">چرا دریچه؟</p>
+          <Headline lines={['قشنگ بودن خوبه.', 'درست کار کردن مهم‌تره.']} id="beliefs-title" />
+          <p class="lead">یه سایت خوب فقط قرار نیست قشنگ باشه. باید بتونه بیزینست رو درست معرفی کنه، اعتماد مشتری رو جلب کنه و کاری که ازش انتظار داری رو انجام بده.</p>
+          <p class="body">ما از همون اول طراحی، تجربه کاربری و سئو رو کنار هم می‌بینیم.</p>
+        </header>
+        <HomeIllustration scene="approach" />
+      </div>
       <ol class="beliefs" role="list">
         {beliefs.map((belief, i) => (
           <li class="belief" data-reveal>
@@ -124,13 +131,16 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
         </div>
         <a class="btn btn-secondary" href="/fa/about/">بیشتر باهامون آشنا شو</a>
       </div>
-      <div class="founders">
-        {persianHomeFounders.map((founder) => (
-          <div class="founder-role">
-            {founder.name && <h3 class="h3">{founder.name}</h3>}
-            <p>{founder.role}</p>
-          </div>
-        ))}
+      <div class="about-visual">
+        <HomeIllustration scene="team" />
+        <div class="founders">
+          {persianHomeFounders.map((founder) => (
+            <div class="founder-role">
+              {founder.name && <h3 class="h3">{founder.name}</h3>}
+              <p>{founder.role}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -149,10 +159,13 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
           {['طراحی متناسب با مخاطب', 'فارسی و انگلیسی', 'تجربه کاربری درست', 'پشتیبانی از RTL و LTR', 'سئوی متناسب با هر زبان'].map((tag) => <li><PersianText text={tag} /></li>)}
         </ul>
       </div>
-      <div class="bilingual-window window" data-reveal>
-        <div class="window__pane">
-          <div class="language-sample"><span class="eyebrow">فارسی</span><p>بیزینست رو همون‌طور که باید معرفی کن.</p></div>
-          <div class="language-sample english" lang="en-GB" dir="ltr"><span class="eyebrow">English</span><p>Make your business stand out.</p></div>
+      <div class="bilingual-visual">
+        <HomeIllustration scene="bilingual" />
+        <div class="bilingual-window window" data-reveal>
+          <div class="window__pane">
+            <div class="language-sample"><span class="eyebrow">فارسی</span><p>بیزینست رو همون‌طور که باید معرفی کن.</p></div>
+            <div class="language-sample english" lang="en-GB" dir="ltr"><span class="eyebrow">English</span><p>Make your business stand out.</p></div>
+          </div>
         </div>
       </div>
     </div>
@@ -173,6 +186,7 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
           <a class="btn btn-secondary" href="/fa/seo/">بیشتر درباره سئو بدون</a>
         </header>
         <div class="search-examples">
+          <HomeIllustration scene="search" />
           <h3 class="h3">مشتری‌های تو چی توی گوگل سرچ می‌کنن؟</h3>
           <ul role="list">
             {searchExamples.map((example) => <li><p class="search-query"><bdi dir="ltr">{example.query}</bdi></p><p class="body">{example.text}</p></li>)}
@@ -254,6 +268,9 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
   .section-intro { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); justify-items:start; }
   .prose { display:grid; gap:1.25rem; justify-items:start; }
   .intro { padding-top:0; }
+  .illustrated-intro { display:grid; gap:var(--stack-md); align-items:center; margin-bottom:var(--stack-lg); }
+  .illustrated-intro .section-intro { margin-bottom:0; }
+  .about-visual,.bilingual-visual { display:grid; gap:var(--stack-md); min-width:0; }
   .intro-grid { display:grid; gap:var(--stack-lg); }
   .number { color:var(--red); font-size:1rem; font-weight:500; }
   .service { display:grid; gap:2rem; padding-block:var(--stack-lg); border-top:1px solid var(--line); }
@@ -305,6 +322,7 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
   .persian-home :global(.btn) { white-space:normal; line-height:1.7; padding-block:.8rem; text-align:center; }
   @media(min-width:700px) { .work-grid,.supporting-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media(min-width:960px) {
+    .illustrated-intro { grid-template-columns:1.2fr 1fr; gap:var(--col-gap); }
     .intro-grid { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:var(--col-gap); }
     .intro-grid :global(.h2) { grid-column:2 / span 10; }
     .intro-copy { grid-column:6 / -1; }

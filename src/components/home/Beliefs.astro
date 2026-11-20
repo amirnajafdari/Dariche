@@ -1,4 +1,5 @@
 ---
+import HomeIllustration from './HomeIllustration.astro';
 import { num, type Lang } from '@/i18n';
 import { home } from '@/data/pages';
 import Headline from '../Headline.astro';
@@ -10,11 +11,14 @@ const { lang } = Astro.props;
 ---
 <section class="beliefs section" aria-labelledby="beliefs-title">
   <div class="container">
-    <header class="beliefs__intro">
-      <p class="eyebrow" data-reveal="fade">{home.beliefs.eyebrow[lang]}</p>
-      <Headline lines={home.beliefs.title[lang]} id="beliefs-title" size="display" class="beliefs__title" />
-      <p class="lead" data-reveal>{home.beliefs.lead[lang]}</p>
-    </header>
+    <div class="illustrated-intro">
+      <header class="beliefs__intro">
+        <p class="eyebrow" data-reveal="fade">{home.beliefs.eyebrow[lang]}</p>
+        <Headline lines={home.beliefs.title[lang]} id="beliefs-title" class="beliefs__title" />
+        <p class="lead" data-reveal>{home.beliefs.lead[lang]}</p>
+      </header>
+      <HomeIllustration scene="approach" />
+    </div>
     <ol class="beliefs__list" role="list">
       {home.beliefs.items[lang].map((item, i) => (
         <li class:list={['belief', `belief--${i % 2 ? 'b' : 'a'}`]} data-reveal>
@@ -30,6 +34,9 @@ const { lang } = Astro.props;
 </section>
 
 <style>
+  .illustrated-intro { display:grid; gap:var(--stack-md); align-items:center; margin-bottom:var(--stack-lg); }
+  .illustrated-intro :global(.section-heading) { margin-bottom:0; }
+  @media(min-width:960px) { .illustrated-intro { grid-template-columns:1.2fr 1fr; gap:var(--col-gap); } }
   .beliefs__intro {
     display: grid;
     gap: var(--stack-md);
@@ -43,7 +50,7 @@ const { lang } = Astro.props;
     max-width: var(--max-text);
   }
   .beliefs__title {
-    font-size: clamp(2.3rem, 1.3rem + 4.4vw, 5.6rem);
+    font-size: var(--fs-h2);
     max-width: 16ch;
   }
   .beliefs__list {

@@ -1,8 +1,10 @@
 ---
 import '@fontsource-variable/outfit';
 import '@fontsource-variable/vazirmatn';
+import '@fontsource-variable/estedad';
 import '@/styles/global.css';
 import vazirArabic from '@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2?url';
+import estedadArabic from '@fontsource-variable/estedad/files/estedad-arabic-wght-normal.woff2?url';
 import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 
 import { href, langMeta, languages, type Lang } from '@/i18n';
@@ -68,6 +70,7 @@ const danaFaces = [
     <script is:inline>document.documentElement.classList.add('js')</script>
 
     {lang === 'fa' && !site.danaInstalled && <link rel="preload" href={vazirArabic} as="font" type="font/woff2" crossorigin />}
+    {lang === 'fa' && <link rel="preload" href={estedadArabic} as="font" type="font/woff2" crossorigin />}
     {lang === 'fa' && site.danaInstalled && <link rel="preload" href="/fonts/dana/dana-300.woff2" as="font" type="font/woff2" crossorigin />}
     {lang === 'en' && <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />}
     {site.danaInstalled && <style is:inline set:html={danaFaces} />}
@@ -163,7 +166,7 @@ const danaFaces = [
           mega.hidden = !open;
         };
         // A click right after hover-open shouldn't immediately close the menu again.
-        toggle.addEventListener('click', () => setMega(mega.hidden || Date.now() - hoverOpenedAt < 600));
+        toggle.addEventListener('click', () => setMega(Boolean(mega.hidden) || Date.now() - hoverOpenedAt < 600));
         const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
         if (canHover) {
           const open = () => {

@@ -6,7 +6,7 @@ interface Props {
   label?: string;
 }
 const { name, class: className, label } = Astro.props;
-const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
+const a11y = label ? { role: 'img' as const, 'aria-label': label } : { 'aria-hidden': true };
 ---
 {name === 'arrow' && (
   <svg class:list={['icon', 'arrow', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" {...a11y}><path d="M4 12h16M14 6l6 6-6 6" /></svg>

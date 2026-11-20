@@ -19,6 +19,7 @@
 
   /* Type */
   --font-fa: 'Dana', 'Vazirmatn Variable', Tahoma, sans-serif;
+  --font-fa-heading: 'Estedad Variable', 'Vazirmatn Variable', Tahoma, sans-serif;
   --font-en: 'Outfit Variable', 'Dana', system-ui, sans-serif;
   --font: var(--font-fa);
 
@@ -249,6 +250,15 @@ b {
   font-weight: 500;
   line-height: var(--lh-tight);
   letter-spacing: calc(var(--tracking-display) / 2);
+}
+/* Give Persian headings their own bold display face, keeping body copy light. */
+:root[lang='fa'] :is(h1, h2, h3, h4, h5, h6, .display, .h2, .h3) {
+  font-family: var(--font-fa-heading);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+:root[lang='fa'] :is(.display, .h2) strong {
+  font-weight: 900;
 }
 .lead {
   font-size: var(--fs-lead);
