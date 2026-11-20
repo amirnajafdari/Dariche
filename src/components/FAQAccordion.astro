@@ -1,12 +1,15 @@
 ---
+import type { Lang } from '@/i18n';
 import type { QA } from '@/data/services';
+import PersianText from './home/PersianText.astro';
 
 // Native <details>: keyboard and screen-reader friendly with no JavaScript.
 interface Props {
   items: QA[];
   name?: string;
+  lang?: Lang;
 }
-const { items, name = 'faq' } = Astro.props;
+const { items, name = 'faq', lang } = Astro.props;
 ---
 <div class="faq">
   {items.map((item, i) => (
@@ -16,7 +19,9 @@ const { items, name = 'faq' } = Astro.props;
         <span class="faq__icon" aria-hidden="true"></span>
       </summary>
       <div class="faq__a">
-        <p>{item.a}</p>
+        {item.a.split('\n\n').map((para) => (
+          <p>{lang === 'fa' ? <PersianText text={para} /> : para}</p>
+        ))}
       </div>
     </details>
   ))}
@@ -77,6 +82,8 @@ const { items, name = 'faq' } = Astro.props;
     background: var(--red);
   }
   .faq__a {
+    display: grid;
+    gap: 0.9rem;
     padding-bottom: 1.75rem;
     max-width: 44rem;
     color: var(--ink-2);

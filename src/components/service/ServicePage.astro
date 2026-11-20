@@ -19,6 +19,8 @@ import ScreenMock from '../ScreenMock.astro';
 import FaqSection from '../FaqSection.astro';
 import FinalCTA from '../FinalCTA.astro';
 import Icon from '../Icon.astro';
+import Bilingual from '../home/Bilingual.astro';
+import SeoSection from '../home/SeoSection.astro';
 
 /**
  * One template for every service page (and future city pages).
@@ -126,6 +128,9 @@ const keywords = [...(finglishPhrases[s.slug] ?? []), ...(location?.searchPhrase
       </ol>
     </div>
   </section>
+
+  {s.slug === 'web-design' && <Bilingual lang={lang} />}
+  {(s.slug === 'seo' || s.slug === 'local-seo') && <SeoSection lang={lang} showLink={false} />}
 
   {showRelated && related && (
     <section class="section svc-related" aria-labelledby="related-title">

@@ -1,6 +1,13 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import PersianHome from '@/components/home/PersianHome.astro';
+import PersianHero from '@/components/home/PersianHero.astro';
+import HomeIntro from '@/components/home/HomeIntro.astro';
+import HomeFounders from '@/components/home/HomeFounders.astro';
+import HomeServices from '@/components/home/HomeServices.astro';
+import PortfolioMarquee from '@/components/home/PortfolioMarquee.astro';
+import HomePricing from '@/components/home/HomePricing.astro';
+import FaqSection from '@/components/FaqSection.astro';
+import HomeContact from '@/components/home/HomeContact.astro';
 import PersianFooter from '@/components/home/PersianFooter.astro';
 import { pageSeo, finglishPhrases } from '@/data/seo';
 import { persianHomeFaqs, persianHomeContact } from '@/data/persianHome';
@@ -21,6 +28,13 @@ const studio = {
   keywords={finglishPhrases.home}
   schema={[studio, pricingCatalogSchema('fa'), faqSchema(persianHomeFaqs)]}
 >
-  <PersianHome />
+  <PersianHero />
+  <HomeIntro lang="fa" />
+  <HomeFounders lang="fa" />
+  <HomeServices lang="fa" />
+  <PortfolioMarquee lang="fa" />
+  <HomePricing lang="fa" useCallbackAnchor />
+  <FaqSection lang="fa" items={persianHomeFaqs} title="سؤال داری؟ شاید جوابش همین‌جا باشه." compact />
+  <HomeContact lang="fa" usePersianHomeContact />
   <PersianFooter slot="footer" />
 </BaseLayout>

@@ -1,0 +1,86 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { founders } from '@/data/founders';
+import FounderCard from '../FounderCard.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  fa: {
+    eyebrow: 'پشت دریچه',
+    title: 'ما دو تا دوستیم که طراحی ما رو کنار هم آورد.',
+    text: 'امیر و علیرضا؛ هر دو در بریتانیا طراحی خوندیم و تجربه طراحی، وب و سئو رو کنار هم گذاشتیم. استودیومون کوچیکه و ارتباطمون با مشتری کاملاً مستقیمی و بی‌واسطه‌ست.',
+    cta: 'بیشتر باهامون آشنا شو',
+  },
+  en: {
+    eyebrow: 'Meet the founders',
+    title: 'Daricheh started as a simple collaboration between two friends.',
+    text: 'Amir and Alireza both studied design in the UK, bringing design, web development and SEO under one roof. Work with us and you speak directly to the two people designing and building your site.',
+    cta: t.moreAboutUs,
+  },
+}[lang];
+---
+<section class="home-founders section--sm" id="about" aria-labelledby="about-title">
+  <div class="container home-founders__grid">
+    <div class="home-founders__copy">
+      <p class="eyebrow" data-reveal="fade">{copy.eyebrow}</p>
+      <h2 class="h2 home-founders__title" id="about-title" data-reveal>{copy.title}</h2>
+      <p class="lead home-founders__text" data-reveal>{copy.text}</p>
+      <a href={href(lang, 'about')} class="link-arrow" data-reveal>{copy.cta}<Icon name="arrow" /></a>
+    </div>
+
+    <div class="home-founders__people">
+      {founders.map((f, i) => (
+        <FounderCard founder={f} lang={lang} class={i === 1 ? 'home-founders__offset' : undefined} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-founders__grid {
+    display: grid;
+    gap: var(--stack-lg);
+    align-items: center;
+  }
+  .home-founders__copy {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .home-founders__title {
+    font-size: clamp(1.8rem, 1.2rem + 2.1vw, 2.9rem);
+  }
+  .home-founders__text {
+    font-size: var(--fs-body);
+    color: var(--ink-2);
+  }
+  .home-founders__people {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 0.5rem + 2.5vw, 2.75rem);
+    align-items: start;
+  }
+  .home-founders__people > :global(.home-founders__offset) {
+    margin-top: clamp(2.25rem, 1rem + 4.5vw, 5.25rem);
+  }
+  @media (min-width: 960px) {
+    .home-founders__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .home-founders__copy {
+      grid-column: 1 / span 5;
+    }
+    .home-founders__people {
+      grid-column: 6 / -1;
+    }
+  }
+</style>

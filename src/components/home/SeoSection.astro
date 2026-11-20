@@ -8,8 +8,9 @@ import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
+  showLink?: boolean;
 }
-const { lang } = Astro.props;
+const { lang, showLink = true } = Astro.props;
 const t = useTranslations(lang);
 const s = home.seo;
 // Labels for the three illustrative searches
@@ -22,7 +23,7 @@ const caption = lang === 'fa' ? 'یه مشتری، سه جور جستجو.' : 'O
       <div class="seo__copy">
         <Headline lines={s.title[lang]} id="seo-title" />
         <p class="body" data-reveal>{s.text[lang]}</p>
-        <a href={href(lang, 'seo')} class="link-arrow" data-reveal>{t.seeSeo}<Icon name="arrow" /></a>
+        {showLink && <a href={href(lang, 'seo')} class="link-arrow" data-reveal>{t.seeSeo}<Icon name="arrow" /></a>}
       </div>
 
       <figure class="seo__searches" data-reveal>

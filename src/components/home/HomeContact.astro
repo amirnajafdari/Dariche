@@ -1,0 +1,131 @@
+---
+import type { Lang } from '@/i18n';
+import { site, phoneUrl, whatsappUrl } from '@/data/site';
+import { persianHomeContact, homeWhatsApp } from '@/data/persianHome';
+import Headline from '../Headline.astro';
+import WhatsAppButton from '../WhatsAppButton.astro';
+import ContactForm from '../ContactForm.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+  usePersianHomeContact?: boolean;
+}
+const { lang, usePersianHomeContact = false } = Astro.props;
+
+const email = usePersianHomeContact ? persianHomeContact.email : site.contact.email;
+const phoneHref = usePersianHomeContact
+  ? (persianHomeContact.phone ? `tel:${persianHomeContact.phone}` : null)
+  : phoneUrl();
+const phoneLabel = usePersianHomeContact
+  ? 'یا مستقیم زنگ بزن'
+  : site.contact.phoneDisplay;
+const waOverride = usePersianHomeContact ? homeWhatsApp : whatsappUrl(lang);
+
+const copy = {
+  fa: {
+    title: ['یه چیزی تو ذهنت داری؟', 'بیا درباره‌ش حرف بزنیم.'],
+    lead: 'شاید یه سایت جدید لازم داری، شاید می‌خوای توی گوگل بیشتر دیده بشی، یا هنوز مطمئن نیستی از کجا شروع کنی. بدون پیچیده کردن ماجرا درباره‌ش حرف می‌زنیم.',
+    waLabel: persianHomeContact.whatsapp ? 'توی واتساپ پیام بده' : 'بیا حرف بزنیم',
+    callbackBtn: 'درخواست تماس ثبت کن',
+    callbackNote: 'فرم رو پر کن تا متن درخواستت توی برنامه ایمیلت آماده بشه؛ برای ثبت درخواست، ایمیل رو ارسال کن.',
+    successText: 'درخواستت برای ارسال با ایمیل آماده شد. برای ثبت نهایی، ارسالش کن؛ اگه برنامه ایمیل باز نشد، توی واتساپ پیام بده.',
+  },
+  en: {
+    title: ['Got something in mind?', "Let's *talk*."],
+    lead: "Whether you need a new website, an online shop, or ongoing SEO and support, tell us where you're starting from — no hard sell.",
+    waLabel: 'Message us on WhatsApp',
+    callbackBtn: 'Request a callback',
+    callbackNote: 'Fill in the form below and your email app will open pre-filled — just hit send, or message us directly on WhatsApp.',
+    successText: undefined,
+  },
+}[lang];
+---
+<section class="home-cta section--sm" id="contact" aria-labelledby="contact-title" data-hide-wa>
+  <div class="container">
+    <div class="home-cta__head">
+      <Headline lines={copy.title} id="contact-title" />
+      <p class="lead home-cta__lead">{copy.lead}</p>
+    </div>
+
+    <div class="home-cta__actions">
+      <div class="btn-row">
+        <WhatsAppButton lang={lang} variant="primary" urlOverride={waOverride} label={copy.waLabel} />
+        <a class="btn btn-secondary" href="#callback">{copy.callbackBtn}</a>
+      </div>
+      {phoneHref && (
+        <a class="link home-cta__phone" href={phoneHref}>
+          <Icon name="phone" />
+          <span class={usePersianHomeContact ? undefined : 'ltr'}>{phoneLabel}</span>
+        </a>
+      )}
+    </div>
+
+    <details class="callback" id="callback" open>
+      <summary class="h3">{copy.callbackBtn}</summary>
+      {!site.formEndpoint && <p class="body callback-note">{copy.callbackNote}</p>}
+      <ContactForm lang={lang} email={email} successText={!site.formEndpoint ? copy.successText : undefined} />
+    </details>
+  </div>
+</section>
+
+<script>
+  const callback = document.querySelector<HTMLDetailsElement>('#callback');
+  if (callback) {
+    callback.open = window.location.hash === '#callback';
+    const revealCallback = () => {
+      if (window.location.hash === '#callback') {
+        callback.open = true;
+        callback.scrollIntoView({ block: 'start' });
+      }
+    };
+    window.addEventListener('hashchange', revealCallback);
+    document.querySelectorAll<HTMLAnchorElement>('a[href="#callback"], a[href="/fa/#callback"], a[href="/en/#callback"]').forEach((link) => {
+      link.addEventListener('click', () => { callback.open = true; });
+    });
+    if (callback.open) revealCallback();
+  }
+</script>
+
+<style>
+  .home-cta {
+    border-top: 1px solid var(--line);
+  }
+  .home-cta__head {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    margin-bottom: var(--stack-md);
+  }
+  .home-cta__lead {
+    color: var(--ink-2);
+  }
+  .home-cta__actions {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .home-cta__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+  }
+  .callback {
+    margin-top: var(--stack-lg);
+    max-width: 52rem;
+    border-block: 1px solid var(--line);
+    scroll-margin-top: 7rem;
+  }
+  .callback summary {
+    cursor: pointer;
+    padding-block: 1.35rem;
+  }
+  .callback-note {
+    font-size: var(--fs-small);
+    margin-bottom: 1rem;
+  }
+  .callback :global(.cform) {
+    padding-block: 0.75rem 2rem;
+  }
+</style>

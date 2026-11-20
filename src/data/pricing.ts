@@ -35,6 +35,8 @@ export interface OneOffService {
   description: Localized;
   listLabel: Localized;
   features: Localized<string[]>;
+  /** Short 3-bullet summary for compact homepage cards */
+  highlights: Localized<string[]>;
   cta: Localized;
 }
 
@@ -51,6 +53,8 @@ export interface MonthlyPackage {
   tagline: Localized;
   paragraphs: Localized<string[]>;
   features: Localized<string[]>;
+  /** Short 3-bullet summary for compact homepage cards */
+  highlights: Localized<string[]>;
   cta: Localized;
   comparison: Record<ComparisonKey, Localized>;
 }
@@ -96,6 +100,10 @@ export const oneOffServices: OneOffService[] = [
     features: {
       fa: ['طراحی یا بازطراحی وب‌سایت', 'تا ۱۵ صفحه', 'هر صفحه اضافه: £10'],
       en: ['Website design or redesign', 'Up to 15 pages', '£10 per additional page'],
+    },
+    highlights: {
+      fa: ['تا ۱۵ صفحه', 'هر صفحه اضافه: £10', 'طراحی جدید یا بازطراحی سایت'],
+      en: ['Up to 15 pages', '£10 per additional page', 'New website or redesign'],
     },
     cta: {
       fa: 'سایت جدیدم رو می‌خوام',
@@ -147,6 +155,10 @@ export const oneOffServices: OneOffService[] = [
         'Additional products require a custom quote',
       ],
     },
+    highlights: {
+      fa: ['ثبت تا ۵۰ محصول', 'محصولات بیشتر با قیمت اختصاصی', 'طراحی و راه‌اندازی فروشگاه آنلاین'],
+      en: ['Up to 50 products', 'Custom quote for more products', 'Complete online shop build'],
+    },
     cta: {
       fa: 'فروشگاهم رو راه بندازیم',
       en: 'Build your online shop',
@@ -188,6 +200,10 @@ export const oneOffServices: OneOffService[] = [
     features: {
       fa: ['Shopify', 'Amazon', 'eBay', 'سایر پلتفرم‌های فروش آنلاین'],
       en: ['Shopify', 'Amazon', 'eBay', 'Similar platforms'],
+    },
+    highlights: {
+      fa: ['Shopify، Amazon و eBay', 'سایر پلتفرم‌های فروش آنلاین', 'راه‌اندازی و آماده‌سازی فروشگاه'],
+      en: ['Shopify, Amazon and eBay', 'Similar selling platforms', 'Ready-to-sell store setup'],
     },
     cta: {
       fa: 'درباره فروشگاهم حرف بزنیم',
@@ -238,6 +254,10 @@ export const monthlyPackages: MonthlyPackage[] = [
         'Website maintenance and small changes',
         'SSL certificate and hosting',
       ],
+    },
+    highlights: {
+      fa: ['سئوی داخلی، ۲ مقاله و ۳ بک‌لینک در ماه', 'نگهداری و تغییرات جزئی سایت', 'گواهی SSL و هاستینگ'],
+      en: ['On-site SEO, 2 blog posts & 3 backlinks/month', 'Website maintenance & small changes', 'SSL certificate & hosting'],
     },
     cta: {
       fa: 'روزن رو انتخاب می‌کنم',
@@ -308,6 +328,10 @@ export const monthlyPackages: MonthlyPackage[] = [
         'SSL certificate and hosting',
         'Monthly report and daily backups',
       ],
+    },
+    highlights: {
+      fa: ['سئوی داخلی، ۶ مقاله، ۹ بک‌لینک و ۲ صفحه فرود در ماه', 'بهینه‌سازی هوش مصنوعی (GEO) و چت‌بات هوشمند', 'پشتیبانی و تغییرات نامحدود، بکاپ روزانه و گزارش ماهانه'],
+      en: ['On-site SEO, 6 posts, 9 backlinks & 2 landing pages/month', 'AI optimisation (GEO) & trained AI chatbot', 'Unlimited support & changes, SSL, hosting & daily backups'],
     },
     cta: {
       fa: 'جامخانه رو انتخاب می‌کنم',
@@ -390,6 +414,10 @@ export const monthlyPackages: MonthlyPackage[] = [
         'SSL certificate and hosting',
         'Monthly report and daily backups',
       ],
+    },
+    highlights: {
+      fa: ['۱۲ مقاله، ۱۸ بک‌لینک و ۶ صفحه فرود در ماه', 'مدیریت Google Ads، Meta Ads و تبلیغات ChatGPT', 'مدیریت Google Maps، چت‌بات هوشمند و پشتیبانی نامحدود'],
+      en: ['12 posts, 18 backlinks & 6 landing pages/month', 'Google Ads, Meta Ads & ChatGPT ads management', 'Google Maps management, reviews, GEO, AI chatbot & unlimited support'],
     },
     cta: {
       fa: 'درباره ارسی حرف بزنیم',

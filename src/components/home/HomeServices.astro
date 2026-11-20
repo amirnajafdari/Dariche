@@ -1,0 +1,197 @@
+---
+import { href, num, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import Headline from '../Headline.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  fa: {
+    eyebrow: 'خدمات دریچه',
+    title: ['کارهایی که', '*انجام می‌دیم*.'],
+    lead: 'از ساخت سایت جدید و فروشگاه اینترنتی تا سئو، گوگل مپ و پشتیبانی مداوم.',
+    items: [
+      {
+        title: 'طراحی سایت',
+        text: 'سایت اختصاصی، سریع و تمیز برای معرفی حرفه‌ای بیزینست — چه از صفر، چه بازطراحی سایت فعلی.',
+        slug: 'web-design',
+        cta: 'جزئیات طراحی سایت',
+      },
+      {
+        title: 'فروشگاه اینترنتی',
+        text: 'فروشگاه آنلاین کامل با تجربه خرید راحت، یا راه‌اندازی فروشگاه در Shopify، Amazon و eBay.',
+        slug: 'ecommerce',
+        cta: 'جزئیات فروشگاه اینترنتی',
+      },
+      {
+        title: 'سئو و سئو محلی',
+        text: 'دیده شدن در جستجوهای گوگل، Google Maps و جستجوهای محلی تا مشتری‌ها خودشان پیدایت کنند.',
+        slug: 'seo',
+        cta: 'جزئیات سئو و سئو محلی',
+      },
+      {
+        title: 'پشتیبانی و رشد سایت',
+        text: 'نگهداری، امنیت، SSL، هاستینگ، تولید محتوا، بهینه‌سازی هوش مصنوعی و مدیریت تبلیغات.',
+        slug: 'website-support',
+        cta: 'جزئیات پشتیبانی و رشد',
+      },
+    ],
+  },
+  en: {
+    eyebrow: 'Services',
+    title: ['What we', '*do*.'],
+    lead: 'From a new website or online shop to ongoing SEO, local visibility and website support.',
+    items: [
+      {
+        title: 'Web Design',
+        text: 'Clean, fast, bespoke websites and redesigns — including bilingual Persian and English builds.',
+        slug: 'web-design',
+        cta: 'Explore Web Design',
+      },
+      {
+        title: 'Ecommerce',
+        text: 'Online shops built for smooth checkout, plus store setup on Shopify, Amazon, eBay and similar platforms.',
+        slug: 'ecommerce',
+        cta: 'Explore Ecommerce',
+      },
+      {
+        title: 'SEO & Local SEO',
+        text: 'On-site SEO, content, backlinks and Google Maps management so UK customers find you first.',
+        slug: 'seo',
+        cta: 'Explore SEO & Local SEO',
+      },
+      {
+        title: 'Website Support & Growth',
+        text: 'Ongoing maintenance, hosting, SSL, unlimited support options, AI optimisation (GEO) and ads management.',
+        slug: 'website-support',
+        cta: 'Explore Support & Growth',
+      },
+    ],
+  },
+}[lang];
+---
+<section class="home-services section--sm" id="services" aria-labelledby="services-title">
+  <div class="container">
+    <header class="home-services__head">
+      <div class="home-services__intro">
+        <p class="eyebrow" data-reveal="fade">{copy.eyebrow}</p>
+        <Headline lines={copy.title} id="services-title" />
+      </div>
+      <div class="home-services__side" data-reveal>
+        <p class="lead">{copy.lead}</p>
+        <a href={href(lang, 'services')} class="link-arrow">{t.allServices}<Icon name="arrow" /></a>
+      </div>
+    </header>
+
+    <ol class="home-services__grid" role="list">
+      {copy.items.map((item, i) => (
+        <li class="home-services__card" data-reveal style={`--delay:${(i % 2) * 0.06}s`}>
+          <a href={href(lang, item.slug)} class="home-services__link">
+            <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+            <h3 class="home-services__title">{item.title}</h3>
+            <p class="home-services__text">{item.text}</p>
+            <span class="home-services__go">
+              {item.cta}
+              <Icon name="arrow" />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .home-services {
+    background: var(--paper-2);
+  }
+  .home-services__head {
+    display: grid;
+    gap: var(--stack-md);
+    margin-bottom: var(--stack-lg);
+    align-items: end;
+  }
+  .home-services__intro {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .home-services__side {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .home-services__grid {
+    display: grid;
+    gap: 1.5rem var(--col-gap);
+  }
+  .home-services__card {
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+    border-radius: 0 0 var(--radius) var(--radius);
+    transition: border-color 0.3s;
+  }
+  .home-services__card:hover {
+    border-color: var(--green);
+  }
+  .home-services__link {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.75rem 1.5rem;
+    height: 100%;
+    align-content: start;
+  }
+  .home-services__title {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    transition: color 0.25s;
+  }
+  .home-services__card:hover .home-services__title {
+    color: var(--green);
+  }
+  .home-services__text {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  .home-services__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--green);
+  }
+  .home-services__go .icon {
+    transition: translate 0.3s var(--ease);
+  }
+  .home-services__card:hover .home-services__go .icon {
+    translate: 0.25rem 0;
+  }
+  :global([dir='rtl']) .home-services__card:hover .home-services__go .icon {
+    translate: -0.25rem 0;
+  }
+  @media (min-width: 700px) {
+    .home-services__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 960px) {
+    .home-services__head {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .home-services__intro {
+      grid-column: 1 / span 6;
+    }
+    .home-services__side {
+      grid-column: 7 / -1;
+    }
+  }
+</style>

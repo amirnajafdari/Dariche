@@ -10,16 +10,17 @@ interface Props {
   items: QA[];
   title?: string;
   id?: string;
+  compact?: boolean;
 }
-const { lang, items, id = 'faq' } = Astro.props;
+const { lang, items, id = 'faq', compact = false } = Astro.props;
 const t = useTranslations(lang);
 const title = Astro.props.title ?? t.faqTitle;
 ---
-<section class="faq-section section" aria-labelledby={`${id}-title`}>
+<section class:list={['faq-section', compact ? 'section--sm' : 'section']} id={id} aria-labelledby={`${id}-title`}>
   <div class="container faq-section__grid">
     <Headline lines={title} id={`${id}-title`} class="faq-section__title" />
     <div class="faq-section__list">
-      <FAQAccordion items={items} name={id} />
+      <FAQAccordion items={items} name={id} lang={lang} />
     </div>
   </div>
 </section>

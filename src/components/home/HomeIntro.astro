@@ -1,0 +1,110 @@
+---
+import type { Lang } from '@/i18n';
+import Headline from '../Headline.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const copy = {
+  fa: {
+    eyebrow: 'درباره دریچه',
+    title: ['زبان همدیگرو می‌فهمیم.', 'بازار *بریتانیا* رو هم می‌شناسیم.'],
+    text: 'دریچه یه استودیوی کوچیک طراحی سایت و سئو برای بیزینس‌های ایرانی در بریتانیاست. هم با دغدغه‌ها و سلیقه مشتری ایرانی آشناییم، هم می‌دونیم مخاطب بازار بریتانیا از یه سایت حرفه‌ای چه انتظاری داره.',
+    pillars: [
+      { title: 'طراحی با هدف', text: 'ساده، سریع و چیده‌شده برای اینکه مشتری راحت‌تر اعتماد کنه و تماس بگیره.' },
+      { title: 'سئو از روز اول', text: 'ساختار و محتوا رو از ابتدا برای جستجوهای واقعی گوگل و بازار بریتانیا می‌سازیم.' },
+      { title: 'مخصوص بیزینس تو', text: 'بدون قالب‌های تکراری؛ متناسب با خدمات، زبان مشتری‌ها و هدف واقعی کارت.' },
+    ],
+  },
+  en: {
+    eyebrow: 'Why Daricheh',
+    title: ['We think in Persian.', 'We know the *UK* market.'],
+    text: "Daricheh is a small web design and SEO studio for Iranian-owned businesses across the UK. We understand the nuance of running a business here — building sites that feel natural to Iranian customers and unmistakably professional to everyone else.",
+    pillars: [
+      { title: 'Design with purpose', text: 'Every section has a clear job: build trust quickly and turn visits into enquiries.' },
+      { title: 'SEO from day one', text: 'Built around how people in the UK actually search — in English, Persian and Finglish.' },
+      { title: 'Tailored to your business', text: 'No recycled templates; structured around your services, audience and goals.' },
+    ],
+  },
+}[lang];
+---
+<section class="home-intro section--sm" id="intro" aria-labelledby="intro-title">
+  <div class="container">
+    <div class="home-intro__top">
+      <div class="home-intro__head">
+        <p class="eyebrow" data-reveal="fade">{copy.eyebrow}</p>
+        <Headline lines={copy.title} id="intro-title" />
+      </div>
+      <p class="home-intro__lead lead" data-reveal>{copy.text}</p>
+    </div>
+
+    <ul class="home-intro__pillars" role="list">
+      {copy.pillars.map((item, i) => (
+        <li class="home-intro__pillar" data-reveal style={`--delay:${i * 0.06}s`}>
+          <h3 class="home-intro__pillar-title">{item.title}</h3>
+          <p class="home-intro__pillar-text">{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .home-intro {
+    border-bottom: 1px solid var(--line);
+  }
+  .home-intro__top {
+    display: grid;
+    gap: var(--stack-md);
+    align-items: end;
+  }
+  .home-intro__head {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .home-intro__lead {
+    color: var(--ink-2);
+  }
+  .home-intro__pillars {
+    display: grid;
+    gap: 1.5rem var(--col-gap);
+    margin-top: var(--stack-lg);
+  }
+  .home-intro__pillar {
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    align-content: start;
+  }
+  .home-intro__pillar-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .home-intro__pillar-text {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+    line-height: 1.75;
+  }
+  @media (min-width: 820px) {
+    .home-intro__pillars {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 960px) {
+    .home-intro__top {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+    .home-intro__head {
+      grid-column: 1 / span 6;
+    }
+    .home-intro__lead {
+      grid-column: 7 / -1;
+    }
+  }
+</style>

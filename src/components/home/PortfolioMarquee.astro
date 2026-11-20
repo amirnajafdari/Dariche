@@ -1,0 +1,358 @@
+---
+import { href, type Lang } from '@/i18n';
+import { useTranslations } from '@/i18n/ui';
+import { caseStudies } from '@/data/caseStudies';
+import { getService } from '@/data/services';
+import { visible } from '@/data/site';
+import Headline from '../Headline.astro';
+import ProjectVisual from '../ProjectVisual.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const items = visible(caseStudies);
+
+const copy = {
+  fa: {
+    eyebrow: 'نمونه‌کارها',
+    title: ['چند تا کاری که', '*با علاقه* ساختیم.'],
+    all: 'همه نمونه‌کارها',
+    pause: 'توقف حرکت',
+    play: 'ادامه حرکت',
+    prev: 'نمونه‌کار قبلی',
+    next: 'نمونه‌کار بعدی',
+    region: 'گالری نمونه‌کارها',
+  },
+  en: {
+    eyebrow: 'Selected Work',
+    title: ['A few projects', 'we *love*.'],
+    all: t.viewAllWork,
+    pause: 'Pause',
+    play: 'Play',
+    prev: 'Previous projects',
+    next: 'Next projects',
+    region: 'Portfolio showcase',
+  },
+}[lang];
+
+const formatServices = (slugs: string[]) =>
+  slugs
+    .map((s) => getService(s)?.name[lang] ?? s)
+    .join(lang === 'fa' ? ' / ' : ' · ');
+---
+{items.length > 0 && (
+  <section class="work-marquee section--sm" id="work" aria-labelledby="work-title" data-marquee-root>
+    <div class="container work-marquee__head">
+      <div class="work-marquee__intro">
+        <p class="eyebrow" data-reveal="fade">{copy.eyebrow}</p>
+        <Headline lines={copy.title} id="work-title" />
+      </div>
+
+      <div class="work-marquee__controls">
+        <div class="marquee-nav" role="group" aria-label={copy.region}>
+          <button type="button" class="marquee-btn" data-marquee-prev aria-label={copy.prev}>
+            <span aria-hidden="true">←</span>
+          </button>
+          <button type="button" class="marquee-btn" data-marquee-next aria-label={copy.next}>
+            <span aria-hidden="true">→</span>
+          </button>
+          <button
+            type="button"
+            class="marquee-btn marquee-btn--toggle"
+            data-marquee-toggle
+            data-label-pause={copy.pause}
+            data-label-play={copy.play}
+            aria-pressed="false"
+          >
+            {copy.pause}
+          </button>
+        </div>
+        <a href={href(lang, 'work')} class="link-arrow">{copy.all}<Icon name="arrow" /></a>
+      </div>
+    </div>
+
+    <div class="marquee-viewport" dir="ltr" data-marquee-viewport tabindex="0" role="region" aria-label={copy.region}>
+      <div class="marquee-track" data-marquee-track>
+        <div class="marquee-group">
+          {items.map((cs) => (
+            <article class="mcard">
+              <a href={href(lang, `work/${cs.slug}`)} class="mcard__link">
+                <div class="mcard__media">
+                  <ProjectVisual cs={cs} lang={lang} sizes="(min-width: 960px) 440px, 82vw" />
+                </div>
+                <div class="mcard__meta" dir={lang === 'fa' ? 'rtl' : 'ltr'}>
+                  <h3 class="mcard__name">{cs.client[lang]}</h3>
+                  <p class="mcard__sub">
+                    <span>{cs.industry[lang]}</span>
+                    <span class="mcard__dot" aria-hidden="true">·</span>
+                    <span class="mcard__services">{formatServices(cs.services)}</span>
+                  </p>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <div class="marquee-group marquee-group--clone" aria-hidden="true">
+          {items.map((cs) => (
+            <article class="mcard">
+              <a href={href(lang, `work/${cs.slug}`)} class="mcard__link" tabindex="-1">
+                <div class="mcard__media">
+                  <ProjectVisual cs={cs} lang={lang} sizes="(min-width: 960px) 440px, 82vw" />
+                </div>
+                <div class="mcard__meta" dir={lang === 'fa' ? 'rtl' : 'ltr'}>
+                  <p class="mcard__name">{cs.client[lang]}</p>
+                  <p class="mcard__sub">
+                    <span>{cs.industry[lang]}</span>
+                    <span class="mcard__dot" aria-hidden="true">·</span>
+                    <span class="mcard__services">{formatServices(cs.services)}</span>
+                  </p>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-marquee-root]').forEach((root) => {
+    const viewport = root.querySelector<HTMLElement>('[data-marquee-viewport]');
+    const toggle = root.querySelector<HTMLButtonElement>('[data-marquee-toggle]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-marquee-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-marquee-next]');
+    if (!viewport) return;
+
+    const setManual = (manual: boolean) => {
+      root.classList.toggle('is-manual', manual);
+      if (toggle) {
+        toggle.setAttribute('aria-pressed', String(manual));
+        toggle.textContent = manual ? (toggle.dataset.labelPlay ?? 'Play') : (toggle.dataset.labelPause ?? 'Pause');
+      }
+    };
+
+    toggle?.addEventListener('click', () => {
+      setManual(!root.classList.contains('is-manual'));
+    });
+
+    const step = (dir: number) => {
+      if (!root.classList.contains('is-manual')) setManual(true);
+      const card = viewport.querySelector<HTMLElement>('.mcard');
+      const amount = card ? card.getBoundingClientRect().width + 24 : 360;
+      viewport.scrollBy({ left: dir * amount, behavior: 'smooth' });
+    };
+
+    prev?.addEventListener('click', () => step(-1));
+    next?.addEventListener('click', () => step(1));
+  });
+</script>
+
+<style>
+  .work-marquee {
+    --marquee-gap: clamp(1rem, 0.75rem + 1.2vw, 1.75rem);
+    overflow: hidden;
+  }
+  .work-marquee__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    margin-bottom: var(--stack-lg);
+  }
+  .work-marquee__intro {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .work-marquee__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .marquee-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    direction: ltr;
+  }
+  .marquee-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding-inline: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+    background: var(--paper);
+    transition: border-color 0.25s, color 0.25s;
+  }
+  .marquee-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .marquee-btn--toggle {
+    padding-inline: 0.9rem;
+  }
+
+  .marquee-viewport {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-block: 0.5rem 1rem;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    animation: marquee-scroll 42s linear infinite;
+  }
+  .marquee-viewport:hover .marquee-track,
+  .marquee-viewport:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  .marquee-group {
+    display: flex;
+    gap: var(--marquee-gap);
+    padding-inline-end: var(--marquee-gap);
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .mcard {
+    flex: none;
+    width: clamp(19rem, 31vw, 29rem);
+    scroll-snap-align: start;
+  }
+  .mcard__link {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .mcard__media {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+  .mcard__media > :global(img),
+  .mcard__media > :global(div) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 0.8s var(--ease);
+  }
+  .mcard__link:hover .mcard__media > :global(*) {
+    scale: 1.03;
+  }
+  .mcard__meta {
+    display: grid;
+    gap: 0.2rem;
+    padding-inline: 0.15rem;
+  }
+  .mcard__name {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--ink);
+    transition: color 0.25s;
+  }
+  .mcard__link:hover .mcard__name {
+    color: var(--green);
+  }
+  .mcard__sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+    line-height: 1.5;
+  }
+  .mcard__services {
+    color: var(--ink-2);
+  }
+
+  /* Manual browse mode (paused toggle, mobile touch devices, or reduced motion) */
+  .work-marquee.is-manual .marquee-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    padding-inline: var(--gutter);
+    scrollbar-width: thin;
+  }
+  .work-marquee.is-manual .marquee-track {
+    animation: none;
+    transform: none;
+  }
+  .work-marquee.is-manual .marquee-group--clone {
+    display: none;
+  }
+  .work-marquee.is-manual .marquee-group {
+    padding-inline-end: 0;
+  }
+
+  @media (hover: none), (pointer: coarse), (max-width: 767px) {
+    .marquee-btn--toggle {
+      display: none;
+    }
+    .marquee-viewport {
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .marquee-viewport::-webkit-scrollbar {
+      display: none;
+    }
+    .marquee-track {
+      animation: none;
+      transform: none;
+    }
+    .marquee-group--clone {
+      display: none;
+    }
+    .marquee-group {
+      padding-inline-end: 0;
+    }
+    .mcard {
+      width: min(82vw, 22rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-btn--toggle {
+      display: none;
+    }
+    .marquee-viewport {
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      padding-inline: var(--gutter);
+    }
+    .marquee-track {
+      animation: none;
+      transform: none;
+    }
+    .marquee-group--clone {
+      display: none;
+    }
+    .marquee-group {
+      padding-inline-end: 0;
+    }
+  }
+</style>
