@@ -1,25 +1,31 @@
 ---
+import { Picture } from 'astro:assets';
 import { contactForm, homeWhatsApp, persianHomeContact } from '@/data/persianHome';
+import heroFa from '@/assets/home/hero-fa.jpg';
 import Headline from '../Headline.astro';
 import PrimaryButton from '../PrimaryButton.astro';
 import SecondaryButton from '../SecondaryButton.astro';
 import WhatsAppButton from '../WhatsAppButton.astro';
 
 const lang = 'fa';
+const heroWidths = [640, 1024, 1440, 1920, 2560].filter((w) => w < heroFa.width).concat(heroFa.width);
 ---
 <section class="hero" aria-labelledby="hero-title">
-  <img
-    class="hero__bg"
-    src="/images/hero/hero-fa.webp"
+  <Picture
+    src={heroFa}
     alt=""
     aria-hidden="true"
-    width="1024"
-    height="576"
+    widths={heroWidths}
+    sizes="100vw"
+    formats={['webp']}
+    fallbackFormat="jpg"
+    quality={95}
+    pictureAttributes={{ class: 'hero__bg-wrap', 'aria-hidden': 'true' }}
+    class="hero__bg"
     loading="eager"
     fetchpriority="high"
-    decoding="async"
+    decoding="sync"
   />
-  <div class="hero__veil" aria-hidden="true"></div>
   <div class="container hero__grid">
     <div class="hero__copy">
       <Headline lines={['یه دریچه برای', 'دیده شدن بیزینست.']} as="h1" size="display" id="hero-title" class="hero__title" />
@@ -44,34 +50,27 @@ const lang = 'fa';
     overflow: hidden;
     isolation: isolate;
     background: #f6f4f1;
+    display: flex;
+    flex-direction: column;
     padding-top: clamp(2.75rem, 6vw, 4.5rem);
-    padding-bottom: clamp(16rem, 54vw, 24rem);
   }
-  .hero__bg {
-    position: absolute;
-    inset: 0;
+  .hero__bg-wrap {
+    order: 2;
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 18% bottom;
-    z-index: -2;
+    margin-top: clamp(2rem, 5vw, 3rem);
     pointer-events: none;
     user-select: none;
   }
-  .hero__veil {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      rgb(255 255 255 / 0.92) 0%,
-      rgb(255 255 255 / 0.84) 46%,
-      rgb(255 255 255 / 0.08) 76%,
-      transparent 100%
-    );
+  .hero__bg {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: left center;
   }
   .hero__grid {
+    order: 1;
     position: relative;
     display: grid;
   }
@@ -103,23 +102,26 @@ const lang = 'fa';
 
   @media (min-width: 960px) {
     .hero {
-      display: flex;
+      flex-direction: row;
       align-items: center;
       min-height: clamp(38rem, 78vh, 52rem);
       padding-block: clamp(4rem, 5vw, 6.5rem);
     }
+    .hero__bg-wrap {
+      order: 0;
+      position: absolute;
+      inset: 0;
+      margin-top: 0;
+      z-index: -1;
+    }
     .hero__bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       object-position: left center;
     }
-    .hero__veil {
-      background: linear-gradient(
-        to left,
-        rgb(255 255 255 / 0.72) 0%,
-        rgb(255 255 255 / 0.42) 40%,
-        transparent 56%
-      );
-    }
     .hero__grid {
+      order: 0;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--col-gap);
       align-items: center;
@@ -130,14 +132,6 @@ const lang = 'fa';
   }
 
   @media (min-width: 1240px) {
-    .hero__veil {
-      background: linear-gradient(
-        to left,
-        rgb(255 255 255 / 0.35) 0%,
-        rgb(255 255 255 / 0.12) 38%,
-        transparent 50%
-      );
-    }
     .hero__copy {
       grid-column: 1 / span 5;
     }
