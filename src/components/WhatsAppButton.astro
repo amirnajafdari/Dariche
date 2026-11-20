@@ -23,7 +23,7 @@ interface Props {
 const { lang, variant = 'quiet', label, message, class: className, urlOverride } = Astro.props;
 const t = useTranslations(lang);
 const url = urlOverride ?? whatsappUrl(lang, message);
-const common = url.startsWith('/') ? { href: url } : { href: url, target: '_blank', rel: 'noopener' };
+const common = url.startsWith('/') ? { href: url } : { href: url, target: '_blank', rel: 'noopener noreferrer' };
 ---
 {variant === 'floating' ? (
   <a {...common} class:list={['wa-float', className]} aria-label={label ?? t.whatsappFloating} data-wa-float>

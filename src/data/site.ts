@@ -15,9 +15,10 @@ export const site = {
   areaServed: 'GB',
 
   contact: {
-    phoneDisplay: '07000 000000', // PLACEHOLDER
-    phoneHref: '+447000000000', // PLACEHOLDER — E.164, no spaces
-    whatsappNumber: '447000000000', // PLACEHOLDER — international format, no "+" (used by wa.me)
+    phoneDisplay: '(+44) 07428567080',
+    phoneHref: '+447428567080',
+    whatsappNumber: '447428567080',
+    whatsappUrl: 'https://wa.me/447428567080',
     email: 'hello@daricheh.co.uk',
   },
 
@@ -64,8 +65,10 @@ export const site = {
   ogImage: '/og/daricheh-default.png',
 };
 
-export const whatsappUrl = (lang: Lang, text?: string) =>
-  `https://wa.me/${site.contact.whatsappNumber}?text=${encodeURIComponent(text ?? site.whatsappGreeting[lang])}`;
+/** Single central WhatsApp URL used across the entire website. */
+export const WHATSAPP_URL = site.contact.whatsappUrl;
+
+export const whatsappUrl = (_lang?: Lang, _text?: string) => WHATSAPP_URL;
 
 export const phoneUrl = () => `tel:${site.contact.phoneHref}`;
 export const emailUrl = () => `mailto:${site.contact.email}`;

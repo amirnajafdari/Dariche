@@ -1,4 +1,5 @@
 import type { QA } from './services';
+import { WHATSAPP_URL } from './site.ts';
 import {
   oneOffServices as centralOneOffServices,
   monthlyPackages as centralMonthlyPackages,
@@ -20,9 +21,7 @@ export const persianHomeFounders = [
   { name: 'علیرضا' as string | null, role: 'طراحی وب و سئو' },
 ];
 export const contactForm = '#callback';
-export const homeWhatsApp = persianHomeContact.whatsapp
-  ? `https://wa.me/${persianHomeContact.whatsapp}?text=${encodeURIComponent('سلام، از سایت دریچه پیام می‌دم. یه سؤال درباره سایتم داشتم.')}`
-  : contactForm;
+export const homeWhatsApp = WHATSAPP_URL;
 
 export const primaryServices = [
   { title: 'طراحی سایت', tagline: 'سایتی که هم قشنگه، هم کار راه‌اندازه.', text: 'یه سایت تمیز، سریع و حرفه‌ای که شخصیت بیزینست رو درست نشون بده. طوری طراحی می‌کنیم که مشتری راحت خدماتت رو بشناسه، جواب سؤال‌هاش رو بگیره و برای تماس، رزرو یا خرید سردرگم نشه.', link: 'بیشتر درباره طراحی سایت', path: 'web-design' },

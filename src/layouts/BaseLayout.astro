@@ -35,10 +35,12 @@ interface Props {
   noindex?: boolean;
   keywords?: string[];
   publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
   persianHome?: boolean;
 }
 
-const { lang, title, description, path, breadcrumbs, schema = [], image, type, noindex, keywords, publishedTime } = Astro.props;
+const { lang, title, description, path, breadcrumbs, schema = [], image, type, noindex, keywords, publishedTime, modifiedTime, author } = Astro.props;
 const t = useTranslations(lang);
 const canonical = href(lang, path);
 const alternates = Astro.props.alternates ?? Object.fromEntries(languages.map((l) => [l, href(l, path)]));
@@ -87,6 +89,8 @@ const danaFaces = [
       keywords={keywords}
       schema={jsonLd}
       publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      author={author}
     />
 
     <link rel="icon" href="/favicon.ico" sizes="any" />

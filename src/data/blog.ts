@@ -1,11 +1,22 @@
 import type { Lang, Localized } from '@/i18n';
 import type { ImageAsset } from './caseStudies';
-import type { ServiceSlug } from './services';
+import type { QA, ServiceSlug } from './services';
+import { publishedEnglishPosts } from './blogArticlesEn';
+import { publishedPersianPosts } from './blogArticlesFa';
 
-export type CategoryId = 'web-design' | 'seo' | 'google-maps' | 'uk-business' | 'marketing' | 'ux' | 'ai';
+export type CategoryId =
+  | 'web-design'
+  | 'seo'
+  | 'local-seo'
+  | 'google-maps'
+  | 'uk-business'
+  | 'marketing'
+  | 'ux'
+  | 'ai';
 
 export const categories: { id: CategoryId; name: Localized }[] = [
-  { id: 'web-design', name: { fa: 'طراحی سایت', en: 'Web design' } },
+  { id: 'web-design', name: { fa: 'طراحی سایت', en: 'Web Design' } },
+  { id: 'local-seo', name: { fa: 'سئو محلی', en: 'Local SEO' } },
   { id: 'seo', name: { fa: 'سئو', en: 'SEO' } },
   { id: 'google-maps', name: { fa: 'Google Maps', en: 'Google Maps' } },
   { id: 'uk-business', name: { fa: 'بیزینس در بریتانیا', en: 'Business in the UK' } },
@@ -17,6 +28,7 @@ export const categories: { id: CategoryId; name: Localized }[] = [
 export type Block =
   | { type: 'p'; text: string }
   | { type: 'h2'; text: string }
+  | { type: 'h3'; text: string }
   | { type: 'ul'; items: string[] }
   | { type: 'quote'; text: string };
 
@@ -29,6 +41,8 @@ export interface Post {
   title: string;
   excerpt: string;
   category: CategoryId;
+  tags?: string[];
+  author?: Localized;
   /** ISO dates */
   date: string;
   updated?: string;
@@ -38,6 +52,8 @@ export interface Post {
   seo?: {
     title?: string;
     description?: string;
+    primaryKeyword?: string;
+    secondaryKeywords?: string[];
     /**
      * Finglish / alternative search phrases this article is written to answer.
      * Used for internal planning and in meta keywords only — never stuffed into visible copy.
@@ -45,10 +61,17 @@ export interface Post {
     searchPhrases?: string[];
   };
   body: Block[];
+  faqs?: QA[];
+  cta?: {
+    heading: string;
+    text: string[];
+    button: string;
+    href?: string;
+  };
 }
 
-// SAMPLE CONTENT — real, useful drafts, but review before publishing.
-export const posts: Post[] = [
+// SAMPLE CONTENT — earlier studio drafts kept below the newly published articles.
+const samplePosts: Post[] = [
   {
     key: 'search-languages',
     lang: 'fa',
@@ -57,6 +80,7 @@ export const posts: Post[] = [
     title: 'مشتری‌های ایرانی چطور سرچ می‌کنن؟ فارسی، انگلیسی، فینگلیش',
     excerpt: 'یه نفر می‌نویسه «طراحی سایت»، یکی «web designer» و یکی «tarahi site». اگه سایتت فقط برای یکی‌شون آماده باشه، بقیه رو از دست دادی.',
     category: 'seo',
+    author: { fa: 'علیرضا', en: 'Alireza' },
     date: '2026-10-01',
     readingMinutes: 4,
     relatedService: 'seo',
@@ -81,6 +105,7 @@ export const posts: Post[] = [
     title: 'Google Business Profile؛ مهم‌ترین صفحه‌ای که شاید هنوز درستش نکردی',
     excerpt: 'برای خیلی از بیزینس‌های محلی، اولین چیزی که مشتری می‌بینه سایت نیست؛ پروفایل گوگله.',
     category: 'google-maps',
+    author: { fa: 'علیرضا', en: 'Alireza' },
     date: '2026-09-18',
     readingMinutes: 5,
     relatedService: 'local-seo',
@@ -101,6 +126,7 @@ export const posts: Post[] = [
     title: 'چرا متن فارسی سایتت نباید شبیه Google Translate باشه',
     excerpt: 'مشتری ایرانی از جمله‌ی اول می‌فهمه متن ترجمه شده یا یه نفر واقعاً براش نوشته.',
     category: 'ux',
+    author: { fa: 'علیرضا', en: 'Alireza' },
     date: '2026-09-02',
     readingMinutes: 3,
     relatedService: 'web-design',
@@ -120,6 +146,7 @@ export const posts: Post[] = [
     title: 'How Iranian customers search: Persian, English and Finglish',
     excerpt: "One person types 'web designer', another 'طراحی سایت', another 'tarahi site'. If your site only answers one, you miss the rest.",
     category: 'seo',
+    author: { fa: 'علیرضا', en: 'Alireza' },
     date: '2026-10-01',
     readingMinutes: 4,
     relatedService: 'seo',
@@ -140,6 +167,7 @@ export const posts: Post[] = [
     title: "Google Business Profile: the page you probably haven't finished",
     excerpt: "For most local businesses, the first thing a customer sees isn't the website. It's the Google profile.",
     category: 'google-maps',
+    author: { fa: 'علیرضا', en: 'Alireza' },
     date: '2026-09-18',
     readingMinutes: 4,
     relatedService: 'local-seo',
@@ -152,6 +180,8 @@ export const posts: Post[] = [
     ],
   },
 ];
+
+export const posts: Post[] = [...publishedPersianPosts, ...publishedEnglishPosts, ...samplePosts];
 
 export const postsFor = (lang: Lang) =>
   posts.filter((p) => p.lang === lang).sort((a, b) => b.date.localeCompare(a.date));

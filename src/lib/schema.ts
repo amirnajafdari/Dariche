@@ -1,7 +1,7 @@
 import { href, langMeta, type Lang } from '@/i18n';
 import { site } from '@/data/site';
 import type { QA, Service } from '@/data/services';
-import type { Post } from '@/data/blog';
+import { categoryName, type Post } from '@/data/blog';
 import {
   oneOffServices,
   monthlyPackages,
@@ -162,18 +162,37 @@ export const faqSchema = (items: QA[]) => ({
   })),
 });
 
-export const articleSchema = (post: Post) => ({
-  '@type': 'Article',
-  headline: post.title,
-  description: post.excerpt,
-  datePublished: post.date,
-  dateModified: post.updated ?? post.date,
-  inLanguage: langMeta[post.lang].hreflang,
-  mainEntityOfPage: abs(href(post.lang, `blog/${post.slug}`)),
-  image: abs(post.cover?.src ?? site.ogImage),
-  author: { '@id': orgId },
-  publisher: { '@id': orgId },
-});
+export const articleSchema = (post: Post) => {
+  const pageUrl = abs(href(post.lang, `blog/${post.slug}`));
+  const authorName = post.author?.en ?? 'Alireza';
+  const kw = [
+    ...(post.seo?.primaryKeyword ? [post.seo.primaryKeyword] : []),
+    ...(post.seo?.secondaryKeywords ?? []),
+    ...(post.tags ?? []),
+  ];
+  return {
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.seo?.description ?? post.excerpt,
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    inLanguage: langMeta[post.lang].hreflang,
+    url: pageUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+    },
+    image: abs(post.cover?.src ?? site.ogImage),
+    articleSection: categoryName(post.category, post.lang),
+    ...(kw.length ? { keywords: [...new Set(kw)].join(', ') } : {}),
+    author: {
+      '@type': 'Person',
+      name: authorName,
+      url: abs(href(post.lang, 'about')),
+    },
+    publisher: { '@id': orgId },
+  };
+};
 
 export const breadcrumbSchema = (crumbs: { name: string; path: string }[]) => ({
   '@type': 'BreadcrumbList',

@@ -30,7 +30,7 @@ const legal = [['حریم خصوصی','privacy'],['سیاست کوکی‌ها','
       <nav aria-labelledby="footer-contact">
         <h2 id="footer-contact">ارتباط با ما</h2>
         <ul role="list">
-          {persianHomeContact.whatsapp && <li><a href={homeWhatsApp} target="_blank" rel="noopener">واتساپ</a></li>}
+          {persianHomeContact.whatsapp && <li><a href={homeWhatsApp} target="_blank" rel="noopener noreferrer">واتساپ</a></li>}
           {persianHomeContact.phone && <li><a href={`tel:${persianHomeContact.phone}`}>تماس تلفنی</a></li>}
           <li><a href={`mailto:${persianHomeContact.email}`}>ایمیل</a></li>
           {persianHomeContact.instagram && <li><a href={persianHomeContact.instagram} target="_blank" rel="noopener me">اینستاگرام</a></li>}

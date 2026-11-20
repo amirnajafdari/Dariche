@@ -68,7 +68,7 @@ const socialIcon = (name: string) => (name.toLowerCase() === 'instagram' ? 'inst
         <h2 class="site-footer__h">{t.footerContact}</h2>
         <ul role="list" class="site-footer__contact">
           <li>
-            <a href={whatsappUrl(lang)} target="_blank" rel="noopener"><Icon name="whatsapp" />{t.whatsapp}</a>
+            <a href={whatsappUrl(lang)} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" />{t.whatsapp}</a>
           </li>
           <li>
             <a href={phoneUrl()}><Icon name="phone" /><span class="ltr">{site.contact.phoneDisplay}</span></a>

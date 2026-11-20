@@ -4,6 +4,10 @@ const escape = (s: string) =>
 /** Escapes text and turns *word* into <strong>word</strong>. Used for headline emphasis. */
 export const rich = (s: string) => escape(s).replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
 
+/** Escapes text and turns [label](/path/) into internal <a> links. Used in blog prose. */
+export const inlineLinks = (s: string) =>
+  escape(s).replace(/\[([^\]]+)\]\((\/[^)\s]+)\)/g, '<a href="$2" class="link">$1</a>');
+
 /** Plain version of a rich headline, for meta tags and aria labels. */
 export const plain = (s: string | string[]) => (Array.isArray(s) ? s.join(' ') : s).replace(/\*/g, '');
 
