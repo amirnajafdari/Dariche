@@ -1,31 +1,26 @@
 ---
-import { Picture } from 'astro:assets';
 import { contactForm, homeWhatsApp, persianHomeContact } from '@/data/persianHome';
-import heroFa from '@/assets/home/hero-fa.jpg';
 import Headline from '../Headline.astro';
 import PrimaryButton from '../PrimaryButton.astro';
 import SecondaryButton from '../SecondaryButton.astro';
 import WhatsAppButton from '../WhatsAppButton.astro';
 
 const lang = 'fa';
-const heroWidths = [640, 1024, 1440, 1920, 2560].filter((w) => w < heroFa.width).concat(heroFa.width);
 ---
 <section class="hero" aria-labelledby="hero-title">
-  <Picture
-    src={heroFa}
-    alt=""
-    aria-hidden="true"
-    widths={heroWidths}
-    sizes="100vw"
-    formats={['webp']}
-    fallbackFormat="jpg"
-    quality={95}
-    pictureAttributes={{ class: 'hero__bg-wrap', 'aria-hidden': 'true' }}
-    class="hero__bg"
-    loading="eager"
-    fetchpriority="high"
-    decoding="sync"
-  />
+  <!-- Original artwork, served untouched (no resizing or re-encoding) -->
+  <picture class="hero__bg-wrap" aria-hidden="true">
+    <img
+      src="/images/hero/hero-fa.png"
+      width="1672"
+      height="941"
+      alt=""
+      class="hero__bg"
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+    />
+  </picture>
   <div class="container hero__grid">
     <div class="hero__copy">
       <Headline lines={['یه دریچه برای', 'دیده شدن بیزینست.']} as="h1" size="display" id="hero-title" class="hero__title" />

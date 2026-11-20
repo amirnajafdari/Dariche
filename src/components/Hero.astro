@@ -1,9 +1,7 @@
 ---
-import { Picture } from 'astro:assets';
 import { href, type Lang } from '@/i18n';
 import { useTranslations } from '@/i18n/ui';
 import { home } from '@/data/pages';
-import heroEn from '@/assets/home/hero-en.jpg';
 import Headline from './Headline.astro';
 import PrimaryButton from './PrimaryButton.astro';
 import SecondaryButton from './SecondaryButton.astro';
@@ -14,24 +12,21 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const heroWidths = [640, 1024, 1440, 1920, 2560].filter((w) => w < heroEn.width).concat(heroEn.width);
 ---
 <section class="hero" aria-labelledby="hero-title">
-  <Picture
-    src={heroEn}
-    alt=""
-    aria-hidden="true"
-    widths={heroWidths}
-    sizes="100vw"
-    formats={['webp']}
-    fallbackFormat="jpg"
-    quality={95}
-    pictureAttributes={{ class: 'hero__bg-wrap', 'aria-hidden': 'true' }}
-    class="hero__bg"
-    loading="eager"
-    fetchpriority="high"
-    decoding="sync"
-  />
+  <!-- Original artwork, served untouched (no resizing or re-encoding) -->
+  <picture class="hero__bg-wrap" aria-hidden="true">
+    <img
+      src="/images/hero/hero-en.png"
+      width="1672"
+      height="941"
+      alt=""
+      class="hero__bg"
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+    />
+  </picture>
   <div class="container hero__grid">
     <div class="hero__copy">
       <Headline lines={home.hero.title[lang]} as="h1" size="display" id="hero-title" class="hero__title" />
