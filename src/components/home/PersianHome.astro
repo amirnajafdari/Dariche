@@ -3,13 +3,15 @@ import Headline from '../Headline.astro';
 import ProjectVisual from '../ProjectVisual.astro';
 import WhatsAppButton from '../WhatsAppButton.astro';
 import ContactForm from '../ContactForm.astro';
+import FounderCard from '../FounderCard.astro';
 import PersianHero from './PersianHero.astro';
 import HomeIllustration from './HomeIllustration.astro';
 import PersianPricing from './PersianPricing.astro';
 import PersianText from './PersianText.astro';
 import { caseStudies } from '@/data/caseStudies';
+import { founders } from '@/data/founders';
 import { site } from '@/data/site';
-import { primaryServices, supportingServices, projects, beliefs, persianHomeFounders, searchExamples, seoServices, persianHomeFaqs, contactForm, homeWhatsApp, persianHomeContact } from '@/data/persianHome';
+import { primaryServices, supportingServices, projects, beliefs, searchExamples, seoServices, persianHomeFaqs, contactForm, homeWhatsApp, persianHomeContact } from '@/data/persianHome';
 const number = (i: number) => (i + 1).toLocaleString('fa-IR', { minimumIntegerDigits: 2 });
 const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) => cs.slug === project.slug)! }));
 ---
@@ -134,11 +136,8 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
       <div class="about-visual">
         <HomeIllustration scene="team" />
         <div class="founders">
-          {persianHomeFounders.map((founder) => (
-            <div class="founder-role">
-              {founder.name && <h3 class="h3">{founder.name}</h3>}
-              <p>{founder.role}</p>
-            </div>
+          {founders.map((founder, i) => (
+            <FounderCard founder={founder} lang="fa" class={i === 1 ? 'founders__offset' : undefined} />
           ))}
         </div>
       </div>
@@ -293,9 +292,8 @@ const work = projects.map((project) => ({ ...project, cs: caseStudies.find((cs) 
   .belief { display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:baseline; }
   .belief h3 { font-size:clamp(1.6rem,1.1rem + 2vw,3rem); line-height:1.5; font-weight:300; }
   .about-grid,.bilingual-grid,.seo-grid,.faq-grid { display:grid; gap:var(--stack-xl); }
-  .founders { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--col-gap); align-items:start; }
-  .founder-role { border-top:1px solid var(--green); padding:1.5rem 0; display:grid; gap:1rem; color:var(--ink-2); }
-  .founder-role:nth-child(2) { margin-top:4rem; border-color:var(--red); }
+  .founders { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(1.25rem, 0.5rem + 3vw, 3.5rem); align-items:start; }
+  .founders > :global(.founders__offset) { margin-top:clamp(3rem, 1rem + 6vw, 7rem); }
   .tags { display:flex; flex-wrap:wrap; gap:.7rem; }
   .tags li { border:1px solid var(--line); border-radius:var(--radius); padding:.3rem .8rem; font-size:.9rem; color:var(--ink-2); }
   .bilingual-window { margin-inline-end:1rem; align-self:center; }

@@ -13,7 +13,15 @@ const { founder, lang, showBio = false, class: className } = Astro.props;
 <figure class:list={['founder', className]} data-reveal>
   <div class="founder__frame">
     {founder.photo ? (
-      <img src={founder.photo.src} alt={founder.photo.alt[lang]} width={founder.photo.width} height={founder.photo.height} loading="lazy" decoding="async" />
+      <img
+        src={founder.photo.src}
+        alt={founder.photo.alt[lang]}
+        width={founder.photo.width}
+        height={founder.photo.height}
+        style={founder.photoPosition ? `object-position: ${founder.photoPosition}` : undefined}
+        loading="lazy"
+        decoding="async"
+      />
     ) : (
       <div class="founder__placeholder" aria-hidden="true">
         <span>{founder.initials}</span>

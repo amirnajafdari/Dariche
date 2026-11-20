@@ -16,8 +16,8 @@ export const persianHomeContact = {
   linkedin: null as string | null,
 };
 export const persianHomeFounders = [
-  { name: null as string | null, role: 'طراحی و هویت برند' },
-  { name: null as string | null, role: 'طراحی وب و سئو' },
+  { name: 'امیر' as string | null, role: 'طراحی و هویت برند' },
+  { name: 'علیرضا' as string | null, role: 'طراحی وب و سئو' },
 ];
 export const contactForm = '#callback';
 export const homeWhatsApp = persianHomeContact.whatsapp
