@@ -48,6 +48,8 @@ const meta = langMeta[lang];
 
 const crumbs = breadcrumbs ? [{ name: t.breadcrumbHome, path: href(lang) }, ...breadcrumbs] : null;
 const isPersianHome = Astro.props.persianHome === true;
+// Tag Manager only on real builds, so local testing never reaches analytics.
+const gtmId = import.meta.env.PROD ? site.gtmId : '';
 const org = organization(lang);
 // Only this homepage suppresses the existing unverified contact settings.
 const homeOrg = { ...org, telephone: persianHomeContact.phone ?? undefined, email: persianHomeContact.email, sameAs: [persianHomeContact.instagram, persianHomeContact.linkedin].filter(Boolean) };
@@ -70,6 +72,11 @@ const danaFaces = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <script is:inline>document.documentElement.classList.add('js')</script>
+    {gtmId && (
+      <script is:inline define:vars={{ gtmId }}>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtmId);
+      </script>
+    )}
 
     {lang === 'fa' && !site.danaInstalled && <link rel="preload" href={vazirArabic} as="font" type="font/woff2" crossorigin />}
     {lang === 'fa' && <link rel="preload" href={estedadArabic} as="font" type="font/woff2" crossorigin />}
@@ -105,6 +112,9 @@ const danaFaces = [
     <link rel="sitemap" href="/sitemap.xml" />
   </head>
   <body>
+    {gtmId && (
+      <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+    )}
     <a class="skip-link" href="#main">{t.skipToContent}</a>
     <Header lang={lang} alternates={alternates} contactHref={isPersianHome ? contactForm : undefined} whatsappHref={isPersianHome ? homeWhatsApp : undefined} whatsappLabel={isPersianHome && !persianHomeContact.whatsapp ? 'درخواست تماس ثبت کن' : undefined} />
     <main id="main" tabindex="-1">
