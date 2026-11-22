@@ -96,6 +96,7 @@ const socialIcon = (name: string) => (name.toLowerCase() === 'instagram' ? 'inst
           <li><a href={href(lang, `legal/${l.slug}`)}>{l.label[lang]}</a></li>
         ))}
         <li><a href={href(lang, 'sitemap')}>{lang === 'fa' ? 'نقشه سایت' : 'Sitemap'}</a></li>
+        <li><a href={href(lang, 'legal/cookies')} data-cookie-settings>{lang === 'fa' ? 'تنظیمات کوکی' : 'Cookie settings'}</a></li>
       </ul>
       <LanguageSwitcher lang={lang} alternates={alternates} />
     </div>

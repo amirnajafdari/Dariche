@@ -1,0 +1,153 @@
+---
+import { href, type Lang } from '@/i18n';
+
+/**
+ * Cookie consent for Google Tag Manager tags (Google Consent Mode v2).
+ * Defaults are set to "denied" in BaseLayout before GTM loads; this banner
+ * records the visitor's choice and updates consent. Any element with
+ * [data-cookie-settings] reopens it so a choice can be changed later.
+ */
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const fa = lang === 'fa';
+const copy = {
+  title: fa ? 'کوکی‌ها' : 'Cookies',
+  text: fa
+    ? 'با اجازه‌ی تو از کوکی‌های آماری استفاده می‌کنیم تا بفهمیم سایت چطور استفاده می‌شه و بهترش کنیم. بدون اجازه‌ات، هیچ کوکی ردیابی ذخیره نمی‌شه.'
+    : "With your permission, we use analytics cookies to understand how the site is used and make it better. Without it, no tracking cookies are stored.",
+  accept: fa ? 'قبول' : 'Accept',
+  reject: fa ? 'نه، مرسی' : 'Reject',
+  policy: fa ? 'سیاست کوکی‌ها' : 'Cookie policy',
+};
+---
+<div class="cookie" role="dialog" aria-modal="false" aria-labelledby="cookie-title" aria-describedby="cookie-text" hidden data-cookie-banner>
+  <p class="cookie__title" id="cookie-title">{copy.title}</p>
+  <p class="cookie__text" id="cookie-text">
+    {copy.text}
+    <a href={href(lang, 'legal/cookies')} class="link">{copy.policy}</a>
+  </p>
+  <div class="cookie__actions">
+    <button type="button" class="btn btn-primary cookie__btn" data-consent="granted">{copy.accept}</button>
+    <button type="button" class="btn btn-secondary cookie__btn" data-consent="denied">{copy.reject}</button>
+  </div>
+</div>
+
+<script>
+  const KEY = 'daricheh-consent';
+  const MAX_AGE = 365 * 24 * 60 * 60 * 1000; // ask again after a year
+
+  const banner = document.querySelector<HTMLElement>('[data-cookie-banner]');
+
+  const read = (): string | null => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY) ?? 'null');
+      return saved && Date.now() - saved.t < MAX_AGE ? saved.v : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const show = (open: boolean) => {
+    if (!banner) return;
+    banner.hidden = !open;
+    document.documentElement.classList.toggle('consent-open', open);
+  };
+
+  const choose = (value: 'granted' | 'denied') => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ v: value, t: Date.now() }));
+    } catch {}
+    // gtag is defined in the head by BaseLayout when Tag Manager is enabled
+    const w = window as unknown as { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] };
+    w.gtag?.('consent', 'update', {
+      analytics_storage: value,
+      ad_storage: value,
+      ad_user_data: value,
+      ad_personalization: value,
+    });
+    w.dataLayer?.push({ event: value === 'granted' ? 'consent_granted' : 'consent_denied' });
+    show(false);
+  };
+
+  banner?.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((btn) =>
+    btn.addEventListener('click', () => choose(btn.dataset.consent as 'granted' | 'denied')),
+  );
+
+  document.querySelectorAll('[data-cookie-settings]').forEach((el) =>
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      show(true);
+      banner?.querySelector<HTMLButtonElement>('[data-consent]')?.focus();
+    }),
+  );
+
+  if (!read()) show(true);
+</script>
+
+<style>
+  .cookie {
+    position: fixed;
+    z-index: 60;
+    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.4rem 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    border-top: 2px solid var(--green);
+    box-shadow: 0 18px 40px -20px rgb(29 31 34 / 0.35);
+  }
+  .cookie[hidden] {
+    display: none;
+  }
+  @media (min-width: 700px) {
+    .cookie {
+      left: auto;
+      right: auto;
+      /* the artwork side of the hero, never over the hero text */
+      inset-inline-end: 1.5rem;
+      max-width: 27rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cookie:not([hidden]) {
+      animation: cookie-in 0.6s var(--ease) both;
+    }
+  }
+  @keyframes cookie-in {
+    from {
+      opacity: 0;
+      translate: 0 1rem;
+    }
+  }
+  .cookie__title {
+    font-weight: 600;
+  }
+  .cookie__text {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  .cookie__text .link {
+    margin-inline-start: 0.35rem;
+  }
+  .cookie__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .cookie__btn {
+    min-height: 2.9rem;
+    padding-inline: 1rem;
+  }
+  /* the floating WhatsApp button steps aside while the banner is open */
+  :global(html.consent-open [data-wa-float]) {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+</style>

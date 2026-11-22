@@ -321,10 +321,20 @@ export const legal: Record<'privacy' | 'cookies' | 'terms', { title: Localized; 
   },
   cookies: {
     title: { fa: 'کوکی‌ها', en: 'Cookie Policy' },
-    updated: '2026-10-23',
+    updated: '2026-11-22',
     body: {
-      fa: [{ h: 'کوتاه و ساده', p: 'این سایت در حال حاضر هیچ کوکی تبلیغاتی یا ردیابی استفاده نمی‌کنه. اگه بعداً ابزار آماری اضافه بشه، اینجا توضیح می‌دیم و اول از خودت اجازه می‌گیریم.' }],
-      en: [{ h: 'Short and simple', p: "This site doesn't currently use advertising or tracking cookies. If we add analytics later, we'll explain it here and ask for your consent first." }],
+      fa: [
+        { h: 'کوتاه و ساده', p: 'برای اینکه بفهمیم سایت چطور استفاده می‌شه و بهترش کنیم، از ابزارهای آماری مثل Google Analytics استفاده می‌کنیم که از طریق Google Tag Manager اجرا می‌شن. این ابزارها فقط بعد از اینکه خودت «قبول» رو بزنی، کوکی ذخیره می‌کنن.' },
+        { h: 'اگه قبول نکنی', p: 'هیچ کوکی آماری یا تبلیغاتی ذخیره نمی‌شه و سایت کاملاً عادی کار می‌کنه.' },
+        { h: 'انتخابت رو کجا نگه می‌داریم', p: 'انتخابت (قبول یا رد) فقط توی مرورگر خودت ذخیره می‌شه تا هر بار ازت نپرسیم. بعد از یک سال دوباره می‌پرسیم.' },
+        { h: 'نظرت عوض شد؟', p: 'هر وقت خواستی، از لینک «تنظیمات کوکی» پایین هر صفحه می‌تونی انتخابت رو عوض کنی.' },
+      ],
+      en: [
+        { h: 'Short and simple', p: 'To understand how the site is used and improve it, we use analytics tools such as Google Analytics, run through Google Tag Manager. They only store cookies after you choose “Accept”.' },
+        { h: 'If you reject', p: 'No analytics or advertising cookies are stored, and the site works exactly the same.' },
+        { h: 'Where your choice is kept', p: 'Your choice (accept or reject) is saved only in your own browser so we don’t ask every time. We ask again after a year.' },
+        { h: 'Changed your mind?', p: 'Use the “Cookie settings” link at the bottom of any page to change your choice at any time.' },
+      ],
     },
   },
   terms: {

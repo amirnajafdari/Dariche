@@ -15,6 +15,7 @@ import Seo from '@/components/Seo.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import WhatsAppButton from '@/components/WhatsAppButton.astro';
+import CookieBanner from '@/components/CookieBanner.astro';
 import { homeWhatsApp, persianHomeContact, contactForm } from '@/data/persianHome';
 
 interface Props {
@@ -73,6 +74,28 @@ const danaFaces = [
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <script is:inline>document.documentElement.classList.add('js')</script>
     {gtmId && (
+      <script is:inline>
+        // Google Consent Mode v2: nothing is stored until the visitor accepts (see CookieBanner).
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', {
+          analytics_storage: 'denied',
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          functionality_storage: 'granted',
+          security_storage: 'granted',
+          wait_for_update: 500
+        });
+        try {
+          var saved = JSON.parse(localStorage.getItem('daricheh-consent') || 'null');
+          if (saved && saved.v === 'granted' && Date.now() - saved.t < 31536000000) {
+            gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' });
+          }
+        } catch (e) {}
+      </script>
+    )}
+    {gtmId && (
       <script is:inline define:vars={{ gtmId }}>
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtmId);
       </script>
@@ -122,6 +145,7 @@ const danaFaces = [
     </main>
     {isPersianHome ? <slot name="footer" /> : <Footer lang={lang} alternates={alternates} />}
     <WhatsAppButton lang={lang} variant="floating" urlOverride={isPersianHome ? homeWhatsApp : undefined} label={isPersianHome && !persianHomeContact.whatsapp ? 'درخواست تماس' : undefined} />
+    {site.gtmId && <CookieBanner lang={lang} />}
 
     <script>
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
