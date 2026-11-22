@@ -95,6 +95,7 @@ const socialIcon = (name: string) => (name.toLowerCase() === 'instagram' ? 'inst
         {legalNav.map((l) => (
           <li><a href={href(lang, `legal/${l.slug}`)}>{l.label[lang]}</a></li>
         ))}
+        <li><a href={href(lang, 'sitemap')}>{lang === 'fa' ? 'نقشه سایت' : 'Sitemap'}</a></li>
       </ul>
       <LanguageSwitcher lang={lang} alternates={alternates} />
     </div>
