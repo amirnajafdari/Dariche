@@ -78,6 +78,16 @@ const phoneDisplay = '+44 7428 567080';
         <a href="/sitemap.xml">{copy.sitemap}</a>
       </div>
     </div>
+
+    <div class="site-footer__bottom">
+      <p class="small muted">© {lang === 'fa' ? year.toLocaleString('fa-IR', { useGrouping: false }) : year} {site.name[lang]}. {t.rights}</p>
+      <ul role="list" class="site-footer__legal">
+        {legalNav.map((l) => (
+          <li><a href={href(lang, `legal/${l.slug}`)}>{l.label[lang]}</a></li>
+        ))}
+      </ul>
+      <LanguageSwitcher lang={lang} alternates={alternates} />
+    </div>
   </div>
 </footer>
 

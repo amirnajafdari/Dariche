@@ -63,6 +63,9 @@ export const site = {
   xDefaultLang: 'en' as Lang,
 
   ogImage: '/og/daricheh-default.png',
+
+  /** Google Tag Manager container. Loaded on production builds only; empty string turns it off. */
+  gtmId: 'GTM-WD9C5CNG',
 };
 
 /** Single central WhatsApp URL used across the entire website. */

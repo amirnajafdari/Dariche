@@ -1,0 +1,144 @@
+---
+// Human-readable sitemap. Built from the same data as the rest of the site,
+// so new services, projects and articles appear here automatically.
+import { getStaticLangPaths, href, type Lang } from '@/i18n';
+import { site, visible } from '@/data/site';
+import { mainNav, serviceMenu, legalNav } from '@/data/navigation';
+import { getService } from '@/data/services';
+import { caseStudies } from '@/data/caseStudies';
+import { postsFor } from '@/data/blog';
+import { oneOffServices, monthlyPackages } from '@/data/pricing';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+
+export const getStaticPaths = getStaticLangPaths;
+const lang = Astro.params.lang as Lang;
+const fa = lang === 'fa';
+
+type Link = { label: string; href: string };
+const pricing = href(lang, 'pricing');
+
+const groups: { title: string; links: Link[] }[] = [
+  {
+    title: fa ? 'صفحات اصلی' : 'Main pages',
+    links: [
+      ...mainNav.filter((n) => !n.menu).map((n) => ({ label: n.label[lang], href: href(lang, n.path) })),
+      { label: fa ? 'همه خدمات' : 'All services', href: href(lang, 'services') },
+      { label: fa ? 'تماس با ما' : 'Contact', href: href(lang, 'contact') },
+    ],
+  },
+  {
+    title: fa ? 'خدمات' : 'Services',
+    links: serviceMenu.map((slug) => ({ label: getService(slug)!.name[lang], href: href(lang, slug) })),
+  },
+  {
+    title: fa ? 'تعرفه‌ها' : 'Pricing',
+    links: [
+      ...oneOffServices.map((s) => ({ label: s.title[lang], href: `${pricing}#${s.id}` })),
+      ...monthlyPackages.map((p) => ({ label: p.fullName[lang], href: `${pricing}#${p.id}` })),
+    ],
+  },
+  {
+    title: fa ? 'نمونه‌کارها' : 'Work',
+    links: visible(caseStudies).map((c) => ({ label: c.client[lang], href: href(lang, `work/${c.slug}`) })),
+  },
+  {
+    title: fa ? 'مقالات' : 'Journal',
+    links: visible(postsFor(lang)).map((p) => ({ label: p.title, href: href(lang, `blog/${p.slug}`) })),
+  },
+  {
+    title: fa ? 'قوانین' : 'Legal',
+    links: legalNav.map((l) => ({ label: l.label[lang], href: href(lang, `legal/${l.slug}`) })),
+  },
+].filter((g) => g.links.length > 0);
+
+const title = fa ? 'نقشه سایت' : 'Sitemap';
+const crumbs = [{ name: title, path: href(lang, 'sitemap') }];
+---
+<BaseLayout
+  lang={lang}
+  path="sitemap"
+  title={`${title} | ${site.name[lang]}`}
+  description={fa ? 'همه صفحه‌های سایت دریچه، یک‌جا.' : 'Every page on the Daricheh website, in one place.'}
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    lang={lang}
+    title={fa ? ['همه صفحه‌ها،', '*یک‌جا*.'] : ['Every page,', 'in *one place*.']}
+    lead={fa ? 'دنبال چیزی می‌گردی؟ همه صفحه‌های سایت اینجاست.' : 'Looking for something? Every page on the site is here.'}
+    variant="split"
+    breadcrumbs={crumbs}
+  />
+
+  <section class="section sitemap" aria-label={title}>
+    <div class="container sitemap__grid">
+      {groups.map((g, i) => (
+        <nav class="sitemap__group" aria-labelledby={`sm-${i}`} data-reveal>
+          <h2 class="sitemap__title" id={`sm-${i}`}>{g.title}</h2>
+          <ul role="list">
+            {g.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </nav>
+      ))}
+    </div>
+    <div class="container">
+      <p class="sitemap__xml small muted">
+        {fa ? 'نسخه مخصوص موتورهای جستجو:' : 'For search engines:'}
+        <a href="/sitemap.xml" class="link" dir="ltr">sitemap.xml</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sitemap {
+    padding-top: 0;
+  }
+  .sitemap__grid {
+    display: grid;
+    gap: var(--stack-lg) var(--col-gap);
+  }
+  @media (min-width: 640px) {
+    .sitemap__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1000px) {
+    .sitemap__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .sitemap__group {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ink);
+  }
+  .sitemap__title {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+  .sitemap__group ul {
+    display: grid;
+  }
+  .sitemap__group a {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-block: 0.35rem;
+    border-bottom: 1px solid var(--line);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .sitemap__group a:hover {
+    color: var(--green);
+    border-color: var(--green);
+  }
+  .sitemap__xml {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: var(--stack-xl);
+  }
+</style>

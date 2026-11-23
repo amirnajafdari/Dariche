@@ -26,6 +26,7 @@ export const GET: APIRoute = () => {
     both('blog'),
     both('contact'),
     ...legalNav.map((l) => both(`legal/${l.slug}`)),
+    both('sitemap'),
   ];
 
   // Posts: only languages that actually have the article
