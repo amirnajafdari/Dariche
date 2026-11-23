@@ -6,7 +6,7 @@ import HomeFounders from '@/components/home/HomeFounders.astro';
 import HomeServices from '@/components/home/HomeServices.astro';
 import PortfolioMarquee from '@/components/home/PortfolioMarquee.astro';
 import HomePricing from '@/components/home/HomePricing.astro';
-import FaqSection from '@/components/FaqSection.astro';
+import HomeFaq from '@/components/home/HomeFaq.astro';
 import HomeContact from '@/components/home/HomeContact.astro';
 import PersianFooter from '@/components/home/PersianFooter.astro';
 import { pageSeo, finglishPhrases } from '@/data/seo';
@@ -34,7 +34,7 @@ const studio = {
   <HomeServices lang="fa" />
   <PortfolioMarquee lang="fa" />
   <HomePricing lang="fa" useCallbackAnchor />
-  <FaqSection lang="fa" items={persianHomeFaqs} title="سؤال داری؟ شاید جوابش همین‌جا باشه." compact />
+  <HomeFaq lang="fa" />
   <HomeContact lang="fa" usePersianHomeContact />
   <PersianFooter slot="footer" />
 </BaseLayout>

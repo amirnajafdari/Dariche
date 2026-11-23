@@ -10,7 +10,7 @@ import HomeFounders from '@/components/home/HomeFounders.astro';
 import HomeServices from '@/components/home/HomeServices.astro';
 import PortfolioMarquee from '@/components/home/PortfolioMarquee.astro';
 import HomePricing from '@/components/home/HomePricing.astro';
-import FaqSection from '@/components/FaqSection.astro';
+import HomeFaq from '@/components/home/HomeFaq.astro';
 import HomeContact from '@/components/home/HomeContact.astro';
 
 // Persian has its own homepage entry so its verified Persian contact settings stay scoped cleanly.
@@ -32,6 +32,6 @@ const faqs = homeFaqs[lang];
   <HomeServices lang={lang} />
   <PortfolioMarquee lang={lang} />
   <HomePricing lang={lang} />
-  <FaqSection lang={lang} items={faqs} compact />
+  <HomeFaq lang={lang} />
   <HomeContact lang={lang} />
 </BaseLayout>

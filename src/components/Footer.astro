@@ -1,212 +1,192 @@
----
-import { href, type Lang } from '@/i18n';
-import { useTranslations } from '@/i18n/ui';
-import { footerNav, legalNav, serviceMenu } from '@/data/navigation';
-import { getService } from '@/data/services';
-import { formatGbp, monthlyPackages, oneOffServices } from '@/data/pricing';
-import { site, whatsappUrl, phoneUrl, emailUrl } from '@/data/site';
-import Logo from './Logo.astro';
-import LanguageSwitcher from './LanguageSwitcher.astro';
+﻿---
+import { href, languages, langMeta, type Lang } from '@/i18n';
+import { site, whatsappUrl, phoneUrl } from '@/data/site';
 import Icon from './Icon.astro';
 
 interface Props {
   lang: Lang;
   alternates: Partial<Record<Lang, string>>;
+  email?: string;
 }
-const { lang, alternates } = Astro.props;
-const t = useTranslations(lang);
-const year = new Date().getFullYear();
-const socialIcon = (name: string) => (name.toLowerCase() === 'instagram' ? 'instagram' : 'linkedin');
+const { lang, alternates, email = site.contact.email } = Astro.props;
+const isPersian = lang === 'fa';
+const copy = isPersian ? {
+  headline: 'منتظریم ازت بشنویم.', cta: 'بیا حرف بزنیم',
+  call: 'تماس', whatsapp: 'واتساپ', email: 'ایمیل',
+  description: 'طراحی سایت و سئو برای بیزینس‌های ایرانی در بریتانیا.',
+  contact: 'تماس با ما', navigation: 'پیوندهای پایین صفحه', language: 'تغییر زبان', sitemap: 'نقشه سایت',
+} : {
+  headline: "We'd love to hear from you.", cta: "Let's Talk",
+  call: 'Call', whatsapp: 'WhatsApp', email: 'Email',
+  description: 'Web design and SEO for Iranian-owned businesses across the UK.',
+  contact: 'Contact', navigation: 'Footer navigation', language: 'Change language', sitemap: 'Sitemap',
+};
+const links = [
+  { path: '', fa: 'خانه', en: 'Home' },
+  { path: 'services', fa: 'خدمات', en: 'Services' },
+  { path: 'work', fa: 'نمونه‌کارها', en: 'Our Work' },
+  { path: 'pricing', fa: 'تعرفه‌ها', en: 'Pricing' },
+  { path: 'about', fa: 'درباره ما', en: 'About' },
+  { path: 'blog', fa: 'مقالات', en: 'Blog' },
+  { path: 'contact', fa: 'تماس با ما', en: 'Contact' },
+  { path: 'legal/privacy', fa: 'حریم خصوصی', en: 'Privacy Policy' },
+  { path: 'legal/cookies', fa: 'سیاست کوکی‌ها', en: 'Cookie Policy' },
+];
+const phoneDisplay = '+44 7428 567080';
 ---
-<footer class="site-footer" data-hide-wa>
+<footer class="site-footer" dir={isPersian ? 'rtl' : 'ltr'} lang={langMeta[lang].htmlLang} data-hide-wa>
   <div class="container">
-    <div class="site-footer__top">
-      <div class="site-footer__brand">
-        <Logo lang={lang} size="lg" />
-        <p class="site-footer__tag">{t.footerTagline}</p>
-      </div>
-
-      <nav class="site-footer__col" aria-labelledby="f-links">
-        <h2 id="f-links" class="site-footer__h">{t.footerLinks}</h2>
-        <ul role="list">
-          {footerNav.map((item) => (
-            <li><a href={href(lang, item.path)}>{item.label[lang]}</a></li>
-          ))}
-        </ul>
-      </nav>
-
-      <nav class="site-footer__col" aria-labelledby="f-services">
-        <h2 id="f-services" class="site-footer__h">{t.footerServices}</h2>
-        <ul role="list">
-          {serviceMenu.map((slug) => (
-            <li><a href={href(lang, slug)}>{getService(slug)!.name[lang]}</a></li>
-          ))}
-        </ul>
-      </nav>
-
-      <nav class="site-footer__col" aria-labelledby="f-pricing">
-        <h2 id="f-pricing" class="site-footer__h">{t.footerPricing}</h2>
-        <ul role="list" class="site-footer__pricing">
-          {oneOffServices.map((s) => (
-            <li>
-              <a href={`${href(lang, 'pricing')}#${s.id}`}>
-                {s.footerLabel[lang]} — {s.from && `${t.from} `}<bdi dir="ltr">{formatGbp(s.price)}</bdi>
-              </a>
-            </li>
-          ))}
-          {monthlyPackages.map((p) => (
-            <li>
-              <a href={`${href(lang, 'pricing')}#${p.id}`}>
-                {p.title[lang]} — <bdi dir="ltr">{formatGbp(p.price)}</bdi> {t.perMonth}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <div class="site-footer__col">
-        <h2 class="site-footer__h">{t.footerContact}</h2>
-        <ul role="list" class="site-footer__contact">
-          <li>
-            <a href={whatsappUrl(lang)} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" />{t.whatsapp}</a>
-          </li>
-          <li>
-            <a href={phoneUrl()}><Icon name="phone" /><span class="ltr">{site.contact.phoneDisplay}</span></a>
-          </li>
-          <li>
-            <a href={emailUrl()}><Icon name="mail" /><span class="ltr">{site.contact.email}</span></a>
-          </li>
-        </ul>
-        <ul role="list" class="site-footer__social">
-          {site.social.map((s) => (
-            <li>
-              <a href={s.url} target="_blank" rel="noopener me" aria-label={s.name}>
-                <Icon name={socialIcon(s.name)} />
-              </a>
-            </li>
-          ))}
-        </ul>
+    <div class="site-footer__intro">
+      <h2 class="site-footer__headline">{copy.headline}</h2>
+      <a class="site-footer__cta" href={href(lang, 'contact')}>
+        <span>{copy.cta}</span>
+        <span class="site-footer__cta-icon"><Icon name="arrow" /></span>
+      </a>
+      <ul class="site-footer__contacts" role="list">
+        <li><span>{copy.call}</span><a href={phoneUrl()}><bdi dir="ltr">{phoneDisplay}</bdi></a></li>
+        <li><span>{copy.whatsapp}</span><a href={whatsappUrl(lang)} target="_blank" rel="noopener noreferrer"><bdi dir="ltr">{phoneDisplay}</bdi></a></li>
+        <li><span>{copy.email}</span><a href={`mailto:${email}`}><bdi dir="ltr">{email}</bdi></a></li>
+      </ul>
+      <div class="site-footer__contact-icons">
+        <a href={phoneUrl()} aria-label={`${copy.call}: ${phoneDisplay}`}><Icon name="phone" /></a>
+        <a href={whatsappUrl(lang)} target="_blank" rel="noopener noreferrer" aria-label={`${copy.whatsapp}: ${phoneDisplay}`}><Icon name="whatsapp" /></a>
       </div>
     </div>
-
-    <div class="site-footer__bottom">
-      <p class="small muted">© {lang === 'fa' ? year.toLocaleString('fa-IR', { useGrouping: false }) : year} {site.name[lang]}. {t.rights}</p>
-      <ul role="list" class="site-footer__legal">
-        {legalNav.map((l) => (
-          <li><a href={href(lang, `legal/${l.slug}`)}>{l.label[lang]}</a></li>
-        ))}
+    <div class="site-footer__brand">
+      <a class="site-footer__logo" href={href(lang)} aria-label={isPersian ? 'دریچه — خانه' : 'Daricheh — Home'}>
+        <img src="/images/daricheh-footer-white.png" alt="دریچه | Daricheh" width="1024" height="437" loading="lazy" decoding="async" />
+      </a>
+      <p>{copy.description}</p>
+      <a class="site-footer__brand-contact" href={href(lang, 'contact')}>{copy.contact}</a>
+    </div>
+    <nav class="site-footer__navigation" aria-label={copy.navigation}>
+      <ul role="list">
+        {links.map((link) => <li><a href={href(lang, link.path)}>{link[lang]}</a></li>)}
       </ul>
-      <LanguageSwitcher lang={lang} alternates={alternates} />
+    </nav>
+    <div class="site-footer__bottom">
+      <p class="site-footer__copyright" lang="en-GB" dir="ltr">© Daricheh — All rights reserved.</p>
+      <div class="site-footer__utilities">
+        <nav class="site-footer__languages" dir="ltr" aria-label={copy.language}>
+          {languages.map((language, index) => (
+            <>
+              {index > 0 && <span aria-hidden="true">|</span>}
+              <a href={alternates[language] ?? href(language)} lang={langMeta[language].htmlLang} hreflang={langMeta[language].hreflang} aria-current={language === lang ? 'page' : undefined}>{language === 'fa' ? 'فارسی' : 'English'}</a>
+            </>
+          ))}
+        </nav>
+        <a href="/sitemap.xml">{copy.sitemap}</a>
+      </div>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--line);
-    padding-block: var(--section-sm) 2rem;
-    padding-bottom: max(2rem, calc(env(safe-area-inset-bottom) + 5rem));
+    --footer-white: #f8f6f2;
+    --footer-rule: rgb(248 246 242 / 25%);
+    background: #226f54;
+    color: var(--footer-white);
+    padding-block: clamp(3.5rem, 7vw, 6.5rem) max(2rem, env(safe-area-inset-bottom));
+    font-family: var(--font-en);
   }
-  @media (min-width: 900px) {
-    .site-footer {
-      padding-bottom: 2rem;
-    }
-  }
-  .site-footer__top {
-    display: grid;
-    gap: 3rem var(--col-gap);
-    grid-template-columns: 1fr;
-    padding-bottom: var(--stack-xl);
-  }
-  @media (min-width: 700px) {
-    .site-footer__top {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .site-footer__brand {
-      grid-column: 1 / -1;
-    }
-  }
-  @media (min-width: 1100px) {
-    .site-footer__top {
-      grid-template-columns: 1fr 1fr 1.6fr 1.1fr;
-    }
-    .site-footer__brand {
-      grid-column: 1 / -1;
-    }
-  }
-  .site-footer__pricing a {
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-  .site-footer__tag {
-    margin-top: 1.5rem;
-    max-width: 22rem;
-    color: var(--ink-2);
+  .site-footer[lang='fa'] { font-family: var(--font-fa); }
+  .site-footer a { text-underline-offset: 0.3em; }
+  .site-footer a:hover { text-decoration: underline; }
+  .site-footer a:focus-visible { outline: 2px solid var(--footer-white); outline-offset: 5px; }
+  .site-footer .site-footer__headline {
+    max-width: 15ch;
+    font-family: inherit;
     font-weight: 300;
-    font-size: var(--fs-lead);
-    line-height: 1.7;
+    font-size: clamp(2.5rem, 5.4vw, 5.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
   }
-  .site-footer__h {
-    font-size: var(--fs-small);
-    font-weight: 500;
-    color: var(--ink-3);
-    margin-bottom: 1.25rem;
+  .site-footer[lang='fa'] .site-footer__headline {
+    max-width: none;
+    font-family: var(--font-fa);
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: 0;
   }
-  .site-footer__col ul {
-    display: grid;
-    gap: 0.15rem;
-  }
-  .site-footer__col a {
+  .site-footer__cta {
     display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    min-height: 2.5rem;
-    color: var(--ink);
-    transition: color 0.2s;
-  }
-  .site-footer__col a:hover {
-    color: var(--green);
-  }
-  .site-footer__contact .icon {
-    color: var(--green);
-  }
-  .site-footer__social {
-    display: flex !important;
-    gap: 0.5rem !important;
-    margin-top: 1rem;
-  }
-  .site-footer__social a {
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-  }
-  .site-footer__social a:hover {
-    border-color: var(--green);
-  }
-  .site-footer__bottom {
-    display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
+    gap: 2rem;
+    min-height: 3.75rem;
+    margin-top: 2rem;
+    padding-block: 0.5rem;
+    padding-inline: 1.5rem 0.5rem;
+    border-radius: 999px;
+    background: var(--footer-white);
+    color: #226f54;
+    font-size: 1.0625rem;
+    font-weight: 500;
   }
-  .site-footer__legal {
+  .site-footer__cta-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: #226f54;
+    color: var(--footer-white);
+  }
+  .site-footer__cta-icon :global(svg) { width: 1.25rem; height: 1.25rem; }
+  .site-footer__contacts {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 1.5rem;
-    font-size: var(--fs-small);
+    gap: 1rem clamp(2rem, 5vw, 4.5rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
   }
-  .site-footer__legal a {
-    display: inline-flex;
+  .site-footer__contacts li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.65rem; }
+  .site-footer__contacts li > span { font-size: 0.875rem; }
+  .site-footer__contacts a { display: inline-flex; align-items: center; min-height: 2.75rem; overflow-wrap: anywhere; }
+  .site-footer__contacts bdi { font-family: var(--font-en); }
+  .site-footer__contact-icons { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+  .site-footer__contact-icons a {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgb(248 246 242 / 55%);
+    border-radius: 50%;
+  }
+  .site-footer__contact-icons a:hover { background: rgb(248 246 242 / 10%); }
+  .site-footer__contact-icons :global(svg) { width: 1.15rem; height: 1.15rem; }
+  .site-footer__brand {
+    display: flex;
     align-items: center;
-    min-height: 2.75rem;
-    color: var(--ink-3);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    padding-block: clamp(2rem, 4vw, 3rem);
+    border-block: 1px solid var(--footer-rule);
   }
-  .site-footer__legal a:hover {
-    color: var(--ink);
+  .site-footer__logo { display: block; flex: 0 0 12rem; }
+  .site-footer__logo img { width: 12rem; height: auto; }
+  .site-footer__brand p { max-width: 31rem; font-size: 1rem; font-weight: 300; line-height: 1.8; }
+  .site-footer__brand-contact { margin-inline-start: auto; flex-shrink: 0; padding-block: 0.65rem; text-decoration: underline; }
+  .site-footer__navigation { padding-top: 1.5rem; }
+  .site-footer__navigation ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.75rem; }
+  .site-footer__navigation a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.9375rem; }
+  .site-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 2rem; padding-top: 1.5rem; }
+  .site-footer__copyright { font-family: var(--font-en); font-size: 0.8125rem; color: rgb(248 246 242 / 78%); }
+  .site-footer__utilities { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 2rem; font-size: 0.875rem; }
+  .site-footer__utilities a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .site-footer__languages { display: flex; align-items: center; gap: 0.75rem; }
+  .site-footer__languages [lang='fa'] { font-family: var(--font-fa); }
+  .site-footer__languages [lang='en-GB'] { font-family: var(--font-en); }
+  .site-footer__languages [aria-current='page'] { text-decoration: underline; }
+  .site-footer__languages > span { color: var(--footer-rule); }
+  @media (max-width: 699px) {
+    .site-footer__headline { max-width: 14ch; }
+    .site-footer__contacts { flex-direction: column; gap: 0.5rem; }
+    .site-footer__brand { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+    .site-footer__logo { flex-basis: auto; }
+    .site-footer__brand-contact { margin-inline-start: 0; }
+    .site-footer__navigation ul { flex-direction: column; gap: 0; }
+    .site-footer__bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
   }
 </style>
