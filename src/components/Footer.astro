@@ -1,4 +1,4 @@
-﻿---
+---
 import { href, languages, langMeta, type Lang } from '@/i18n';
 import { site, whatsappUrl, phoneUrl } from '@/data/site';
 import Icon from './Icon.astro';
@@ -11,15 +11,31 @@ interface Props {
 const { lang, alternates, email = site.contact.email } = Astro.props;
 const isPersian = lang === 'fa';
 const copy = isPersian ? {
-  headline: 'منتظریم ازت بشنویم.', cta: 'بیا حرف بزنیم',
-  call: 'تماس', whatsapp: 'واتساپ', email: 'ایمیل',
+  headline: 'منتظریم ازت بشنویم.',
+  cta: 'بیا حرف بزنیم',
+  call: 'تماس',
+  whatsapp: 'واتساپ',
+  email: 'ایمیل',
   description: 'طراحی سایت و سئو برای بیزینس‌های ایرانی در بریتانیا.',
-  contact: 'تماس با ما', navigation: 'پیوندهای پایین صفحه', language: 'تغییر زبان', sitemap: 'نقشه سایت',
+  contact: 'تماس با ما',
+  navigation: 'پیوندهای پایین صفحه',
+  language: 'تغییر زبان',
+  sitemap: 'نقشه سایت',
+  xmlSitemap: 'XML',
+  cookieSettings: 'تنظیمات کوکی',
 } : {
-  headline: "We'd love to hear from you.", cta: "Let's Talk",
-  call: 'Call', whatsapp: 'WhatsApp', email: 'Email',
+  headline: "We'd love to hear from you.",
+  cta: "Let's Talk",
+  call: 'Call',
+  whatsapp: 'WhatsApp',
+  email: 'Email',
   description: 'Web design and SEO for Iranian-owned businesses across the UK.',
-  contact: 'Contact', navigation: 'Footer navigation', language: 'Change language', sitemap: 'Sitemap',
+  contact: 'Contact',
+  navigation: 'Footer navigation',
+  language: 'Change language',
+  sitemap: 'Sitemap',
+  xmlSitemap: 'XML',
+  cookieSettings: 'Cookie settings',
 };
 const links = [
   { path: '', fa: 'خانه', en: 'Home' },
@@ -33,6 +49,7 @@ const links = [
   { path: 'legal/cookies', fa: 'سیاست کوکی‌ها', en: 'Cookie Policy' },
 ];
 const phoneDisplay = '+44 7428 567080';
+const year = new Date().getFullYear();
 ---
 <footer class="site-footer" dir={isPersian ? 'rtl' : 'ltr'} lang={langMeta[lang].htmlLang} data-hide-wa>
   <div class="container">
@@ -52,6 +69,7 @@ const phoneDisplay = '+44 7428 567080';
         <a href={whatsappUrl(lang)} target="_blank" rel="noopener noreferrer" aria-label={`${copy.whatsapp}: ${phoneDisplay}`}><Icon name="whatsapp" /></a>
       </div>
     </div>
+
     <div class="site-footer__brand">
       <a class="site-footer__logo" href={href(lang)} aria-label={isPersian ? 'دریچه — خانه' : 'Daricheh — Home'}>
         <img src="/images/daricheh-footer-white.png" alt="دریچه | Daricheh" width="1024" height="437" loading="lazy" decoding="async" />
@@ -59,34 +77,35 @@ const phoneDisplay = '+44 7428 567080';
       <p>{copy.description}</p>
       <a class="site-footer__brand-contact" href={href(lang, 'contact')}>{copy.contact}</a>
     </div>
+
     <nav class="site-footer__navigation" aria-label={copy.navigation}>
       <ul role="list">
         {links.map((link) => <li><a href={href(lang, link.path)}>{link[lang]}</a></li>)}
+        <li><a href={href(lang, 'legal/cookies')} data-cookie-settings>{copy.cookieSettings}</a></li>
       </ul>
     </nav>
+
     <div class="site-footer__bottom">
-      <p class="site-footer__copyright" lang="en-GB" dir="ltr">© Daricheh — All rights reserved.</p>
+      <p class="site-footer__copyright" lang="en-GB" dir="ltr">© {year} Daricheh — All rights reserved.</p>
       <div class="site-footer__utilities">
         <nav class="site-footer__languages" dir="ltr" aria-label={copy.language}>
           {languages.map((language, index) => (
             <>
               {index > 0 && <span aria-hidden="true">|</span>}
-              <a href={alternates[language] ?? href(language)} lang={langMeta[language].htmlLang} hreflang={langMeta[language].hreflang} aria-current={language === lang ? 'page' : undefined}>{language === 'fa' ? 'فارسی' : 'English'}</a>
+              <a
+                href={alternates[language] ?? href(language)}
+                lang={langMeta[language].htmlLang}
+                hreflang={langMeta[language].hreflang}
+                aria-current={language === lang ? 'page' : undefined}
+              >
+                {language === 'fa' ? 'فارسی' : 'English'}
+              </a>
             </>
           ))}
         </nav>
-        <a href="/sitemap.xml">{copy.sitemap}</a>
+        <a href={href(lang, 'sitemap')}>{copy.sitemap}</a>
+        <a href="/sitemap.xml">{copy.xmlSitemap}</a>
       </div>
-    </div>
-
-    <div class="site-footer__bottom">
-      <p class="small muted">© {lang === 'fa' ? year.toLocaleString('fa-IR', { useGrouping: false }) : year} {site.name[lang]}. {t.rights}</p>
-      <ul role="list" class="site-footer__legal">
-        {legalNav.map((l) => (
-          <li><a href={href(lang, `legal/${l.slug}`)}>{l.label[lang]}</a></li>
-        ))}
-      </ul>
-      <LanguageSwitcher lang={lang} alternates={alternates} />
     </div>
   </div>
 </footer>
@@ -183,7 +202,7 @@ const phoneDisplay = '+44 7428 567080';
   .site-footer__navigation a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.9375rem; }
   .site-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 2rem; padding-top: 1.5rem; }
   .site-footer__copyright { font-family: var(--font-en); font-size: 0.8125rem; color: rgb(248 246 242 / 78%); }
-  .site-footer__utilities { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 2rem; font-size: 0.875rem; }
+  .site-footer__utilities { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; font-size: 0.875rem; }
   .site-footer__utilities a { display: inline-flex; align-items: center; min-height: 2.75rem; }
   .site-footer__languages { display: flex; align-items: center; gap: 0.75rem; }
   .site-footer__languages [lang='fa'] { font-family: var(--font-fa); }
