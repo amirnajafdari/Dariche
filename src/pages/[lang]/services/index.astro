@@ -23,23 +23,35 @@ const crumbs = [{ name: t.services, path: href(lang, 'services') }];
 
   <section class="section all-svc" aria-label={t.services}>
     <div class="container">
-      <ol role="list" class="all-svc__list">
+      <ol role="list" class="all-svc__grid">
         {services.map((s, i) => (
-          <li class="all-svc__item" data-reveal>
-            <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
-            <h2 class="all-svc__name"><a href={href(lang, s.slug)}>{s.name[lang]}</a></h2>
-            <p class="all-svc__blurb">{s.homeBlurb[lang]}</p>
-            <span class="all-svc__go" aria-hidden="true"><Icon name="arrow" /></span>
+          <li class="d-card d-service-card" data-reveal style={`--delay:${(i % 2) * 0.05}s`}>
+            <a href={href(lang, s.slug)} class="d-service-card__link">
+              <div class="d-service-card__top">
+                <span class="d-service-card__num">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+                <span class="d-service-card__disc" aria-hidden="true"><Icon name="arrow" /></span>
+              </div>
+              <div class="d-service-card__body">
+                <h2 class="d-card__title d-service-card__title">{s.name[lang]}</h2>
+                <p class="d-service-card__text">{s.homeBlurb[lang]}</p>
+              </div>
+              <div class="d-service-card__foot">
+                <span class="d-service-card__cta">
+                  {t.fullDetails}
+                  <Icon name="arrow" />
+                </span>
+              </div>
+            </a>
           </li>
         ))}
       </ol>
 
       <ul role="list" class="all-svc__extra">
         {supportingOfferings.map((o) => (
-          <li data-reveal>
-            <a href={href(lang, o.link)}>
-              <strong>{o.name[lang]}</strong>
-              <span>{o.blurb[lang]}</span>
+          <li class="d-card all-svc__extra-card" data-reveal>
+            <a href={href(lang, o.link)} class="d-info-card__link">
+              <strong class="all-svc__extra-title">{o.name[lang]}</strong>
+              <span class="all-svc__extra-blurb">{o.blurb[lang]}</span>
             </a>
           </li>
         ))}
@@ -51,73 +63,41 @@ const crumbs = [{ name: t.services, path: href(lang, 'services') }];
 </BaseLayout>
 
 <style>
-  .all-svc__item {
-    position: relative;
-    display: grid;
-    grid-template-columns: 3.5rem 1fr;
-    gap: 0.5rem 1rem;
-    padding-block: 2.5rem;
+  .all-svc {
+    background: var(--paper-2);
     border-top: 1px solid var(--line);
   }
-  .all-svc__name {
-    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.6rem);
-    font-weight: 300;
-    line-height: 1.2;
-    transition: color 0.3s;
+  .all-svc__grid {
+    display: grid;
+    gap: clamp(1.15rem, 0.9rem + 1vw, 1.65rem);
   }
-  .all-svc__name a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-  .all-svc__item:hover .all-svc__name {
-    color: var(--green);
-  }
-  .all-svc__blurb {
-    grid-column: 2;
-    color: var(--ink-2);
-    max-width: 32rem;
-  }
-  .all-svc__go {
-    display: none;
-  }
-  @media (min-width: 900px) {
-    .all-svc__item {
-      grid-template-columns: 5rem 1.2fr 1fr 2rem;
-      align-items: center;
-      column-gap: var(--col-gap);
-    }
-    .all-svc__blurb {
-      grid-column: 3;
-    }
-    .all-svc__go {
-      display: block;
+  @media (min-width: 720px) {
+    .all-svc__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   .all-svc__extra {
     display: grid;
-    gap: 0 var(--col-gap);
+    gap: clamp(1rem, 0.85rem + 0.8vw, 1.4rem);
     margin-top: var(--stack-xl);
-    border-top: 1px solid var(--ink);
   }
   @media (min-width: 800px) {
     .all-svc__extra {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-  .all-svc__extra a {
-    display: grid;
-    gap: 0.25rem;
-    padding-block: 1.5rem;
+  .all-svc__extra-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    transition: color 0.25s ease;
   }
-  .all-svc__extra strong {
-    font-weight: 500;
+  .all-svc__extra-card:hover .all-svc__extra-title {
+    color: var(--green-deep);
   }
-  .all-svc__extra a:hover strong {
-    color: var(--green);
-  }
-  .all-svc__extra span {
+  .all-svc__extra-blurb {
     font-size: var(--fs-small);
-    color: var(--ink-3);
+    color: var(--ink-2);
+    line-height: 1.75;
   }
 </style>

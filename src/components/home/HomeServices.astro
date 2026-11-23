@@ -90,15 +90,24 @@ const copy = {
 
     <ol class="home-services__grid" role="list">
       {copy.items.map((item, i) => (
-        <li class="home-services__card" data-reveal style={`--delay:${(i % 2) * 0.06}s`}>
-          <a href={href(lang, item.slug)} class="home-services__link">
-            <span class="index">{num(lang, String(i + 1).padStart(2, '0'))}</span>
-            <h3 class="home-services__title">{item.title}</h3>
-            <p class="home-services__text">{item.text}</p>
-            <span class="home-services__go">
-              {item.cta}
-              <Icon name="arrow" />
-            </span>
+        <li class="d-card d-service-card" data-reveal style={`--delay:${(i % 2) * 0.06}s`}>
+          <a href={href(lang, item.slug)} class="d-service-card__link">
+            <div class="d-service-card__top">
+              <span class="d-service-card__num">{num(lang, String(i + 1).padStart(2, '0'))}</span>
+              <span class="d-service-card__disc" aria-hidden="true">
+                <Icon name="arrow" />
+              </span>
+            </div>
+            <div class="d-service-card__body">
+              <h3 class="d-card__title d-service-card__title">{item.title}</h3>
+              <p class="d-service-card__text">{item.text}</p>
+            </div>
+            <div class="d-service-card__foot">
+              <span class="d-service-card__cta">
+                {item.cta}
+                <Icon name="arrow" />
+              </span>
+            </div>
           </a>
         </li>
       ))}
@@ -128,54 +137,7 @@ const copy = {
   }
   .home-services__grid {
     display: grid;
-    gap: 1.5rem var(--col-gap);
-  }
-  .home-services__card {
-    background: var(--paper);
-    border-top: 1px solid var(--ink);
-    border-radius: 0 0 var(--radius) var(--radius);
-    transition: border-color 0.3s;
-  }
-  .home-services__card:hover {
-    border-color: var(--green);
-  }
-  .home-services__link {
-    display: grid;
-    gap: 0.75rem;
-    padding: 1.75rem 1.5rem;
-    height: 100%;
-    align-content: start;
-  }
-  .home-services__title {
-    font-size: var(--fs-h3);
-    font-weight: 500;
-    transition: color 0.25s;
-  }
-  .home-services__card:hover .home-services__title {
-    color: var(--green);
-  }
-  .home-services__text {
-    font-size: var(--fs-small);
-    color: var(--ink-2);
-    line-height: 1.8;
-  }
-  .home-services__go {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.35rem;
-    font-size: var(--fs-small);
-    font-weight: 500;
-    color: var(--green);
-  }
-  .home-services__go .icon {
-    transition: translate 0.3s var(--ease);
-  }
-  .home-services__card:hover .home-services__go .icon {
-    translate: 0.25rem 0;
-  }
-  :global([dir='rtl']) .home-services__card:hover .home-services__go .icon {
-    translate: -0.25rem 0;
+    gap: clamp(1.15rem, 0.9rem + 1vw, 1.65rem);
   }
   @media (min-width: 700px) {
     .home-services__grid {

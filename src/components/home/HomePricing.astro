@@ -57,19 +57,26 @@ const ctaUrl = (id: string, title: string) =>
       <h3 class="home-pricing__group-title">{copy.oneOffHeading}</h3>
       <div class="hplans">
         {oneOffServices.map((s) => (
-          <article class="hplan" id={s.id} aria-labelledby={`${s.id}-title`}>
-            <h4 class="hplan__title" id={`${s.id}-title`}>{s.title[lang]}</h4>
-            <p class="hplan__price">
-              {s.from && <span class="hplan__prefix">{t.from} </span>}
-              <bdi dir="ltr" class="hplan__amount">{formatGbp(s.price)}</bdi>
-              <span class="hplan__period">— {s.billingNote[lang]}</span>
+          <article class="d-card d-price-card d-price-card--compact" id={s.id} aria-labelledby={`${s.id}-title`}>
+            <header class="d-price-card__head">
+              <h4 class="d-card__title" id={`${s.id}-title`}>{s.title[lang]}</h4>
+            </header>
+
+            <p class="d-price-card__price-tray">
+              {s.from && <span class="d-price-card__prefix">{t.from} </span>}
+              <bdi dir="ltr" class="d-price-card__amount">{formatGbp(s.price)}</bdi>
+              <span class="d-price-card__period">— {s.billingNote[lang]}</span>
             </p>
-            <ul class="hplan__list" role="list">
-              {s.highlights[lang].map((item) => (
-                <li>{lang === 'fa' ? <PersianText text={item} /> : item}</li>
-              ))}
-            </ul>
-            <div class="hplan__cta">
+
+            <div class="d-price-card__features">
+              <ul class="d-price-card__list" role="list">
+                {s.highlights[lang].map((item) => (
+                  <li>{lang === 'fa' ? <PersianText text={item} /> : item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="d-price-card__cta">
               <SecondaryButton href={ctaUrl(s.id, s.title.fa)} icon="arrow">{s.cta[lang]}</SecondaryButton>
             </div>
           </article>
@@ -81,24 +88,39 @@ const ctaUrl = (id: string, title: string) =>
       <h3 class="home-pricing__group-title">{copy.monthlyHeading}</h3>
       <div class="hplans hplans--monthly">
         {monthlyPackages.map((p) => (
-          <article class:list={['hplan', { 'hplan--featured': p.featured }]} id={p.id} aria-labelledby={`${p.id}-title`}>
-            <div class="hplan__name-row">
-              <h4 class="hplan__title" id={`${p.id}-title`}>{p.title[lang]}</h4>
-              <bdi dir={lang === 'fa' ? 'ltr' : 'rtl'} lang={lang === 'fa' ? 'en-GB' : 'fa'} class="hplan__alt">
-                {p.secondaryName[lang]}
-              </bdi>
-              {p.featured && p.featuredLabel && <span class="hplan__badge">{p.featuredLabel[lang]}</span>}
-            </div>
-            <p class="hplan__price">
-              <bdi dir="ltr" class="hplan__amount">{formatGbp(p.price)}</bdi>
-              <span class="hplan__period">{t.perMonth}</span>
+          <article
+            class:list={['d-card d-price-card d-price-card--compact', { 'd-card--featured': p.featured }]}
+            id={p.id}
+            aria-labelledby={`${p.id}-title`}
+          >
+            <header class="d-price-card__head">
+              <div class="d-price-card__top-row">
+                <div class="d-price-card__name-wrap">
+                  <h4 class="d-card__title" id={`${p.id}-title`}>{p.title[lang]}</h4>
+                  <bdi dir={lang === 'fa' ? 'ltr' : 'rtl'} lang={lang === 'fa' ? 'en-GB' : 'fa'} class="d-badge d-badge--alt">
+                    {p.secondaryName[lang]}
+                  </bdi>
+                </div>
+                {p.featured && p.featuredLabel && (
+                  <span class="d-badge d-badge--featured">{p.featuredLabel[lang]}</span>
+                )}
+              </div>
+            </header>
+
+            <p class="d-price-card__price-tray">
+              <bdi dir="ltr" class="d-price-card__amount">{formatGbp(p.price)}</bdi>
+              <span class="d-price-card__period">{t.perMonth}</span>
             </p>
-            <ul class="hplan__list" role="list">
-              {p.highlights[lang].map((item) => (
-                <li>{lang === 'fa' ? <PersianText text={item} /> : item}</li>
-              ))}
-            </ul>
-            <div class="hplan__cta">
+
+            <div class="d-price-card__features">
+              <ul class="d-price-card__list" role="list">
+                {p.highlights[lang].map((item) => (
+                  <li>{lang === 'fa' ? <PersianText text={item} /> : item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="d-price-card__cta">
               {p.featured ? (
                 <PrimaryButton href={ctaUrl(p.id, p.title.fa)} icon="arrow">{p.cta[lang]}</PrimaryButton>
               ) : (
@@ -138,119 +160,38 @@ const ctaUrl = (id: string, title: string) =>
   }
   .home-pricing__group {
     display: grid;
-    gap: 1.25rem;
+    gap: 1.35rem;
     scroll-margin-top: 7rem;
   }
   .home-pricing__group + .home-pricing__group {
-    margin-top: var(--stack-lg);
+    margin-top: var(--stack-xl);
   }
   .home-pricing__group-title {
-    font-size: 1.05rem;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--ink-2);
+  }
+  :global([lang='fa']) .home-pricing__group-title {
+    font-family: var(--font-fa);
+    font-weight: 600;
+  }
+  .home-pricing__group-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
   }
 
   .hplans {
     display: grid;
-    gap: 1.25rem var(--col-gap);
+    gap: clamp(1.15rem, 0.9rem + 1vw, 1.65rem);
     align-items: stretch;
   }
-  .hplan {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.6rem 1.4rem;
-    background: var(--paper);
-    border-top: 1px solid var(--ink);
-    border-radius: 0 0 var(--radius) var(--radius);
-    min-width: 0;
-    scroll-margin-top: 7rem;
-  }
-  .hplan--featured {
-    border: 1px solid var(--green);
-    border-top: 3px solid var(--green);
-    border-radius: var(--radius);
-  }
-  .hplan__name-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.35rem 0.65rem;
-  }
-  .hplan__title {
-    font-size: 1.2rem;
-    font-weight: 500;
-    line-height: 1.4;
-    color: var(--ink);
-  }
-  .hplan__alt {
-    font-size: var(--fs-small);
-    color: var(--ink-3);
-  }
-  .hplan__badge {
-    width: 100%;
-    font-size: var(--fs-micro);
-    font-weight: 500;
-    color: var(--red);
-  }
-  .hplan__price {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    color: var(--green);
-    line-height: 1.15;
-  }
-  .hplan__prefix {
-    font-size: var(--fs-small);
-    color: var(--green);
-  }
-  .hplan__amount {
-    font-size: clamp(2.1rem, 1.7rem + 1.3vw, 2.85rem);
-    font-weight: 200;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-  }
-  .hplan__period {
-    font-size: var(--fs-small);
-    color: var(--ink-3);
-  }
-  .hplan__list {
-    display: grid;
-    gap: 0.45rem;
-    padding-top: 0.9rem;
-    border-top: 1px solid var(--line);
-  }
-  .hplan__list li {
-    position: relative;
-    padding-inline-start: 0.9rem;
-    font-size: var(--fs-small);
-    line-height: 1.65;
-    color: var(--ink-2);
-    text-align: start;
-  }
-  .hplan__list li::before {
-    content: '';
-    position: absolute;
-    inset-inline-start: 0;
-    top: 0.75em;
-    width: 4px;
-    height: 4px;
-    background: var(--green);
-  }
-  .hplan__cta {
-    margin-top: auto;
-    padding-top: 0.4rem;
-  }
-  .hplan__cta :global(.btn) {
-    width: 100%;
-    min-height: 3rem;
-    white-space: normal;
-    text-align: center;
-    padding-block: 0.7rem;
-  }
   .home-pricing__foot {
-    margin-top: var(--stack-md);
+    margin-top: var(--stack-lg);
     display: flex;
     justify-content: flex-start;
   }
@@ -271,7 +212,7 @@ const ctaUrl = (id: string, title: string) =>
     }
   }
   @media (max-width: 959px) {
-    .hplans--monthly > .hplan--featured {
+    .hplans--monthly > .d-card--featured {
       order: -1;
     }
   }

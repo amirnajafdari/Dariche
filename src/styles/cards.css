@@ -1,0 +1,620 @@
+/* ==========================================================================
+   Daricheh — Reusable Card Design System
+   Luxury minimal, editorial, gallery-grade surfaces for pricing & services.
+   ========================================================================== */
+
+:root {
+  --card-radius: 18px;
+  --card-radius-sm: 12px;
+  --card-bg: #ffffff;
+  --card-bg-tinted: #faf9f6;
+  --card-bg-tray: #f5f4f0;
+  --card-bg-featured: linear-gradient(175deg, #f2f8f5 0%, #ffffff 48%);
+  --card-bg-featured-tray: rgb(34 111 84 / 0.08);
+  --card-border: rgb(29 31 34 / 0.085);
+  --card-border-strong: rgb(29 31 34 / 0.14);
+  --card-border-hover: rgb(34 111 84 / 0.34);
+  --card-border-featured: rgb(34 111 84 / 0.32);
+  --card-divider: rgb(29 31 34 / 0.075);
+  --card-shadow:
+    0 1px 2px rgb(29 31 34 / 0.03),
+    0 14px 34px -22px rgb(29 31 34 / 0.16);
+  --card-shadow-hover:
+    0 2px 6px rgb(29 31 34 / 0.04),
+    0 24px 50px -22px rgb(25 83 63 / 0.22);
+  --card-shadow-featured:
+    0 2px 10px rgb(34 111 84 / 0.07),
+    0 24px 54px -24px rgb(25 83 63 / 0.26);
+}
+
+/* --------------------------------------------------------------------------
+   Base Card Surface (.d-card)
+   -------------------------------------------------------------------------- */
+.d-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition:
+    transform 0.42s var(--ease),
+    box-shadow 0.42s var(--ease),
+    border-color 0.32s ease,
+    background-color 0.32s ease;
+}
+
+/* Subtle top architectural hairline that illuminates on hover / featured */
+.d-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: 1.5rem;
+  top: 0;
+  height: 2px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(90deg, transparent, var(--green) 25%, var(--green) 75%, transparent);
+  opacity: 0;
+  transform: scaleX(0.45);
+  transition: opacity 0.38s var(--ease), transform 0.5s var(--ease);
+  pointer-events: none;
+}
+
+.d-card--featured {
+  background: var(--card-bg-featured);
+  border-color: var(--card-border-featured);
+  box-shadow: var(--card-shadow-featured);
+}
+
+.d-card--featured::before {
+  inset-inline: 0;
+  height: 3px;
+  border-radius: 0;
+  background: linear-gradient(90deg, var(--green-deep), var(--green) 55%, #378d6e);
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Soft ambient studio sheen on featured card */
+.d-card--featured::after {
+  content: '';
+  position: absolute;
+  top: -4rem;
+  inset-inline-end: -4rem;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(34 111 84 / 0.085) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.d-card--tinted {
+  background: var(--card-bg-tinted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .d-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-border-hover);
+    box-shadow: var(--card-shadow-hover);
+  }
+  .d-card:hover::before {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
+  .d-card--featured:hover {
+    border-color: rgb(34 111 84 / 0.52);
+  }
+}
+
+.d-card:has(a:focus-visible),
+.d-card:has(button:focus-visible),
+.d-card:has(summary:focus-visible) {
+  border-color: var(--green);
+}
+
+/* Consistent studio-grade card typography (beats global heavy Persian display weight) */
+.d-card__title {
+  font-size: clamp(1.18rem, 1.06rem + 0.35vw, 1.38rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+:root[lang='fa'] .d-card__title {
+  font-family: var(--font-fa);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Editorial Pills & Badges
+   -------------------------------------------------------------------------- */
+.d-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.72rem;
+  border-radius: 999px;
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.d-badge--featured {
+  background: rgb(110 5 9 / 0.07);
+  border: 1px solid rgb(110 5 9 / 0.16);
+  color: var(--red);
+}
+
+.d-badge--featured::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  flex: none;
+}
+
+.d-badge--alt {
+  background: rgb(29 31 34 / 0.045);
+  color: var(--ink-3);
+  border: 1px solid rgb(29 31 34 / 0.06);
+  font-weight: 400;
+}
+
+.d-card--featured .d-badge--alt {
+  background: rgb(34 111 84 / 0.08);
+  border-color: rgb(34 111 84 / 0.14);
+  color: var(--green-deep);
+}
+
+/* --------------------------------------------------------------------------
+   Pricing Card Family (.d-price-card)
+   -------------------------------------------------------------------------- */
+.d-price-card {
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+  scroll-margin-top: 7rem;
+}
+
+.d-price-card--compact {
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 1.15rem + 0.65vw, 1.8rem);
+}
+
+.d-price-card__head {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+
+.d-price-card__top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.65rem;
+}
+
+.d-price-card__name-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+/* Recessed tonal price tray */
+.d-price-card__price-tray {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  padding: 0.95rem 1.15rem;
+  border-radius: var(--card-radius-sm);
+  background: var(--card-bg-tray);
+  border: 1px solid rgb(29 31 34 / 0.045);
+  line-height: 1.1;
+}
+
+.d-card--featured .d-price-card__price-tray {
+  background: var(--card-bg-featured-tray);
+  border-color: rgb(34 111 84 / 0.14);
+}
+
+.d-price-card__prefix {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--green);
+}
+
+.d-price-card__amount {
+  font-family: var(--font-en);
+  font-size: clamp(2.15rem, 1.75rem + 1.25vw, 2.95rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--green-deep);
+  white-space: nowrap;
+}
+
+.d-price-card--compact .d-price-card__amount {
+  font-size: clamp(2rem, 1.65rem + 1.1vw, 2.65rem);
+}
+
+.d-price-card__period {
+  font-size: var(--fs-small);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+/* Tagline & description */
+.d-price-card__copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.d-price-card__tagline {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.d-price-card__tagline strong {
+  font-weight: 600;
+}
+
+.d-price-card__desc {
+  display: grid;
+  gap: 0.65rem;
+  color: var(--ink-2);
+  font-size: var(--fs-small);
+  line-height: 1.78;
+}
+
+/* Feature list with subtle circular checkmarks */
+.d-price-card__features {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--card-divider);
+  align-content: start;
+}
+
+.d-price-card__list-label {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+}
+
+:root[lang='en-GB'] .d-price-card__list-label {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.d-price-card__list {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.d-price-card__list li {
+  position: relative;
+  padding-inline-start: 1.65rem;
+  font-size: var(--fs-small);
+  line-height: 1.65;
+  color: var(--ink-2);
+  text-align: start;
+}
+
+.d-price-card__list li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.28em;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background-color: var(--green-tint);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.7 6.3 5 8.5 9.4 3.8' stroke='%23226f54' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0.72rem 0.72rem;
+}
+
+.d-card--featured .d-price-card__list li::before {
+  background-color: rgb(34 111 84 / 0.14);
+}
+
+/* Collapsible features summary on monthly pricing cards */
+.d-price-card__details {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--card-divider);
+  padding-top: 0.9rem;
+}
+
+.d-price-card__details summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.d-price-card__details summary::-webkit-details-marker {
+  display: none;
+}
+
+.d-price-card__toggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 50%;
+  background: var(--card-bg-tray);
+  border: 1px solid var(--card-border);
+  color: var(--green);
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.d-price-card__toggle::after {
+  content: '+';
+  font-size: 1.15rem;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.d-price-card__details[open] .d-price-card__toggle {
+  background: var(--green-tint);
+  border-color: rgb(34 111 84 / 0.24);
+}
+
+.d-price-card__details[open] .d-price-card__toggle::after {
+  content: '−';
+}
+
+.d-price-card__details .d-price-card__list {
+  margin-top: 0.85rem;
+}
+
+/* Integrated Card CTA */
+.d-price-card__cta {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: 0.85rem;
+}
+
+.d-price-card__cta .btn {
+  width: 100%;
+  min-height: 3.15rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--card-radius-sm);
+  white-space: normal;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s var(--ease);
+}
+
+.d-price-card__cta .btn-secondary {
+  background: var(--card-bg-tray);
+  border: 1px solid var(--card-border-strong);
+  color: var(--ink);
+}
+
+.d-price-card__cta .btn-secondary:hover {
+  background: var(--green);
+  border-color: var(--green);
+  color: #ffffff;
+  box-shadow: 0 10px 22px -12px rgb(34 111 84 / 0.55);
+}
+
+.d-price-card__cta .btn-primary {
+  box-shadow: 0 12px 26px -14px rgb(34 111 84 / 0.65);
+}
+
+.d-price-card__cta .btn-primary:hover {
+  box-shadow: 0 16px 32px -14px rgb(25 83 63 / 0.72);
+}
+
+/* --------------------------------------------------------------------------
+   Service Card Family (.d-service-card)
+   -------------------------------------------------------------------------- */
+.d-service-card {
+  height: 100%;
+}
+
+.d-service-card__link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  height: 100%;
+  padding: clamp(1.5rem, 1.25rem + 0.9vw, 2.15rem);
+}
+
+.d-service-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.d-service-card__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.35rem;
+  height: 2.35rem;
+  padding-inline: 0.6rem;
+  border-radius: 999px;
+  background: var(--green-tint);
+  border: 1px solid rgb(34 111 84 / 0.14);
+  color: var(--green);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.32s ease, border-color 0.32s ease, color 0.32s ease;
+}
+
+.d-service-card__disc {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.45rem;
+  height: 2.45rem;
+  border-radius: 50%;
+  background: var(--card-bg-tray);
+  border: 1px solid var(--card-border);
+  color: var(--ink-2);
+  transition:
+    background-color 0.32s ease,
+    border-color 0.32s ease,
+    color 0.32s ease,
+    transform 0.38s var(--ease);
+}
+
+.d-service-card__disc .icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.35s var(--ease);
+}
+
+.d-service-card__body {
+  display: grid;
+  gap: 0.65rem;
+  align-content: start;
+}
+
+.d-service-card__title {
+  font-size: clamp(1.25rem, 1.08rem + 0.5vw, 1.55rem);
+  transition: color 0.28s ease;
+}
+
+.d-service-card__text {
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+  line-height: 1.82;
+  max-width: 44ch;
+}
+
+.d-service-card__foot {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--card-divider);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.d-service-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--green);
+  transition: gap 0.32s var(--ease), color 0.28s ease;
+}
+
+.d-service-card__cta .icon {
+  width: 1rem;
+  height: 1rem;
+  transition: translate 0.32s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .d-service-card:hover .d-service-card__num {
+    background: var(--green);
+    border-color: var(--green);
+    color: #ffffff;
+  }
+  .d-service-card:hover .d-service-card__disc {
+    background: var(--green);
+    border-color: var(--green);
+    color: #ffffff;
+  }
+  .d-service-card:hover .d-service-card__title {
+    color: var(--green-deep);
+  }
+  .d-service-card:hover .d-service-card__cta {
+    gap: 0.72rem;
+    color: var(--green-deep);
+  }
+  .d-service-card:hover .d-service-card__cta .icon {
+    translate: 0.15rem 0;
+  }
+  [dir='rtl'] .d-service-card:hover .d-service-card__cta .icon {
+    translate: -0.15rem 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Supporting / Info Card Variant (.d-info-card)
+   Used for supporting offerings, service benefits & service-page price boxes
+   -------------------------------------------------------------------------- */
+.d-info-card {
+  padding: clamp(1.35rem, 1.1rem + 0.6vw, 1.75rem);
+  gap: 0.65rem;
+}
+
+.d-info-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  height: 100%;
+  padding: clamp(1.35rem, 1.1rem + 0.6vw, 1.75rem);
+}
+
+/* Touch feedback & reduced motion */
+@media (hover: none), (pointer: coarse) {
+  .d-card:active {
+    transform: scale(0.992);
+    border-color: var(--card-border-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .d-card,
+  .d-card::before,
+  .d-price-card__cta .btn,
+  .d-service-card__num,
+  .d-service-card__disc,
+  .d-service-card__disc .icon,
+  .d-service-card__cta,
+  .d-service-card__cta .icon {
+    transition: none;
+  }
+  .d-card:hover {
+    transform: none;
+  }
+}

@@ -5,7 +5,7 @@ import { oneOffServices, monthlyPackages, contactForm } from '@/data/persianHome
 import { pricingNote } from '@/data/pricing';
 const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#callback`;
 ---
-<section class="section" id="pricing" aria-labelledby="pricing-title">
+<section class="section persian-pricing" id="pricing" aria-labelledby="pricing-title">
   <div class="container">
     <header class="section-intro">
       <p class="eyebrow">تعرفه‌های دریچه</p>
@@ -18,27 +18,37 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
     </div>
     <div class="plans plans--oneoff">
       {oneOffServices.map((plan) => (
-        <article class="plan plan--oneoff" id={plan.id} aria-labelledby={`${plan.id}-title`}>
-          <h4 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h4>
-          <p class="price">
-            {plan.from && <span class="price-prefix">از </span>}
-            <bdi dir="ltr" class="price-amount">{plan.price}</bdi>
-            <span class="period"> — {plan.billingNote}</span>
+        <article class="d-card d-price-card" id={plan.id} aria-labelledby={`${plan.id}-title`}>
+          <header class="d-price-card__head">
+            <h4 class="d-card__title" id={`${plan.id}-title`}>{plan.title}</h4>
+          </header>
+
+          <p class="d-price-card__price-tray">
+            {plan.from && <span class="d-price-card__prefix">از </span>}
+            <bdi dir="ltr" class="d-price-card__amount">{plan.price}</bdi>
+            <span class="d-price-card__period"> — {plan.billingNote}</span>
           </p>
-          <p class="tagline"><strong>{plan.tagline}</strong></p>
-          <p class="description"><PersianText text={plan.text} /></p>
-          <div class="features">
-            <p class="list-label">{plan.listLabel}</p>
-            <ul role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
+
+          <div class="d-price-card__copy">
+            <p class="d-price-card__tagline"><strong>{plan.tagline}</strong></p>
+            <p class="d-price-card__desc"><PersianText text={plan.text} /></p>
           </div>
-          <a class="btn btn-secondary" href={enquiry(plan.title)}>{plan.cta}</a>
+
+          <div class="d-price-card__features">
+            <p class="d-price-card__list-label">{plan.listLabel}</p>
+            <ul class="d-price-card__list" role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
+          </div>
+
+          <div class="d-price-card__cta">
+            <a class="btn btn-secondary" href={enquiry(plan.title)}>{plan.cta}</a>
+          </div>
         </article>
       ))}
     </div>
   </div>
 </section>
 
-<section class="section monthly" id="monthly" aria-labelledby="monthly-title">
+<section class="section monthly persian-pricing persian-pricing--monthly" id="monthly" aria-labelledby="monthly-title">
   <div class="container">
     <header class="section-intro">
       <p class="eyebrow">همکاری ماهانه با دریچه</p>
@@ -48,27 +58,42 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
     </header>
     <div class="plans subscriptions">
       {monthlyPackages.map((plan) => (
-        <article class:list={['plan', { featured: plan.featured }]} id={plan.id} aria-labelledby={`${plan.id}-title`}>
-          <div class="plan-heading">
-            <h3 class="plan-title" id={`${plan.id}-title`}>{plan.title}</h3>
-            <bdi dir="ltr" class="english-name">{plan.en}</bdi>
-            {plan.featured && <span class="badge">{plan.featuredLabel ?? 'برای رشد بیشتر'}</span>}
-          </div>
-          <p class="price">
-            <bdi dir="ltr" class="price-amount">{plan.price}</bdi>
-            <span class="period"> در ماه</span>
+        <article class:list={['d-card d-price-card', { 'd-card--featured': plan.featured }]} id={plan.id} aria-labelledby={`${plan.id}-title`}>
+          <header class="d-price-card__head">
+            <div class="d-price-card__top-row">
+              <div class="d-price-card__name-wrap">
+                <h3 class="d-card__title" id={`${plan.id}-title`}>{plan.title}</h3>
+                <bdi dir="ltr" class="d-badge d-badge--alt">{plan.en}</bdi>
+              </div>
+              {plan.featured && <span class="d-badge d-badge--featured">{plan.featuredLabel ?? 'برای رشد بیشتر'}</span>}
+            </div>
+          </header>
+
+          <p class="d-price-card__price-tray">
+            <bdi dir="ltr" class="d-price-card__amount">{plan.price}</bdi>
+            <span class="d-price-card__period"> در ماه</span>
           </p>
-          <p class="tagline"><strong>{plan.tagline}</strong></p>
-          <div class="description description--stack">{plan.paragraphs.map((p) => <p>{p}</p>)}</div>
-          <details class="features" data-monthly-features open>
-            <summary>خدمات این پکیج:<span aria-hidden="true" class="toggle"></span></summary>
-            <ul role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
+
+          <div class="d-price-card__copy">
+            <p class="d-price-card__tagline"><strong>{plan.tagline}</strong></p>
+            <div class="d-price-card__desc">{plan.paragraphs.map((p) => <p>{p}</p>)}</div>
+          </div>
+
+          <details class="d-price-card__details" data-monthly-features open>
+            <summary>
+              <span>خدمات این پکیج:</span>
+              <span aria-hidden="true" class="d-price-card__toggle"></span>
+            </summary>
+            <ul class="d-price-card__list" role="list">{plan.features.map((feature) => <li><PersianText text={feature} /></li>)}</ul>
           </details>
-          <a class:list={['btn', plan.featured ? 'btn-primary' : 'btn-secondary']} href={enquiry(plan.title)}>{plan.cta}</a>
+
+          <div class="d-price-card__cta">
+            <a class:list={['btn', plan.featured ? 'btn-primary' : 'btn-secondary']} href={enquiry(plan.title)}>{plan.cta}</a>
+          </div>
         </article>
       ))}
     </div>
-    <div class="pricing-help">
+    <div class="d-card d-info-card pricing-help">
       <h3 class="h3">هنوز نمی‌دونی کدوم پکیج مناسبته؟</h3>
       <p class="body">لازم نیست گرون‌ترین گزینه رو انتخاب کنی. درباره بیزینست و چیزی که می‌خوای بهش برسی حرف می‌زنیم تا ببینیم کدوم خدمات واقعاً به کارت میاد.</p>
       <a class="btn btn-primary" href={contactForm}>بیا با هم بررسی کنیم</a>
@@ -90,51 +115,19 @@ const enquiry = (name: string) => `/fa/?package=${encodeURIComponent(name)}#call
 </script>
 
 <style>
-  .section-intro { display:grid; gap:1.5rem; margin-bottom:var(--stack-lg); }
-  .group-heading { display:grid; gap:.75rem; margin-bottom:2.5rem; }
-  .plans { display:grid; gap:2rem var(--col-gap); align-items:start; }
-  .plan { display:flex; flex-direction:column; gap:1.15rem; padding:2rem 1.5rem; border-top:1px solid var(--ink); min-width:0; scroll-margin-top:7rem; }
-  .plan-title { font-size:1.35rem; line-height:1.55; font-weight:500; }
-  .plan-heading { position:relative; display:grid; gap:.3rem; }
-  .english-name { color:var(--ink-3); font-size:1rem; }
-  .price { display:flex; align-items:baseline; flex-wrap:wrap; gap:.35rem; color:var(--green); line-height:1.2; }
-  .price-amount { font-size:clamp(2.5rem, 1.9rem + 1.8vw, 3.6rem); font-weight:300; line-height:1.15; white-space:nowrap; }
-  .period, .price-prefix { font-size:1rem; font-weight:400; color:var(--ink-3); }
-  .price-prefix { color:var(--green); }
-  .tagline { font-size:1.02rem; line-height:1.65; color:var(--ink); }
-  .description { color:var(--ink-2); font-size:.98rem; line-height:1.85; }
-  .description--stack { display:grid; gap:.85rem; }
-  .features { border-top:1px solid var(--line); padding-top:1.15rem; }
-  .features ul { display:grid; gap:.5rem; margin-top:.75rem; }
-  .features li { padding-inline-start:1rem; position:relative; font-size:.96rem; line-height:1.7; color:var(--ink-2); text-align:start; }
-  .features li::before { content:''; width:4px; height:4px; background:var(--green); position:absolute; inset-inline-start:0; top:.78em; }
-  .list-label, summary { font-weight:500; font-size:.96rem; color:var(--ink); }
-  summary { display:flex; justify-content:space-between; align-items:center; gap:1rem; cursor:pointer; list-style:none; min-height:2.75rem; }
-  summary::-webkit-details-marker { display:none; }
-  .toggle::after { content:'+'; color:var(--green); font-size:1.5rem; }
-  details[open] .toggle::after { content:'−'; }
-  .plan .btn { white-space:normal; padding:.85rem 1rem; line-height:1.65; margin-top:auto; text-align:center; width:100%; }
-  .featured { border:1px solid var(--green); border-top:3px solid var(--green); border-radius:var(--radius); }
-  .badge { align-self:start; justify-self:start; color:var(--red); font-size:.9rem; margin-top:.5rem; }
-  .monthly { padding-top:var(--section-sm); }
-  .pricing-help { display:grid; gap:1.5rem; justify-items:start; margin-top:var(--stack-xl); padding-top:var(--stack-lg); border-top:1px solid var(--line); }
-  .pricing-note { display:grid; gap:1.5rem; justify-items:start; margin-top:3rem; max-width:52rem; color:var(--ink-3); font-size:1rem; }
+  .persian-pricing { background: var(--paper-2); }
+  .persian-pricing--monthly { background: var(--paper); }
+  .section-intro { display: grid; gap: 1.5rem; margin-bottom: var(--stack-lg); }
+  .group-heading { display: grid; gap: 0.5rem; margin-bottom: 2rem; }
+  .plans { display: grid; gap: clamp(1.15rem, 0.9rem + 1vw, 1.65rem); align-items: stretch; }
+  .monthly { padding-top: var(--section-sm); }
+  .pricing-help { display: grid; gap: 1.25rem; justify-items: start; margin-top: var(--stack-xl); }
+  .pricing-note { display: grid; gap: 1rem; justify-items: start; margin-top: 2.5rem; max-width: 52rem; color: var(--ink-3); font-size: var(--fs-small); }
 
-  @media(min-width:960px) {
-    .plans { grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .plans--oneoff { align-items:stretch; }
-    .plan--oneoff { height:100%; }
-    @supports (grid-template-rows: subgrid) {
-      .plans--oneoff { grid-auto-rows:auto; row-gap:1.1rem; }
-      .plan--oneoff {
-        display:grid;
-        grid-row:span 6;
-        grid-template-rows:subgrid;
-        row-gap:1.1rem;
-        align-items:start;
-      }
-      .plan--oneoff .features { align-self:stretch; }
-      .plan--oneoff .btn { margin-top:.5rem; align-self:end; }
-    }
+  @media (min-width: 960px) {
+    .plans { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 959px) {
+    .subscriptions > .d-card--featured { order: -1; }
   }
 </style>

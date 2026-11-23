@@ -18,148 +18,40 @@ const t = useTranslations(lang);
 const contactUrl = ctaHref ?? `${href(lang, 'contact')}?package=${encodeURIComponent(service.id)}#form`;
 const amount = formatGbp(service.price);
 ---
-<article class="oneoff-card" id={service.id} aria-labelledby={`oneoff-${service.id}`}>
-  <H class="oneoff-card__title" id={`oneoff-${service.id}`}>{service.title[lang]}</H>
+<article class="d-card d-price-card oneoff-card" id={service.id} aria-labelledby={`oneoff-${service.id}`}>
+  <header class="d-price-card__head">
+    <H class="d-card__title" id={`oneoff-${service.id}`}>{service.title[lang]}</H>
+  </header>
 
-  <p class="oneoff-card__price">
-    {service.from && <span class="oneoff-card__prefix">{t.from} </span>}
-    <bdi dir="ltr" class="oneoff-card__amount">{amount}</bdi>
-    <span class="oneoff-card__billing">— {service.billingNote[lang]}</span>
+  <p class="d-price-card__price-tray">
+    {service.from && <span class="d-price-card__prefix">{t.from} </span>}
+    <bdi dir="ltr" class="d-price-card__amount">{amount}</bdi>
+    <span class="d-price-card__period">— {service.billingNote[lang]}</span>
   </p>
 
-  <p class="oneoff-card__tagline"><strong>{service.tagline[lang]}</strong></p>
+  <div class="d-price-card__copy">
+    <p class="d-price-card__tagline"><strong>{service.tagline[lang]}</strong></p>
+    <p class="d-price-card__desc">
+      {lang === 'fa' ? <PersianText text={service.description.fa} /> : service.description.en}
+    </p>
+  </div>
 
-  <p class="oneoff-card__desc">
-    {lang === 'fa' ? <PersianText text={service.description.fa} /> : service.description.en}
-  </p>
-
-  <div class="oneoff-card__features">
-    <p class="oneoff-card__list-label">{service.listLabel[lang]}</p>
-    <ul role="list">
+  <div class="d-price-card__features">
+    <p class="d-price-card__list-label">{service.listLabel[lang]}</p>
+    <ul class="d-price-card__list" role="list">
       {service.features[lang].map((feature) => (
         <li>{lang === 'fa' ? <PersianText text={feature} /> : feature}</li>
       ))}
     </ul>
   </div>
 
-  <div class="oneoff-card__cta">
+  <div class="d-price-card__cta">
     <SecondaryButton href={contactUrl} icon="arrow">{service.cta[lang]}</SecondaryButton>
   </div>
 </article>
 
 <style>
   .oneoff-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1.15rem;
-    padding: 2rem 1.5rem;
-    border-top: 1px solid var(--ink);
-    min-width: 0;
-    scroll-margin-top: 7rem;
-  }
-  .oneoff-card__title {
-    font-size: var(--fs-h3);
-    font-weight: 500;
-    line-height: 1.4;
-  }
-  .oneoff-card__price {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    color: var(--green);
-    line-height: 1.2;
-  }
-  .oneoff-card__prefix {
-    font-size: var(--fs-small);
-    font-weight: 400;
-    color: var(--green);
-  }
-  .oneoff-card__billing {
-    font-size: var(--fs-small);
-    font-weight: 400;
-    color: var(--ink-3);
-  }
-  .oneoff-card__amount {
-    font-size: clamp(2.5rem, 1.9rem + 1.8vw, 3.5rem);
-    font-weight: 200;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-  }
-  .oneoff-card__tagline {
-    font-size: 1.02rem;
-    line-height: 1.55;
-    color: var(--ink);
-  }
-  .oneoff-card__desc {
-    color: var(--ink-2);
-    font-size: var(--fs-small);
-    line-height: 1.75;
-  }
-  .oneoff-card__features {
-    border-top: 1px solid var(--line);
-    padding-top: 1.15rem;
-    display: grid;
-    gap: 0.7rem;
-    align-content: start;
-  }
-  .oneoff-card__list-label {
-    font-size: var(--fs-small);
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .oneoff-card__features ul {
-    display: grid;
-    gap: 0.5rem;
-  }
-  .oneoff-card__features li {
-    position: relative;
-    padding-inline-start: 1rem;
-    font-size: var(--fs-small);
-    line-height: 1.65;
-    color: var(--ink-2);
-    text-align: start;
-  }
-  .oneoff-card__features li::before {
-    content: '';
-    position: absolute;
-    inset-inline-start: 0;
-    top: 0.78em;
-    width: 4px;
-    height: 4px;
-    background: var(--green);
-  }
-  .oneoff-card__cta {
-    margin-top: auto;
-    padding-top: 0.5rem;
-  }
-  .oneoff-card__cta :global(.btn) {
-    width: 100%;
-    white-space: normal;
-    text-align: center;
-    padding-block: 0.85rem;
-  }
-
-  @media (min-width: 960px) {
-    .oneoff-card {
-      height: 100%;
-    }
-    @supports (grid-template-rows: subgrid) {
-      .oneoff-card {
-        display: grid;
-        grid-row: span 6;
-        grid-template-rows: subgrid;
-        row-gap: 1.1rem;
-        align-items: start;
-      }
-      .oneoff-card__features {
-        align-self: stretch;
-      }
-      .oneoff-card__cta {
-        margin-top: 0;
-        align-self: end;
-      }
-    }
+    height: 100%;
   }
 </style>

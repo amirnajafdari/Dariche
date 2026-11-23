@@ -52,9 +52,11 @@ const faqs = pricingFaqs[lang];
       <div class="pricing-page__grid pricing-page__grid--monthly">
         {monthlyPackages.map((p) => <MonthlyPackageCard pkg={p} lang={lang} headingLevel="h3" />)}
       </div>
-      <div class="pricing-page__help" data-reveal>
-        <h3 class="h3">{pricingPage.helpTitle[lang]}</h3>
-        <p class="body">{pricingPage.helpText[lang]}</p>
+      <div class="d-card d-info-card pricing-page__help" data-reveal>
+        <div class="pricing-page__help-copy">
+          <h3 class="d-card__title">{pricingPage.helpTitle[lang]}</h3>
+          <p class="body">{pricingPage.helpText[lang]}</p>
+        </div>
         <PrimaryButton href={href(lang, 'contact#form')} icon="arrow">{pricingPage.helpCta[lang]}</PrimaryButton>
       </div>
       <p class="pricing-page__note" data-reveal>{pricingNote[lang]}</p>
@@ -86,7 +88,9 @@ const faqs = pricingFaqs[lang];
 
 <style>
   .pricing-section--first {
-    padding-top: 0;
+    padding-top: var(--section-sm);
+    background: var(--paper-2);
+    border-block: 1px solid var(--line);
   }
   .pricing-section__head {
     display: grid;
@@ -96,16 +100,12 @@ const faqs = pricingFaqs[lang];
   }
   .pricing-page__grid {
     display: grid;
-    gap: 2rem var(--col-gap);
-    align-items: start;
+    gap: clamp(1.15rem, 0.9rem + 1vw, 1.65rem);
+    align-items: stretch;
   }
   @media (min-width: 960px) {
     .pricing-page__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .pricing-page__grid--oneoff {
-      align-items: stretch;
-      row-gap: 1.1rem;
     }
   }
   @media (max-width: 959px) {
@@ -114,20 +114,35 @@ const faqs = pricingFaqs[lang];
     }
   }
   .pricing-page__help {
-    display: grid;
-    gap: 1.25rem;
-    justify-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
     margin-top: var(--stack-xl);
-    padding-top: var(--stack-lg);
-    border-top: 1px solid var(--line);
+    padding: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
+    background: linear-gradient(135deg, #f4f8f5 0%, #ffffff 62%);
+    border-color: rgb(34 111 84 / 0.18);
+  }
+  .pricing-page__help-copy {
+    display: grid;
+    gap: 0.65rem;
+  }
+  @media (min-width: 820px) {
+    .pricing-page__help {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
   }
   .pricing-page__note {
-    margin-top: 2.5rem;
+    margin-top: 2rem;
     max-width: 50rem;
     color: var(--ink-3);
     font-size: var(--fs-small);
   }
   .pricing-compare {
     background: var(--paper-2);
+    border-top: 1px solid var(--line);
   }
 </style>

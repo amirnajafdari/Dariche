@@ -251,8 +251,9 @@ b {
   line-height: var(--lh-tight);
   letter-spacing: calc(var(--tracking-display) / 2);
 }
-/* Give Persian headings their own bold display face, keeping body copy light. */
-:root[lang='fa'] :is(h1, h2, h3, h4, h5, h6, .display, .h2, .h3) {
+/* Give Persian headings their own bold display face, keeping body copy light.
+   :where() keeps specificity low so card/component headings can refine weight cleanly. */
+:root[lang='fa'] :where(h1, h2, h3, h4, h5, h6, .display, .h2, .h3) {
   font-family: var(--font-fa-heading);
   font-weight: 800;
   letter-spacing: 0;
