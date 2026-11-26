@@ -19,7 +19,7 @@ export const site = {
     phoneHref: '+447428567080',
     whatsappNumber: '447428567080',
     whatsappUrl: 'https://wa.me/447428567080',
-    email: 'hello@daricheh.co.uk',
+    email: 'info@daricheh.co.uk',
   },
 
   /** Pre-filled WhatsApp text. Keep it short; people edit it anyway. */
@@ -38,7 +38,7 @@ export const site = {
    * Contact form delivery. Leave empty to fall back to a pre-filled email.
    * Works with Formspree, Basin, a Vercel/Netlify function, etc. — anything that accepts a JSON POST.
    */
-  formEndpoint: '',
+  formEndpoint: 'https://formspree.io/f/xbgobzlr',
 
   /**
    * Booking is intentionally off. When a booking tool (Cal.com, Calendly, TidyCal…) is chosen,
