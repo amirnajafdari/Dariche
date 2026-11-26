@@ -1,12 +1,12 @@
 ---
-import type { Lang } from '@/i18n';
+import { href, type Lang } from '@/i18n';
 import { form } from '@/data/pages';
 import { site } from '@/data/site';
 import Icon from './Icon.astro';
 
 /**
  * Callback / contact form.
- * - With site.formEndpoint set: POSTs JSON there.
+ * - With site.formEndpoint set: POSTs JSON there, then redirects after success.
  * - Without it: opens the visitor's email app with everything pre-filled.
  * Without JavaScript the form still submits to the endpoint (or mailto) natively.
  */
@@ -30,6 +30,7 @@ const method = site.formEndpoint ? 'post' : 'get';
   novalidate
   data-contact-form
   data-endpoint={site.formEndpoint}
+  data-success-url={href(lang, 'thank-you')}
   data-email={email}
   data-msg-required={form.required[lang]}
   data-msg-email={form.invalidEmail[lang]}
@@ -192,7 +193,7 @@ const method = site.formEndpoint ? 'post' : 'get';
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error(String(res.status));
-        done();
+        location.assign(d.successUrl!);
       } catch {
         errorMsg.hidden = false;
         status.focus();
